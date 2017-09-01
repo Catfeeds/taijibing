@@ -221,10 +221,11 @@ function savegood(){
             return;
         }
         else{
+            layer.alert('添加成功');
 
             //window.location.replace("/index.php?r=goods/update&id="+$("#id").val());
-            window.location.href("/index.php?r=goods/list");
-            //window.history.back(-1);
+            //window.location.href("/index.php?r=goods/list");
+            window.history.back(-1);
         }
     });
 

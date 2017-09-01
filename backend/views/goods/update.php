@@ -241,9 +241,9 @@
 <!--            </div>-->
 <!--        </div>-->
 <!--    </div>-->
-<!--    <div class="detail5">-->
-<!--        <input type="button" class="btn select_btn" value="保存" onclick="savegood()"/>-->
-<!--    </div>-->
+    <div class="detail5">
+        <input type="button" class="btn select_btn" value="保存" onclick="savegood()"/>
+    </div>
 
     <div id="detail2" style="width: 100%;height: auto;display: block">
 <!--        <div class="separator">-->
