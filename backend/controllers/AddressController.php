@@ -35,11 +35,36 @@ class AddressController extends BaseController
         $pages = new Pagination(['totalCount' => $datas->count(), 'pageSize' => 10]);
         $querys =Address::pageQuery($pages->offset,$pages->limit);
         $model = $querys->asArray()->all();
-        $data=(new Address())->allQuery()->asArray()->all();
+        //获取上级
+        foreach($model as &$v){
+            if($v['PId']!=0){//不属于省份
+                $data=Address::findOne(['Id'=>$v['PId']]);
+
+                $parent1=$data['Name'];
+//                var_dump($parent1);exit;
+                if($data['PId']!=0){
+                    $data=Address::findOne(['Id'=>$data['PId']]);
+                    $parent2=$data['Name'];
+
+                    $v['parent']=$parent1.'-'.$parent2;
+
+                }else{
+                   $v['parent']=$parent1;
+                }
+
+
+            }else{
+                $v['parent']='';
+            }
+        }
+
+
+
+//        $data=(new Address())->allQuery()->asArray()->all();
         return $this->render('index', [
             'model' => $model,
             'pages' => $pages,
-            "data"=>json_encode($data)
+//            "data"=>json_encode($data)
         ]);
     }
     public function actionDelete($id)

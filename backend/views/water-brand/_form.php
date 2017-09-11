@@ -15,6 +15,7 @@ $this->title = '水品牌';
         <div class="ibox-content">
 
             <?php $form = ActiveForm::begin(['options'=>['enctype'=>'multipart/form-data','class'=>'form-horizontal']]); ?>
+            <?= $form->field($goods, 'name')->textInput(['maxlength' => 64]) ?>
             <?= $form->field($model, 'BrandName')->textInput(['maxlength' => 64]) ?>
             <?= $form->field($model, 'Price')->textInput(['placeholder'=>'单位 元，可以包含两位小数！']) ?>
 

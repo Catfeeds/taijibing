@@ -58,7 +58,7 @@
         <input id="nextstep" type="button" disabled="disabled" class="btn select_btn" value="下一步，填写详细信息" onclick="next()"/>
     </div>
 </div>
-<div class="content_middle" style="display: none">
+<div class="content_middle">
     <div class="separator">
         1、基本信息
     </div>
@@ -320,10 +320,16 @@
 <script type="text/javascript" src="./static/js/lib.js"></script>
 <script type="text/javascript" src="./static/js/good/addgood.js"></script>
 
+<script type="text/javascript" src="./static/js/qrcode.js"></script>
+<script type="text/javascript" src="./static/js/good/updategood.js"></script>
+
 
 <script type="text/javascript">
     var category=<?=json_encode($category)?>;
     var merchant=<?=json_encode($merchant)?>;
+
+    var sms=<?=json_encode($sms)?>;
+
 </script>
 <script type="text/javascript">
 

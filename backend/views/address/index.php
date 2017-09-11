@@ -9,9 +9,10 @@ use feehi\widgets\Bar;
     ])?>
     <table class="table table-hover" style="background:white;">
         <thead>
-        <th>id</th>
+        <th>编号</th>
         <th>地址名称</th>
         <th>添加时间</th>
+        <th>所属省市</th>
         <th>操作</th>
         </thead>
         <tbody>
@@ -22,6 +23,7 @@ use feehi\widgets\Bar;
             $str.= "<tr><td>".$val["Id"]."</td>
                         <td>".$val["Name"]."</td>
                         <td>".$val["RowTime"]."</td>
+                        <td>".$val["parent"]."</td>
                         <td><a href=javascript:deleteAddress('".$val["Id"]."')>删除</a></td>
                         </tr>";
         }
@@ -29,16 +31,16 @@ use feehi\widgets\Bar;
         ?>
         </tbody>
     </table>
-    <select class="form-control"  id="addresses" >
-    </select>
+<!--    <select class="form-control"  id="addresses" >-->
+<!--    </select>-->
     <script type="text/javascript" src="./static/js/jquery.min.js"></script>
     <script type="text/javascript" src="./static/js/layer/layer.js"></script>
     <script>
-        var data=<?=$data?>;
+//        var data=<?//=$data?>//;
     </script>
 <script>
     $(function(){
-        initAddressSelect();
+//        initAddressSelect();
     });
     function deleteAddress(id){
         var ii=layer.msg("操作中……");

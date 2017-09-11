@@ -42,7 +42,7 @@ class OrderSuccess extends ActiveRecord
         return [
             'create' => ['OrderNo', 'Fid','TotalMoney',
                          'OrderMoney','CouponMoney',
-                         'Amount','Volume',],
+                         'Amount','Volume','WaterBrand'],
         ];
     }
     public function attributeLabels()
@@ -53,7 +53,8 @@ class OrderSuccess extends ActiveRecord
             'OrderMoney' => '支付金额',
             'CouponMoney' => '优惠金额',
             'Volume' => '购买容量(L)',
-            'Amount'=>'购买数量'
+            'Amount'=>'购买数量',
+            'WaterBrand'=>'选择品牌'
         ];
     }
 
@@ -61,13 +62,14 @@ class OrderSuccess extends ActiveRecord
      * 验证充值表单
      */
     public function checkForm(){
+        $WaterBrand=$this->getAttribute("WaterBrand");//对应的品牌
         $Fid=$this->getAttribute("Fid");
         $TotalMoney=$this->getAttribute("TotalMoney");
         $CouponMoney=$this->getAttribute("CouponMoney");
         $OrderMoney=$this->getAttribute("OrderMoney");
         $Volume=$this->getAttribute("Volume");
         $Amount=$this->getAttribute("Amount");
-        if(!is_numeric($OrderMoney)||!is_numeric($Fid)||!is_numeric($TotalMoney)||!is_numeric($CouponMoney)||!is_numeric($Volume)||!is_numeric($Amount)){
+        if(!is_numeric($OrderMoney)||!is_numeric($Fid)||!is_numeric($TotalMoney)||!is_numeric($CouponMoney)||!is_numeric($Volume)||!is_numeric($Amount)||empty($WaterBrand)){//对应的品牌不为空
             return false;
         }
         return true;
@@ -95,21 +97,22 @@ class OrderSuccess extends ActiveRecord
      * 同步厂商数据
      */
     public function getUpdateFactoryWcodeSql(){
+        $WaterBrand=$this->getAttribute("WaterBrand");//对应的品牌
         $Fid=$this->getAttribute("Fid");
         $Volume=$this->getAttribute("Volume");
         $OriAmount=intval($this->getAttribute("Amount"));
         $sql='';
-        $data=static::findBySql("select * from factory_wcode where Fid=$Fid and Volume=$Volume")->asArray()->one();
+        $data=static::findBySql("select * from factory_wcode where Fid=$Fid and Volume=$Volume and WaterBrand='$WaterBrand'")->asArray()->one();
         if(empty($data)){
             //插入
             $now=date("Y-m-d H:i:s");
-            $sql="insert into factory_wcode(Fid,Volume,Amount,RowTime,PrintAmount,LeftAmount,LastUpTime) VALUES($Fid,$Volume,$OriAmount,'$now',0,$OriAmount,'$now')";
+            $sql="insert into factory_wcode(Fid,Volume,Amount,RowTime,PrintAmount,LeftAmount,LastUpTime,WaterBrand) VALUES($Fid,$Volume,$OriAmount,'$now',0,$OriAmount,'$now','$WaterBrand')";//对应的品牌
 
         }else{
             $Amount=intval($data["Amount"])+$OriAmount;
             $LeftAmount=intval($data["LeftAmount"])+$OriAmount;
             //更新
-            $sql="update factory_wcode set Amount=$Amount , LeftAmount=$LeftAmount where  Fid=$Fid and Volume=$Volume";
+            $sql="update factory_wcode set Amount=$Amount , LeftAmount=$LeftAmount where  Fid=$Fid and Volume=$Volume and WaterBrand='$WaterBrand'";//对应的品牌
         }
         return $sql;
     }
@@ -117,6 +120,7 @@ class OrderSuccess extends ActiveRecord
      *  获取创建订单号查询语句
      */
     public function getCreateOrderSql(){
+        $WaterBrand=$this->getAttribute("WaterBrand");//对应的品牌
         $Fid=$this->getAttribute("Fid");
         $TotalMoney=$this->getAttribute("TotalMoney");
         $CouponMoney=$this->getAttribute("CouponMoney");
@@ -125,8 +129,8 @@ class OrderSuccess extends ActiveRecord
         $Amount=$this->getAttribute("Amount");
         $OrderNo=$this->getOrderNo();
         $now=date("Y-m-d H:i:s");
-        $sql="insert into orders_success(OrderNo,Fid,TotalMoney,CouponMoney,OrderMoney,Volume,Amount,RowTime,State)
-              VALUES ('$OrderNo',$Fid,$TotalMoney,$CouponMoney,$OrderMoney,$Volume,$Amount,'$now',1)";
+        $sql="insert into orders_success(OrderNo,Fid,TotalMoney,CouponMoney,OrderMoney,Volume,Amount,RowTime,State,WaterBrand)
+              VALUES ('$OrderNo',$Fid,$TotalMoney,$CouponMoney,$OrderMoney,$Volume,$Amount,'$now',1,'$WaterBrand')";//对应的品牌
         return $sql;
     }
     public function getOrderNo(){
@@ -142,6 +146,6 @@ class OrderSuccess extends ActiveRecord
         return self::findBySql("select * from orders_success where Fid=$pid");
     }
     public static function pageQuery($offset=0,$limit=10,$pid){
-        return self::findBySql("select * from orders_success where Fid=$pid limit $offset , $limit");
+        return self::findBySql("select * from orders_success where Fid=$pid order by RowTime DESC limit $offset , $limit");
     }
 }

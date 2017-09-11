@@ -32,8 +32,9 @@ class WaterBrand extends ActiveRecord
     public function scenarios()
     {
         return [
-            'default' => ['BrandNo', 'BrandName','Price'],
-            'create' => ['BrandNo', 'BrandName','Price'],
+            'default' => ['BrandNo', 'BrandName'],
+            'create' => ['BrandNo', 'BrandName'],
+            'add' => [ 'BrandName'],
         ];
     }
     /**
@@ -42,7 +43,8 @@ class WaterBrand extends ActiveRecord
     public function rules()
     {
         return [
-            [['BrandName','Price'], 'required'],
+            [['BrandName','BrandNo'], 'required'],
+            [['BrandName'], 'unique'],
         ];
     }
 

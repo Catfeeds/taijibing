@@ -16,23 +16,39 @@ use yii\widgets\LinkPager;
     </div>
         <table class="table table-hover" style="background:white;">
             <thead>
+            <th>编号</th>
             <th>条码</th>
             <th>设备编码</th>
-            <th>姓名</th>
-            <th>手机号</th>
-            <th>社区服务中心</th>
-            <th>县区运营中心</th>
-            <th>水厂</th>
             <th>设备厂家</th>
+            <th>县区运营中心</th>
+            <th>社区服务中心</th>
             <th>地址</th>
-            <th>操作时间</th>
+            <th>用户</th>
+            <th>手机号</th>
+<!--            <th>水厂</th>  <td>".$val["factoryName"]."</td>-->
+            <th>最近扫码时间</th>
+            <th>历史扫码</th>
             </thead>
             <tbody>
             <?php
             $str='';
+            $no=1;
             foreach($model as $key=>$val)
             {
-                $str.= "<tr><td>".$val["BarCode"]."</td><td>".$val["DevNo"]."</td><td>".$val["Name"]."</td><td>".$val["Tel"]."</td><td>".$val["agentname"]."</td><td>".$val["agentpname"]."</td><td>".$val["factoryName"]."</td><td>".$val["DevFactory"]."</td><td>".$val["Address"]."</td><td>".$val["RowTime"]."</td></tr>";
+                $str.= "<tr>
+                            <td>".$no."</td>
+                            <td>".$val["BarCode"]."</td>
+                            <td>".$val["DevNo"]."</td>
+                            <td>".$val["DevFactory"]."</td>
+                            <td>".$val["agentpname"]."</td>
+                            <td>".$val["agentname"]."</td>
+                            <td>".$val["Address"]."</td>
+                            <td>".$val["Name"]."</td>
+                            <td>".$val["Tel"]."</td>
+                            <td>".$val["RowTime"]."</td>
+                            <th><a href='./?r=saoma/detail&DevNo=".$val["DevNo"]."'>详情</a></th>
+                        </tr>";
+                $no++;
             }
             echo $str;
             ?>

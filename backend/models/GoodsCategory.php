@@ -18,7 +18,7 @@ class GoodsCategory extends ActiveRecord
         return 'goods_category';
     }
     public function query(){
-        return static::findBySql("select id,name from goods_category")->asArray()->all();
+        return static::findBySql("select category_id,Name from goods_category")->asArray()->all();
 
     }
     

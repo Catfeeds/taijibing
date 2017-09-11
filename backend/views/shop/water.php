@@ -14,6 +14,65 @@
     <link rel="stylesheet" href="./static/css/index.css">
 
     <style>
+
+        .aaa{
+            width: 70%;
+            -webkit-flex-shrink: 1;
+            -ms-flex: 0 1 auto;
+            /*-webkit-flex-shrink: 1;*/
+            flex-shrink: 1;
+            /*white-space: nowrap;*/
+            position: relative;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            font-size: .6rem;
+            color: #666;
+
+            /*display: -webkit-box;*/
+            /*-webkit-line-clamp:2;*/
+            /*-webkit-box-orient: vertical;*/
+            /*word-break:break-all;*/
+        }
+
+        .aaa .item-name {
+             /*overflow: hidden;*/
+             /*text-overflow:ellipsis;*/
+             white-space: nowrap;
+             font-size: .8rem;
+             color: #000;
+         }
+
+        .aaa .item-intro {
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp:2;
+            -webkit-box-orient: vertical;
+            word-break:break-all;
+        }
+
+        .list-block .aaa .item-money {
+            font-size: .8rem;
+            color: #fd3d21;
+        }
+
+        .list-block .aaa .item-money span {
+            font-size: .5rem;
+            color: #666;
+            text-decoration: line-through;
+        }
+
+        /*.list-block .aaa .label {*/
+            /*width: 35%;*/
+            /*-webkit-flex-shrink: 0;*/
+            /*-ms-flex: 0 0 auto;*/
+            /*-webkit-flex-shrink: 0;*/
+            /*flex-shrink: 0;*/
+            /*margin: 4px 0*/
+        /*}*/
+
+
+
             /*隐藏滚动条*/
         ::-webkit-scrollbar{width:0;height:0}
 
@@ -62,8 +121,8 @@
                 <li class="item-content">
                     <div class="item-media fl"><i class="icon icon-f7"><img src="./static/images/water13.jpg"></i></div>
                     <div class="item-inner fl">
-                        <div class="item-title">
-                            <a href="#" class="item-name">中伦</a>
+                        <div class="aaa">
+                            <a href="#" class="item-name">中伦中</a>
                             <p class="item-intro row_two">喝出自然味道的饮用水</p>
                             <p class="item-sell">已售：<span>50</span></p>
                             <p class="item-money">￥15 <span>￥16</span></p>
@@ -95,7 +154,6 @@
                         <div class="item-after" style="background-color: #f3652d; margin-right: .2rem;"><a href="javascript:void(0);" onclick="callphone()" style="color: #f2f0f0;">购买</a></div>
                     </div>
                 </li>
-
 
                 <li class="item-content">
                     <div class="item-media fl"><i class="icon icon-f7"><img src="./static/images/tea11.jpg"></i></div>

@@ -10,6 +10,8 @@ namespace backend\controllers;
 
 
 use backend\api\BaseApi;
+use backend\models\AgentInfo;
+use backend\models\Goods;
 use backend\models\GoodsCategory;
 use backend\models\GoodsMerchant;
 use yii\base\Exception;
@@ -18,16 +20,46 @@ use yii;
 
 class GoodsController extends BaseController
 {
-    public function actionList()
-    {
+//    public function actionList()
+//    {
+//
+//        $data = $this->getCategoryAndMerchant();
+//        return $this->renderPartial("list", [
+//            "category" => $data["cate"],
+//            "merchant" => $data["mer"],
+//            "preview" => "http://wx.ebopark.com/index.php/Home/Eshop/gooddetail_"
+//        ]);
+//    }
 
-        $data = $this->getCategoryAndMerchant();
-        return $this->renderPartial("list", [
-            "category" => $data["cate"],
-            "merchant" => $data["mer"],
-            "preview" => "http://wx.ebopark.com/index.php/Home/Eshop/gooddetail_"
-        ]);
+    private function getGoodsCategory()
+    {
+        $categoryarray = (new GoodsCategory())->query();
+//        $merchantarray = (new GoodsMerchant())->query();
+        $category = array();
+//        $merchant = array();
+        foreach ($categoryarray as $key => $value) {
+            $category[] = array("name" => $value["Name"], "category_id" => $value["category_id"]);
+        }
+//        foreach ($merchantarray as $key => $value) {
+//            $merchant[] = array("name" => $value["name"], "id" => $value["id"]);
+//        }
+
+        return $category;
+
     }
+
+
+
+
+    //获取所有店铺
+    public function actionList(){
+        //商品分类
+        $category=$this->getGoodsCategory();
+//        var_dump($category);exit;
+        $shops=ActiveRecord::findBySql("select agent_shop.*,agent_info.Name from agent_shop JOIN agent_info ON agent_shop.agent_id=agent_info.Id")->asArray()->all();
+        return $this->render('list2',['shops'=>$shops,'category'=>$category]);
+    }
+
 
     public function actionListNouse()
     {
@@ -71,15 +103,331 @@ class GoodsController extends BaseController
      */
     public function actionAddgood()
     {
-        $data = $this->getPageDataWhenAddOrUpdate();
+//        $data = $this->getPageDataWhenAddOrUpdate();
 
-        return $this->renderPartial("create", [
-            "category" => $data["category"],
-            "merchant" => $data["merchant"],
-            "sms" => $data["sms"]
+        //获取运营中心和服务中心数据
+        $data=$this->getAgents();
+        return $this->renderPartial("create2", [
+            "agent1" => $data["agent1"],
+            "agent2" => $data["agent2"],
 
         ]);
     }
+
+//获取运营中心和服务中心数据
+    private function getAgents()
+    {
+        //运营中心
+        $agentarray1 = ActiveRecord::findBySql("select Id,Name from agent_info where Level=4")->asArray()->all();
+        //服务中心
+        $agentarray2 = ActiveRecord::findBySql("select Id,Name from agent_info where Level=5")->asArray()->all();
+        $agent1 = array();
+        $agent2 = array();
+        foreach ($agentarray1 as $key => $value) {
+            $agent1[] = array("name" => $value["Name"], "id" => $value["Id"]);
+        }
+        foreach ($agentarray2 as $key => $value) {
+            $agent2[] = array("name" => $value["Name"], "id" => $value["Id"]);
+        }
+        return ["agent1" => $agent1, "agent2" => $agent2];
+    }
+
+
+    //ajax获取对应的服务中心
+    public function actionGetAgent($agent_id){
+        $agent=AgentInfo::findAll(['ParentId'=>$agent_id]);
+        return $agent;
+    }
+
+    //ajax获取商品分类数据
+    public function actionGetCategory(){
+        $data=ActiveRecord::findBySql("select * from goods_category")->asArray()->all();
+        return $data;
+    }
+
+    //ajax获取商品数据
+    public function actionGetGoods($category_id){
+        $data=ActiveRecord::findBySql("select DISTINCT name from goods where category_id=$category_id")->asArray()->all();
+        return $data;
+    }
+
+    //ajax获取商品品牌数据
+    public function actionGetBrand($goodsname,$category_id){
+        //获取品牌id
+        $brand_ids=ActiveRecord::findBySql("select DISTINCT brand_id from goods where category_id=$category_id and name='{$goodsname}'")->asArray()->all();
+        $data=[];
+        if($category_id==1){//查询袋装水品牌
+            foreach($brand_ids as $v){
+                $brand=ActiveRecord::findBySql("select BrandNo,BrandName from water_brand where BrandNo='{$v['brand_id']}'")->asArray()->one();
+                $data[]=$brand;
+
+            }
+        }
+
+        if($category_id==2){//查询茶吧机品牌
+            foreach($brand_ids as $v){
+                $brand=ActiveRecord::findBySql("select BrandNo,BrandName from tea_brand where BrandNo='{$v['brand_id']}'")->asArray()->one();
+                $data[]=$brand;
+
+            }
+        }
+
+//var_dump($data);exit;
+
+        return $data;
+
+    }
+
+    //ajax获取对应水厂数据
+    public function actionGetFactory($goodsname,$category_id,$brand_id){
+        $factory_ids=ActiveRecord::findBySql("select DISTINCT factory_id from goods where category_id=$category_id and `name`='{$goodsname}' and brand_id='{$brand_id}'")->asArray()->all();
+       $data=[];
+
+
+        if($category_id==1){//查询对应水厂
+            foreach($factory_ids as $v){
+                $factory=ActiveRecord::findBySql("select Id,Name from factory_info where Id='{$v['factory_id']}'")->asArray()->one();
+                $data[]=$factory;
+            }
+        }
+
+        if($category_id==2){//查询对应设备厂家
+            foreach($factory_ids as $v){
+                $dev_factory=ActiveRecord::findBySql("select Id,Name from dev_factory where Id='{$v['factory_id']}'")->asArray()->one();
+                $data[]=$dev_factory;
+
+            }
+        }
+
+
+
+
+        return $data;
+    }
+
+
+
+    //获取修改数据
+    public function actionEdit($agent_id){
+        if(empty($agent_id)){
+            Yii::$app->getSession()->setFlash('error', "参数错误");
+            $this->goBack();
+            exit();
+        }
+
+
+
+        //获取店铺数据
+        $shop=ActiveRecord::findBySql("select * from agent_shop where agent_id=$agent_id ")->asArray()->all();
+
+        //获取商品数据
+        $agent_goods=ActiveRecord::findBySql("select * from agent_goods where agent_id=$agent_id")->asArray()->all();
+//        var_dump($agent_goods);exit;
+        $goods=[];
+        foreach($agent_goods as $agent_good){
+//            var_dump($agent_good['goods_id']);exit;
+            $good=ActiveRecord::findBySql("select name,category_id,brand_id,factory_id from goods where id={$agent_good['goods_id']}")->asArray()->one();
+//            var_dump($good['category_id']);exit;
+            $goods[]=[
+                'goodscategory'=>$good['category_id'],
+                'goodsname'=>$good['name'],
+                'goodsbrand'=>$good['brand_id'],
+                'goodsfactory'=>$good['factory_id'],
+                'realPrice'=>$agent_good['realprice'],
+                'originalPrice'=>$agent_good['originalprice'],
+            ];
+        }
+//        var_dump($goods);exit;
+        //账户名称(判断是运营中心还是服务中心)
+        $parent_id=ActiveRecord::findBySql("select ParentId from agent_info where Id=$agent_id")->asArray()->one()['ParentId'];
+        $agent=['parent'=>$parent_id,'agent'=>$agent_id];
+//        var_dump($agent);exit;
+
+        //获取运营中心和服务中心数据
+        $datas=$this->getAgents();
+
+        return $this->render('edit',['shop'=>$shop,
+                            "data" => $goods,
+                            'agent'=>$agent,
+                            "agent1" => $datas["agent1"],
+                            "agent2" => $datas["agent2"],
+
+                        ]);
+
+
+
+    }
+
+
+    //修改保存
+    public function actionSaveEdit(){
+
+        $agent1_id = urldecode($this->getParam("agent1"));//运营中心id
+        $agent2_id = urldecode($this->getParam("agent2"));//服务中心id
+        $name = urldecode($this->getParam("name"));//商户店铺名称
+        $detail = urldecode($this->getParam("detail"));//商户简介
+//        $subgoodtypes = urldecode($this->getParam("subgoodtypes"));//商品数据
+        $image1 = urldecode($this->getParam("image1"));//图片1
+        $image2 = urldecode($this->getParam("image2"));//图片2
+        $image3 = urldecode($this->getParam("image3"));//图片3
+        $image4 = urldecode($this->getParam("image4"));//图片4
+        $image5 = urldecode($this->getParam("image5"));//图片5
+        $image6 = urldecode($this->getParam("image6"));//图片6
+        $starttime = urldecode($this->getParam("starttime"));//开始时间
+        $id = urldecode($this->getParam("id"));//商户id
+        $open_time='';//开店时间
+        $close_time='';//关店时间
+
+//        var_dump($starttime);exit;
+
+        if (!$starttime) {
+            $starttime = date('Y-m-d H:i:s',time());
+        }
+        $endtime = urldecode($this->getParam("endtime"));//结束时间
+        if (!$endtime) {
+            $endtime = "2099-1-1";
+        }
+        $subgoodtypes = urldecode($this->getParam("subgoodtypes"));//商品数据
+
+//        var_dump(json_decode($subgoodtypes)[0]->goodsname);exit;
+
+
+
+
+        //判断商户店铺名称，或商户ID号是否重复
+//        $res = ActiveRecord::findBySql("select * from agent_shop where `shop_id`='$id' or `shop_name`='$name'")->asArray()->all();
+//        if ($res) {
+//            foreach ($res as $key => $value) {
+//                $_id = $value["shop_id"];
+//                $_name = $value["shop_name"];
+//                if ($_id == $id) {
+//                    $data["state"] = -1;
+//                    $data["msg"] = "商户ID号重复！";
+//                    $this->jsonReturn($data);
+//                    return;
+//                }
+//                if ($_name == $name) {
+//                    $data["state"] = -1;
+//                    $data["msg"] = "商户店铺名称重复！";
+//                    $this->jsonReturn($data);
+//                    return;
+//                }
+//            }
+//        }
+//            $user = Yii::$app->getUser()->getId();
+
+        $agent_id=empty($agent2_id)?$agent1_id:$agent2_id;//判断是运营中心还是服务中心
+
+//            var_dump($agent_id);exit;
+        //保存商户店铺信息
+//        $sql = "insert into agent_shop (`agent_id`,shop_name,shop_id,`open_time`,`close_time`,image1,image2,image3,image4,image5,image6,shop_detail)
+//                                         values('$agent_id','$name','$id','$open_time','$close_time','$image1','$image2','$image3','$image4','$image5','$image6','$detail')";
+        $sql="update agent_shop set shop_name='$name',shop_id='$id',`open_time`='$open_time',
+            `close_time`= '$close_time',image1='$image1',image2='$image2',
+            image3='$image3',image4='$image4',image5='$image5',image6='$image6',
+            shop_detail='$detail' where agent_id=$agent_id";
+
+        //开启事务
+        $transaction = Yii::$app->db->beginTransaction();
+        try{
+
+            $r = yii::$app->getDb()->createCommand($sql)->execute();
+            if (!$r) {
+                throw new yii\db\Exception('失败');
+            }
+//                yii::$app->getDb()->createCommand("insert into goods_info_img(`GoodsId`,`Type`,`Order`,`Url`) values('$id','1','1','$lb')")->execute();//列表图
+//                yii::$app->getDb()->createCommand("insert into goods_info_img(`GoodsId`,`Type`,`Order`,`Url`) values('$id','2','2','$xj')")->execute();//细节图
+//                yii::$app->getDb()->createCommand("insert into goods_info_img(`GoodsId`,`Type`,`Order`,`Url`) values('$id','3','3','$spxq')")->execute();
+//                yii::$app->getDb()->createCommand("insert into goods_info_img(`GoodsId`,`Type`,`Order`,`Url`) values('$id','4','4','$cpts')")->execute();
+
+            //将该代理商原来的商品删除
+            $sql="delete from agent_goods where agent_id=$agent_id";
+            $r = yii::$app->getDb()->createCommand($sql)->execute();
+//            var_dump($r);exit;
+            if (!$r) {
+                throw new yii\db\Exception('失败2');
+            }
+
+            //保存商品信息保存得到对应的代理商
+            $GoodsTypeArr = json_decode($subgoodtypes);
+//        var_dump($GoodsTypeArr);exit;
+            for ($index = 0; $index < count($GoodsTypeArr); $index++) {
+                $item = $GoodsTypeArr[$index];
+                //获取对应的商品id
+//                    $goods_id=Goods::find()->where(['category_id'=>$item->goodscategory])->andWhere(['name'=>$item->goodsname])->andWhere(['brand_id'=>$item->goodsbrand])->andWhere(['factory_id'=>$item->goodsfactory])->one()->id;
+                $sql="select id from goods where `category_id`=$item->goodscategory and `name`='{$item->goodsname}' and `brand_id`='{$item->goodsbrand}' and `factory_id`='{$item->goodsfactory}'";
+                $goods_id=ActiveRecord::findBySql($sql)->asArray()->one()['id'];
+//                    var_dump($goods_id);exit;
+                //添加到agent_goods表
+                $res= yii::$app->getDb()->createCommand("insert into agent_goods(`agent_id`,`goods_id`,`realprice`,`originalprice`,`goods_starttime`,`goods_endtime`) values($agent_id,$goods_id,$item->realPrice,$item->originalPrice,'{$starttime}','{$endtime}')")->execute();
+                if(!$res){
+                    throw new yii\db\Exception('失败3');
+                }
+
+            }
+
+            $transaction->commit();
+
+            $data["state"] = 0;
+            $data["id"] = $r;
+            $this->jsonReturn($data);
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            $data["state"] = -1;
+            $data["msg"] = $e->getMessage();
+            $this->jsonReturn($data);
+        }
+
+    }
+
+    //删除店铺
+    public function actionDelShop($agent_id){
+        //开启事务
+        $transaction = Yii::$app->db->beginTransaction();
+        try{
+        //将该代理商的商品删除
+        $sql="delete from agent_goods where agent_id=$agent_id";
+        $r = yii::$app->getDb()->createCommand($sql)->execute();
+            if (!$r) {
+                throw new yii\db\Exception('失败1');
+            }
+        //将该代理商门店删除
+        $sql="delete from agent_shop where agent_id=$agent_id";
+        $r = yii::$app->getDb()->createCommand($sql)->execute();
+            if (!$r) {
+                throw new yii\db\Exception('失败2');
+            }
+
+            $transaction->commit();
+
+            $data["state"] = 0;
+            $data["id"] = $r;
+            $this->jsonReturn($data);
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            $data["state"] = -1;
+            $data["msg"] = $e->getMessage();
+            $this->jsonReturn($data);
+        }
+
+    }
+
+    //获取对应门店的商品列表
+//   public function actionGetShopgoods($agent_id){
+//
+//       $data=ActiveRecord::findBySql("select * from agent_goods where agent_id=$agent_id")->asArray()->all();
+//       foreach($data as $v){
+//           $goods=ActiveRecord::findBySql("select * from goods where id={$v['goods_id']}")->asArray()->all();
+//       }
+//
+//   }
+
+
+
+
+
+
+
 
     private function getPageDataWhenAddOrUpdate()
     {
@@ -429,86 +777,114 @@ class GoodsController extends BaseController
 
     public function actionSavegood()
     {
-        //添加商家id，便于获取某商家的商品
-//        $sellerid=Yii::$app->user->identity->getId();
 
 
-        $id = urldecode($this->getParam("id"));//商品id
-        $merchantid = urldecode($this->getParam("merchantid"));//商户id
-        $categoryid = urldecode($this->getParam("categoryid"));//商品分类id
-        $logictype = urldecode($this->getParam("logictype"));//类型
-        $name = urldecode($this->getParam("name"));//商品名称
-        $title = urldecode($this->getParam("title"));//标题
-        $expresstype = urldecode($this->getParam("expresstype"));
-        $initamount = urldecode($this->getParam("initamount"));//初始数量
-        $originalprice = urldecode($this->getParam("originalprice"));//原价
-        $saleprice = urldecode($this->getParam("saleprice"));//售价
-        $shophours = urldecode($this->getParam("shophours"));//营业时间
-        $tel = urldecode($this->getParam("tel"));//电话
-        $lat = urldecode($this->getParam("lat"));//维度
-        $lng = urldecode($this->getParam("lng"));//经度
-        $address = urldecode($this->getParam("address"));//地址
-        $tips = urldecode($this->getParam("tips"));//小喇叭
-        $orderdesctemp = urldecode($this->getParam("orderdesctemp"));
+        $agent1_id = urldecode($this->getParam("agent1"));//运营中心id
+        $agent2_id = urldecode($this->getParam("agent2"));//服务中心id
+        $name = urldecode($this->getParam("name"));//商户店铺名称
+        $detail = urldecode($this->getParam("detail"));//商户简介
+//        $subgoodtypes = urldecode($this->getParam("subgoodtypes"));//商品数据
+        $image1 = urldecode($this->getParam("image1"));//图片1
+        $image2 = urldecode($this->getParam("image2"));//图片2
+        $image3 = urldecode($this->getParam("image3"));//图片3
+        $image4 = urldecode($this->getParam("image4"));//图片4
+        $image5 = urldecode($this->getParam("image5"));//图片5
+        $image6 = urldecode($this->getParam("image6"));//图片6
         $starttime = urldecode($this->getParam("starttime"));//开始时间
+        $id = urldecode($this->getParam("id"));//商户id
+        $open_time=urldecode($this->getParam("opentime"));//开店时间
+        $close_time=urldecode($this->getParam("closetime"));//关店时间
+
+        if (!$open_time) {
+            $open_time = date('Y-m-d H:i:s',time());
+        }
+        if (!$close_time) {
+            $close_time = "2099-1-1";
+        }
+
+
 
 //        var_dump($starttime);exit;
 
         if (!$starttime) {
-            $starttime = "2099-1-1";
-        }
+        $starttime = date('Y-m-d H:i:s',time());
+    }
         $endtime = urldecode($this->getParam("endtime"));//结束时间
         if (!$endtime) {
             $endtime = "2099-1-1";
         }
-        $memberdiscounttype = urldecode($this->getParam("memberdiscounttype"));
-        $memberdiscountval = $memberdiscounttype == "0" ? 0 : urldecode($this->getParam("memberdiscountval"));
-        $existsdetail = urldecode($this->getParam("existsdetail"));
-        $lb = urldecode($this->getParam("lb"));//列表图
-        $xj = urldecode($this->getParam("xj"));//细节图
-        $spxq = urldecode($this->getParam("spxq"));//详情图
-        $cpts = urldecode($this->getParam("cpts"));//特色图
-        $subgoodtypes = urldecode($this->getParam("subgoodtypes"));//商品型号good_sub_type_c
-        try {
-            $res = ActiveRecord::findBySql("select * from goods_info_base where `id`='$id' or `name`='$name'")->asArray()->all();
+        $subgoodtypes = urldecode($this->getParam("subgoodtypes"));//商品数据
+
+//        var_dump(json_decode($subgoodtypes)[0]->goodsname);exit;
+
+
+
+
+            //判断商户店铺名称，或商户ID号是否重复
+            $res = ActiveRecord::findBySql("select * from agent_shop where `shop_id`='$id' or `shop_name`='$name'")->asArray()->all();
             if ($res) {
                 foreach ($res as $key => $value) {
-                    $_id = $value["Id"];
-                    $_name = $value["Name"];
+                    $_id = $value["id"];
+                    $_name = $value["shop_name"];
                     if ($_id == $id) {
                         $data["state"] = -1;
-                        $data["msg"] = "商品ID号重复！";
+                        $data["msg"] = "商户ID号重复！";
                         $this->jsonReturn($data);
                         return;
                     }
                     if ($_name == $name) {
                         $data["state"] = -1;
-                        $data["msg"] = "商品名称重复！";
+                        $data["msg"] = "商户店铺名称重复！";
                         $this->jsonReturn($data);
                         return;
                     }
                 }
             }
-            $user = Yii::$app->getUser()->getId();
-            $sql = "insert into goods_info_base(`id`,MerchantId,CategoryId,LogicType,`name`,`title`,ExpressType,InitAmount,OriginalPrice,SalePrice,ShopHours,Tel,Lat,lng,Address,Tips,RowTime,LastOpUser,LastOpTime,OrderDescTemp,StartTime,EndTime,MemberDiscountType,MemberDiscountVal,ExistsDetail,Total)
-                                         values('$id','$merchantid','$categoryid','$logictype','$name','$title','$expresstype','$initamount','$originalprice','$saleprice','$shophours','$tel','$lat','$lng','$address','$tips',now(),'$user',now(),'$orderdesctemp','$starttime','$endtime','$memberdiscounttype','$memberdiscountval','$existsdetail',0)";
+//            $user = Yii::$app->getUser()->getId();
+
+            $agent_id=empty($agent2_id)?$agent1_id:$agent2_id;//判断是运营中心还是服务中心
+
+//            var_dump($agent_id);exit;
+            //保存商户店铺信息
+            $sql = "insert into agent_shop (`agent_id`,shop_name,shop_id,`open_time`,`close_time`,image1,image2,image3,image4,image5,image6,shop_detail)
+                                         values('$agent_id','$name','$id','$open_time','$close_time','$image1','$image2','$image3','$image4','$image5','$image6','$detail')";
+            //开启事务
+            $transaction = Yii::$app->db->beginTransaction();
+    try{
+
             $r = yii::$app->getDb()->createCommand($sql)->execute();
-            if ($r) {
-                yii::$app->getDb()->createCommand("insert into goods_info_img(`GoodsId`,`Type`,`Order`,`Url`) values('$id','1','1','$lb')")->execute();//列表图
-                yii::$app->getDb()->createCommand("insert into goods_info_img(`GoodsId`,`Type`,`Order`,`Url`) values('$id','2','2','$xj')")->execute();//细节图
+            if (!$r) {
+                throw new yii\db\Exception('失败');
+            }
+//                yii::$app->getDb()->createCommand("insert into goods_info_img(`GoodsId`,`Type`,`Order`,`Url`) values('$id','1','1','$lb')")->execute();//列表图
+//                yii::$app->getDb()->createCommand("insert into goods_info_img(`GoodsId`,`Type`,`Order`,`Url`) values('$id','2','2','$xj')")->execute();//细节图
 //                yii::$app->getDb()->createCommand("insert into goods_info_img(`GoodsId`,`Type`,`Order`,`Url`) values('$id','3','3','$spxq')")->execute();
 //                yii::$app->getDb()->createCommand("insert into goods_info_img(`GoodsId`,`Type`,`Order`,`Url`) values('$id','4','4','$cpts')")->execute();
-                //保存商品型号
+                //保存商品信息保存得到对应的代理商
                 $GoodsTypeArr = json_decode($subgoodtypes);
+//        var_dump($GoodsTypeArr);exit;
                 for ($index = 0; $index < count($GoodsTypeArr); $index++) {
                     $item = $GoodsTypeArr[$index];
-                    yii::$app->getDb()->createCommand("insert into goods_info_item(`GoodsId`,`Name`,`Total`,`CostPrice`) values('$id','$item->typename','0','$item->realPrice')")->execute();
+                    //获取对应的商品id
+//                    $goods_id=Goods::find()->where(['category_id'=>$item->goodscategory])->andWhere(['name'=>$item->goodsname])->andWhere(['brand_id'=>$item->goodsbrand])->andWhere(['factory_id'=>$item->goodsfactory])->one()->id;
+                    $sql="select id from goods where `category_id`=$item->goodscategory and `name`='{$item->goodsname}' and `brand_id`='{$item->goodsbrand}' and `factory_id`='{$item->goodsfactory}'";
+                    $goods_id=ActiveRecord::findBySql($sql)->asArray()->one()['id'];
+//                    var_dump($goods_id);exit;
+                    //添加到agent_goods表
+                   $res= yii::$app->getDb()->createCommand("insert into agent_goods(`agent_id`,`goods_id`,`realprice`,`originalprice`,`goods_starttime`,`goods_endtime`) values($agent_id,$goods_id,$item->realPrice,$item->originalPrice,'{$starttime}','{$endtime}')")->execute();
+                    if(!$res){
+                        throw new yii\db\Exception('失败2');
+                    }
+
                 }
-            }
-            $data["state"] = ($r ? 0 : -1);
+
+        $transaction->commit();
+
+            $data["state"] = 0;
             $data["id"] = $r;
             $this->jsonReturn($data);
         } catch (Exception $e) {
+        $transaction->rollBack();
             $data["state"] = -1;
             $data["msg"] = $e->getMessage();
             $this->jsonReturn($data);
@@ -740,13 +1116,13 @@ class GoodsController extends BaseController
                 }
                 if($_id==$id) {
                     $data["state"]=-1;
-                    $data["msg"]="频道ID重复！";
+                    $data["msg"]="分类ID重复！";
                     $this->ajaxReturn($data);
                     return;
                 }
                 if($_name==$name) {
                     $data["state"]=-1;
-                    $data["msg"]="频道名称重复！";
+                    $data["msg"]="分类名称重复！";
                     $this->ajaxReturn($data);
                     return;
                 }
@@ -765,4 +1141,35 @@ class GoodsController extends BaseController
     public function actionMark(){
         return $this->renderPartial("mark");
     }
+
+
+    //获取所有商品
+    //ajax获取所有商品数据
+    public function actionGetAllGoods(){
+        $data=ActiveRecord::findBySql("select DISTINCT name from goods ")->asArray()->all();
+        return $data;
+    }
+
+    //ajax获取商品品牌数据
+    public function actionGetAllBrand(){
+
+                $brand=ActiveRecord::findBySql("select BrandNo,BrandName from water_brand UNION select BrandNo,BrandName from tea_brand  ")->asArray()->all();
+
+//var_dump($brand);exit;
+
+        return $brand;
+
+    }
+
+    //ajax获取对应水厂数据
+    public function actionGetAllFactory(){
+        $factory=ActiveRecord::findBySql("select Id, Name from factory_info UNION SELECT Id, Name from dev_factory")->asArray()->all();
+
+
+
+        return $factory;
+    }
+
+
+
 }

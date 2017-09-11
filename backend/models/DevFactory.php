@@ -18,12 +18,22 @@ class DevFactory extends ActiveRecord
     {
         return 'dev_factory';
     }
-    public  function insertBaseInfo($loginName='',$pwd=''){
+    public  function insertBaseInfo($Admin_User_Id,$loginName='',$Name,$Address,$ContractTel,
+         $ContractUser,$Province,$City,$Area,$BaiDuLng,$BaiDuLat,$pwd=''){
+        $this->setAttribute("Admin_User_Id",$Admin_User_Id);
         $this->setAttribute("LoginName",$loginName);
+        $this->setAttribute("Address",$Address);
+        $this->setAttribute("ContractTel",$ContractTel);
+        $this->setAttribute("ContractUser",$ContractUser);
+        $this->setAttribute("Province",$Province);
+        $this->setAttribute("City",$City);
+        $this->setAttribute("Area",$Area);
+        $this->setAttribute("BaiDuLng",$BaiDuLng);
+        $this->setAttribute("BaiDuLat",$BaiDuLat);
         $this->setAttribute("LoginPwd",md5($pwd));
-        $this->setAttribute("Name",$loginName);
+        $this->setAttribute("Name",$Name);
         $this->setAttribute("RowTime",date("Y-m-d H:i:s"));
-        $this->save(false);
+        return $this->save(false);
     }
     public function attributeLabels()
     {

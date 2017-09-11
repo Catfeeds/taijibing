@@ -40,6 +40,28 @@ class DevManagerController extends BaseController
         $pages = new Pagination(['totalCount' => $datas->count(), 'pageSize' => 10]);
         $querys =DevRegist::pageQuery($pages->offset,$pages->limit,$devno,$xname,$sname,$mobile,$devf,$tel,$province,$city,$area);
         $model =$this->listWrapData($querys->asArray()->all());
+        //获取机型、用户明
+//        var_dump($model);exit;
+        foreach($model as &$v){
+            $data=DevFactory::findOne(['Name'=>$v['DevFactory']]);
+            if($data){
+                $v['Type']=$data->Type;
+            }else{
+                $v['Type']='';
+            }
+            $data2=CustomSearch::findOne(['Tel'=>$v['Tel']]);
+
+            if($data2){
+                $v['UserName']=$data2->Name;
+            }else{
+                $v['UserName']='';
+            }
+
+//            var_dump($v['UserName']);exit;
+        }
+
+
+//        var_dump($model);exit;
         $waterFlist=FactoryInfo::find()->asArray()->all();
         $address=(new Address())->allQuery()->asArray()->all();
         return $this->render('list', [
@@ -114,6 +136,19 @@ class DevManagerController extends BaseController
         $querys =DevRegist::dynamicPageQuery($tel,$pages->offset,$pages->limit,$devno,$province,$city,$area);
         $areas=Address::allQuery()->asArray()->all();
         $model = $querys->asArray()->all();
+        //获取用户名
+        foreach($model as &$v){
+            $data=CustomSearch::findOne(['Id'=>$v['UserId']]);
+            if($data){
+                $v['UserName']=$data->Name;
+            }else{
+                $v['UserName']='';
+            }
+        }
+
+
+//        var_dump($model);exit;
+
         return $this->render('dynamic', [
             'model' => $model,
             'areas' =>$areas,
@@ -306,6 +341,24 @@ class DevManagerController extends BaseController
             array_push($oriArr,$val);
         }
         return $oriArr;
+    }
+
+
+    //详情
+    public function actionDetail($DevNo){
+        if(!$DevNo) return $this->render('/error/error', [
+            'code' => '403',
+            'name' => 'Params required',
+            'message' => yii::t('app', "DevNo doesn't exit"),
+        ]);
+        //获取该设备的所有操作记录
+        $datas=yii\db\ActiveRecord::findBySql("select * from dev_action_log where DevNo=$DevNo");
+        $pages = new Pagination(['totalCount' => $datas->count(), 'defaultPageSize' => 10]);
+        $model=$datas->asArray()->all();
+
+        return $this->render('detail',['model'=>$model,'pages'=>$pages]);
+
+
     }
 
 

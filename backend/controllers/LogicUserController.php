@@ -8,6 +8,8 @@
 namespace backend\controllers;
 
 use backend\models\Address;
+use backend\models\AdminRoles;
+use backend\models\AdminRoleUser;
 use backend\models\AgentInfo;
 use backend\models\DevFactory;
 use backend\models\FactoryInfo;
@@ -55,6 +57,7 @@ class LogicUserController extends BaseController
             'pages' => $pages,
         ]);
     }
+    //县区运营中心
     public function actionAgentxlist(){
         $username=$this->getParam("username");
         $mobile=$this->getParam("mobile");
@@ -79,6 +82,8 @@ class LogicUserController extends BaseController
             'area'=>empty($area)?"":$area,
         ]);
     }
+
+    //社区服务中心
     public function actionAgentslist(){
         $username=$this->getParam("username");
         $mobile=$this->getParam("mobile");
@@ -90,8 +95,20 @@ class LogicUserController extends BaseController
         $pages = new Pagination(['totalCount' => $datas->count(), 'pageSize' => 10]);
         $model = $datas->offset($pages->offset)->limit($pages->limit)->asArray()->all();
         $address=(new Address())->allQuery()->asArray()->all();
+        //根据登陆者的信息，获取登陆者的角色
+        $login_id=Yii::$app->user->id;
+        //获取角色id
+        $role_id=AdminRoleUser::findOne(['uid'=>$login_id])->role_id;
+        //获取角色
+        $role=AdminRoles::findOne(['id'=>$role_id])->role_name;
+
+//        var_dump($role);exit;
+
+
+
         //县级代理
-        return $this->render('agentList', [
+        return $this->render('agentList2', [
+            'role' => $role,
             'model' => $model,
             'pages' => $pages,
             'level'=>$level,
@@ -113,7 +130,30 @@ class LogicUserController extends BaseController
         $pages = new Pagination(['totalCount' => $datas->count(), 'pageSize' => 10]);
         $model = $datas->offset($pages->offset)->limit($pages->limit)->asArray()->all();
         $address=(new Address())->allQuery()->asArray()->all();
+//var_dump($model);exit;
+        //获取每个水厂剩余条码数最少的品牌
+        $least=yii\db\ActiveRecord::findBySql('select * from (select * from factory_wcode ORDER BY LeftAmount ASC ) as tamp GROUP BY Fid ')->asArray()->all();
+        $BrandName=[];
+        $LeftAmount=[];
+        foreach($least as $v){
+
+            if($v['WaterBrand']){
+//                var_dump($v['Fid']);exit;
+                //根据WaterBrand获取品牌名称
+                $data=yii\db\ActiveRecord::findBySql("select BrandName from water_brand where BrandNo='{$v['WaterBrand']}'")->asArray()->all();
+//                var_dump($data[0]['BrandName']);exit;
+//                $brandname[$v['Fid']]=$data[0]['BrandName'];
+//                $least[$v['Fid']]=$v['LeftAmount'];
+                $BrandName[$v['Fid']]=$data[0]['BrandName'];
+                $LeftAmount[$v['Fid']]=$v['LeftAmount'];
+
+            }
+        }
+//        var_dump($BrandName);exit;
+
         return $this->render('factoryList', [
+            'BrandName'=>$BrandName,
+            'LeftAmount'=>$LeftAmount,
             'model' => $model,
             'pages' => $pages,
             'address'=>$address,
@@ -124,6 +164,11 @@ class LogicUserController extends BaseController
             'area'=>empty($area)?"":$area,
 
         ]);
+    }
+
+    //服务中心操作详情
+    public function actionActiveLog(){
+
     }
 
 

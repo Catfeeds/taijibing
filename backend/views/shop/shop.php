@@ -86,6 +86,20 @@
         width: 100%;
         margin-top: 0;
     }
+
+.address{
+    width:70%;
+    /*border:1px solid #ccc;*/
+    overflow : hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient: vertical;
+    word-break:break-all;
+}
+
+
+
     /*.site #select  select{*/
         /*height: 30px;*/
         /*width: 28%;*/
@@ -115,7 +129,7 @@
 
 <header class="site" >
     <div id="search"><input type="text" placeholder="未定位" id="address" /><input type="text" placeholder="输入商家名称" id="search_content"/><input id="search_btn"  type="button" value="搜索" /></div>
-    <div id="select"><select class="xiala" id="address-province"><option>请选择省</option></select><select class="xiala" id="address-city"><option>请选择市</option></select><select class="xiala" id="address-county"><option>请选择区</option></select><div>
+    <div id="select"><select class="xiala" id="address-province"><option>请选择省</option></select><select class="xiala" id="address-city"><option>请选择市</option></select><select class="xiala" id="address-county"><option>请选择县</option></select><div>
 </header>
 
 <div class="content shop-content" style="margin-top: 30px;">
@@ -126,6 +140,7 @@
         <ul id="changyong" style="display: none">
             <!--常用门店信息-->
         </ul>
+
 
         <p class="shop-title" style="border-bottom:solid #e6e6e6 1px">离我最近</p>
         <ul id="list">
@@ -141,6 +156,10 @@
 <script type='text/javascript' src='./static/js/sm-extend.min.js' charset='utf-8'></script>
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=FCBpETlN4Snp2SfEl92y89WF"></script>
 <script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script>
+
+<!--引用百度地图API-->
+<!--<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.1&services=true"></script>-->
+
 <!--/*地址数据*/-->
 <!--<script type='text/javascript' src='./static/js/address.js' charset='utf-8'></script>-->
 
@@ -276,6 +295,9 @@ $(function(){
             //将地址写入搜索框
             $('#address').val(province);
 
+            //将市的内容先清空
+            $("#address-city").html('');
+
             //console.log(province);
             //获取当前省对应的市 数据
             $.get('index.php?r=shop/get-city',{'id':province_value},function(data){
@@ -288,17 +310,6 @@ $(function(){
                 $("#address-county").html('<option value="">请选择县</option>');
             });
 
-//            $(address).each(function(){
-//                if(this.name == province){
-//                    var option = '<option value="">请选择市</option>';
-//                    $(this.city).each(function(){
-//                        option += '<option value="'+this.name+'">'+this.name+'</option>';
-//                    });
-//                    $("#address-city").html(option);
-//                }
-//            });
-//            //将县的下拉框数据清空
-//            $("#address-county").html('<option value="">请选择县</option>');
         }
 
         if(province == '请选择省'){
@@ -326,13 +337,13 @@ $(function(){
             $("#address-county").html('<option value="">请选择县</option>');
         }else{
             //将地址写入搜索框
-//            var province=$("#address-province  option:selected").text();
-
             //判断省和市是否相对
 
             if(province != city && city!='请选择市'){
                 var province_city=province + city;
                 $('#address').val(province_city);
+                //将县的内容先清空
+                $("#address-county").html('');
 
                 //获取当前市对应的区县 数据
                 $.get('index.php?r=shop/get-county',{'id':city_value},function(data){
@@ -347,32 +358,10 @@ $(function(){
 
         }
 
-
-
-
-
-
-
-
-//        $(address).each(function(){
-//            if(this.name == $("#address-province").val()){
-//                $(this.city).each(function(){
-//                    if(this.name == city){
-//                        //遍历到当前选中的城市了
-//                        var option = '<option value="">请选择县</option>';
-//                        $(this.area).each(function(i,v){
-//
-//                            option += '<option value="'+v+'">'+v+'</option>';
-//                        });
-//                        $("#address-county").html(option);
-//                    }
-//                });
-//            }
-//        });
     });
 
     $('#address-county').change(function(){
-        var county = $(this).val();//当前选中的县（区）
+        var county = $("#address-county  option:selected").text();//当前选中的县（区）
         //将地址写入搜索框
         var province=$("#address-province  option:selected").text();
         var city=$('#address-city  option:selected').text();
@@ -380,6 +369,7 @@ $(function(){
         if(county != city && province != city){
             var province_city_county=province + city + county;
             $('#address').val(province_city_county);
+
         }
 
         if(province == city && county != city){
@@ -399,6 +389,10 @@ $(function(){
 
 //-------------------------------------
 
+
+
+
+
     //弹框提示开启GPS
     loadpopup();
 
@@ -406,11 +400,15 @@ $(function(){
     var address = $('#address').val();
     if(address=='') {
 
+
         //获取所在位置的坐标 并将位置信息显示在地址框
         var geolocation = new BMap.Geolocation();
 
         geolocation.getCurrentPosition(function (r) {
             if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+
+//                translate(r.point) ;
+
                var lng = r.point.lng;
                var lat = r.point.lat;
 
@@ -434,7 +432,15 @@ $(function(){
 //                    map.addOverlay(new BMap.Marker(point)) ;
 
                             var addComp = rs.addressComponents;
-                            $('#address').val(addComp.street);
+                            var street=addComp.street;//街道
+                            var district=addComp.district;//区县
+                            //没有街道名称，写入县区
+                            if(street){
+                                $('#address').val(street);
+                            }else{
+                                $('#address').val(district);
+                            }
+
 //                    alert(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
 //                    alert('您的位置：'+rs.point.lng+','+rs.point.lat);
                         });
@@ -506,10 +512,10 @@ $(function(){
     //根据输入的商家名称获取数据
     function search(lg,lt){
 
-        var search_content=$('#search_content').val();
+        var search_content=$('#search_content').val().replace(/\s+/g, "");//去除所有空格
 
-        //根据搜索内容获取数据
-        $.get("index.php?r=shop/agent-list",{'search_content':search_content,'lng':lg,'lat':lt},function(data) {
+            //根据搜索内容获取数据
+             $.get("index.php?r=shop/agent-list",{'search_content':search_content,'lng':lg,'lat':lt},function(data) {
 
             if (data.status == 0) {
                 alert(data.msg);
@@ -538,7 +544,7 @@ $(function(){
                                         <div class="item-title-row">\
                                             <div class="item-subtitle" style="font-size: 18px;color: #333">' + v.Name + '</div>\
                                         </div>\
-                                            <div class="item-title" style="font-size: 14px;color: #6a6a6a">' + v.Address + '</div>\
+                                            <div class="address" style="font-size: 14px;color: #6a6a6a">' + v.Address + '</div>\
                                         <div class="item-title" style="font-size: 14px"><img src="./static/images/location2.png" alt="" style="color: #6a6a6a;width: 11px;height: 14px"/> &nbsp;' + v.distance + 'km</div>\
                                     </div>\
                                 </a>\
@@ -586,7 +592,7 @@ $(function(){
                                         <div class="item-title-row">\
                                             <div class="item-subtitle" style="font-size: 18px;color: #333">' + v.Name + '</div>\
                                         </div>\
-                                            <div class="item-title" style="font-size: 14px;color: #6a6a6a">' + v.Address + '</div>\
+                                            <div class="address" style="font-size: 14px;color: #6a6a6a;">' + v.Address + '</div>\
                                         <div class="item-title" style="font-size: 14px"><img src="./static/images/location2.png" alt="" style="color: #6a6a6a;width: 11px;height: 14px"/> &nbsp;' + v.distance + 'km</div>\
                                     </div>\
                                 </a>\

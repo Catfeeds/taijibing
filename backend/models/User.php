@@ -32,6 +32,7 @@ class User extends ActiveRecord implements IdentityInterface
     public $password;
     public $repassword;
     public $old_password;
+    public $url;
 
     public static function tableName()
     {
@@ -41,13 +42,17 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username','password','repassword','password_hash','avatar'], 'string'],
+            [['username','password','repassword','password_hash','avatar','name',
+            'contacts','address','province','city','area'], 'string'],
             ['email', 'email'],
             ['email', 'unique'],
             [['repassword'], 'compare','compareAttribute'=>'password'],
-            [['username','email','password', 'repassword'], 'required', 'on'=>['create']],
+//            [['username','email','password', 'repassword','url'], 'required', 'on'=>['create']],
+            [['username','email','password', 'repassword','name','type','lng','lat',
+                'contacts','address','province','tel'], 'required'],
             [['username','email'], 'required', 'on'=>['update', 'self-update']],
             [['username'], 'unique', 'on'=>'create'],
+            [['city','area','agent'],'safe'],
         ];
     }
 
@@ -55,8 +60,13 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             'default' => ['username', 'email'],
-            'create' => ['username', 'email', 'password', 'avatar','logic_type'],
-            'update' => ['username', 'email', 'password', 'avatar'],
+//            'create' => ['username', 'email', 'password', 'avatar','logic_type'],
+            'create' => ['username', 'email', 'password','repassword', 'type','name','contacts',
+                'tel','address','lng','lat','province','city','area','agent'],
+//            'update' => ['username', 'email', 'password', 'avatar'],
+            'update' => [[ 'email','type','name','contacts',
+                'tel','address','lng','lat','province','city','area','agent']],
+
             'self-update' => ['username', 'email', 'password', 'avatar', 'old_password', 'repassword'],
         ];
     }
@@ -64,7 +74,8 @@ class User extends ActiveRecord implements IdentityInterface
     public function attributeLabels()
     {
         return [
-            'username' => yii::t('app', 'Username'),
+//            'username' => yii::t('app', 'Username'),
+            'username' => '登陆账号',
             'email' => yii::t('app', 'Email'),
             'old_password' => yii::t('app', 'Old Password'),
             'password' => yii::t('app', 'Password'),
@@ -72,7 +83,10 @@ class User extends ActiveRecord implements IdentityInterface
             'avatar' => yii::t('app', 'Avatar'),
             'created_at' => yii::t('app', 'Created At'),
             'updated_at' => yii::t('app', 'Updated At'),
-            'login_type'=>'业务类型'
+            'login_type'=>'业务类型',
+            'name'=>'账户名称',
+            'tel'=>'联系电话',
+            'contacts'=>'联系人',
         ];
     }
 

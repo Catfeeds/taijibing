@@ -21,6 +21,7 @@ use yii\widgets\LinkPager;
         </div>
         <table class="table table-hover" style="background:white;">
             <thead>
+            <th>序号</th>
             <th>登录名称</th>
             <th>厂家名称</th>
             <th>所在地区</th>
@@ -29,14 +30,16 @@ use yii\widgets\LinkPager;
             <th>设备型号</th>
             <th>卡片厂家</th>
             <th>最近操作时间</th>
-            <th>操作</th>
+<!--            <th>操作</th>-->
             </thead>
             <tbody>
             <?php
             $str='';
+            $no=1;
             foreach($model as $key=>$val)
             {
                 $str.= "<tr>
+                        <td>".$no."</td>
                         <td>".$val["LoginName"]."</td>
                         <td>".$val["Name"]."</td>
                         <td>".($val["Province"]."-".$val["City"]."-".$val["Area"])."</td>
@@ -45,8 +48,8 @@ use yii\widgets\LinkPager;
                         <td>".$val["Type"]."</td>
                         <td>".$val["CardFactory"]."</td>
                         <td>".$val["RowTime"]."</td>
-                        <td><a href='./?r=dev-factory/update&id=".$val["Id"]."'>修改</a></td>
-                        </tr>";
+                        </tr>";//<td><a href='./?r=dev-factory/update&id=".$val["Id"]."'>修改</a></td>
+                $no++;
             }
             echo $str;
             ?>

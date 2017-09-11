@@ -34,35 +34,45 @@ function getActType($type){
 
     <table class="table table-hover" style="background:white;">
         <thead>
+        <th>序号</th>
         <th>设备编号</th>
-        <th>设备手机号</th>
-        <th>操作日志</th>
+        <th>最近操作</th>
+
+<!--        <th>操作日志</th>-->
         <th>用水量</th>
         <th>剩余水量</th>
         <th>TDS</th>
         <th>水温</th>
-        <th>上传时间</th>
+<!--         -->
         <th>所属地区</th>
         <th>位置信息</th>
+        <th>用户名</th>
+        <th>手机号</th>
+        <th>最近操作时间</th>
+        <th>操作日志</th>
         </thead>
         <tbody>
         <?php
         $str='';
+        $no=1;
         foreach($model as $key=>$val)
         {
-            $str.= "<tr><td>".$val["DevNo"]."</td>
-                        <td>".$val["DevBindMobile"]."</td>
+            $str.= "<tr>
+                        <td>".$no."</td>
+                        <td>".$val["DevNo"]."</td>
                         <td>".(getActType($val["ActType"]))."</td>
-
-
-                         <td>".(empty($val["WaterUse"])?"——":$val["WaterUse"])."</td>
-                          <td>".(empty($val["WaterRest"])?"——":round($val["WaterRest"] ,2))."</td>
-                             <td>".(empty($val["Dts"])?"——":$val["Dts"])."</td>
-                                <td>".(empty($val["Degrees"])?"":$val["Degrees"])."</td>
-                                 <td>".$val["ActEndTime"]."</td>
-                                 <td>".($val["Province"].$val["City"].$val["Area"])."</td>
-                                 <td>".$val["Address"]."(".$val["Lat"].",".$val["Lng"].")</td>
-                        </tr>";
+                        <td>".(empty($val["WaterUse"])?"——":$val["WaterUse"])."</td>
+                        <td>".(empty($val["WaterRest"])?"——":round($val["WaterRest"] ,2))."</td>
+                        <td>".(empty($val["Dts"])?"——":$val["Dts"])."</td>
+                        <td>".(empty($val["Degrees"])?"":$val["Degrees"])."</td>
+                        <td>".($val["Province"].$val["City"].$val["Area"])."</td>
+                        <td>".$val["Address"]."(".$val["Lat"].",".$val["Lng"].")</td>
+                        <td>".$val["UserName"]."</td>
+                        <td>".$val["DevBindMobile"]."</td>
+                        <td>".$val["ActTime"]."</td>
+                        <th><a href='./?r=dev-manager/detail&DevNo=".$val["DevNo"]."'>详情</a></th>
+                    </tr>";
+            $no++;
 
         }
         echo $str;

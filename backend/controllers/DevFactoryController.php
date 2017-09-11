@@ -46,7 +46,7 @@ class DevFactoryController extends BaseController
                 Yii::$app->getSession()->setFlash('error', $err);
             }
         }
-        //获取所有的水品牌
+
         $data=(new Address())->allQuery()->asArray()->all();
         return $this->render('update', [
             'model' => ["model"=>$model,"data"=>json_encode($data)],

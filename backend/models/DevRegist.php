@@ -20,6 +20,21 @@ class DevRegist extends ActiveRecord
         return 'dev_regist';
     }
 
+
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['CustomerType','UseType'],'safe'],
+
+        ];
+    }
+
+
+
     /**
      * 设备列表分页查询
      */
@@ -228,7 +243,7 @@ left join user_info on dev_regist.UserId=user_info.`Id`
    left join user_info on dev_regist.UserId=user_info.`Id`
  left join agent_info on agent_info.`Id`=dev_regist.`AgentId` or  agent_info.`ParentId`=dev_regist.`AgentId`
  left join 	(select * from dev_cmd order by dev_cmd.`RowTime` desc) as dev_cmd_tb on dev_regist.`DevNo`=dev_cmd_tb.`DevNo`
-  where agent_info.LoginName='$username' and $where group by dev_regist.`DevNo`");
+  where agent_info.LoginName='$username' ".(empty($where)?"":"and $where")." group by dev_regist.`DevNo`");
 
     }
 
@@ -274,11 +289,11 @@ left join user_info on dev_regist.UserId=user_info.`Id`
             return DevRegist::dynamicAllQueryWithName($where,$username);
         }
 
-        $sql="select user_info.Tel, dev_regist.Province,dev_regist.City,dev_regist.Area, dev_action_log.*,dev_location.`Address`,dev_location.`Lat`,dev_location.`Lng` from dev_action_log
+        $sql="select * from (select user_info.Tel, dev_regist.Province,dev_regist.City,dev_regist.Area, dev_action_log.*,dev_location.`Address`,dev_location.`Lat`,dev_location.`Lng` from dev_action_log
                     left join dev_location on dev_action_log.`DevNo`=dev_location.`DevNo`
                     left join dev_regist on dev_regist.DevNo=dev_action_log.`DevNo`
                     left join user_info on dev_regist.UserId=user_info.`Id`
-                    ".(empty($where)?"":"where $where") ;
+                    ".(empty($where)?"":"where $where")." order by dev_action_log.ActTime Desc) as temp group by DevNo" ;
         return static::findBySql($sql);
     }
 
@@ -295,11 +310,11 @@ left join user_info on dev_regist.UserId=user_info.`Id`
             }
             $where.="agent_info.LoginName='$username'";
         }
-        $sql="select  user_info.Tel, dev_regist.Province,dev_regist.City,dev_regist.Area,dev_action_log.*,dev_location.`Address`,dev_location.`Lat`,dev_location.`Lng` from dev_action_log
+        $sql="select * from ( select  user_info.Tel, dev_regist.Province,dev_regist.City,dev_regist.Area,dev_action_log.*,dev_location.`Address`,dev_location.`Lat`,dev_location.`Lng` from dev_action_log
                     left join dev_location on dev_action_log.`DevNo`=dev_location.`DevNo`
                     left join dev_regist on dev_regist.DevNo=dev_action_log.`DevNo`
-                    left join user_ino on dev_regist.UserId=user_info.`Id`
-                     left join agent_info on  agent_info.Id=dev_regist.AgentId  or  agent_info.`ParentId`=dev_regist.`AgentId` where ".$where ;
+                    left join user_info on dev_regist.UserId=user_info.`Id`
+                     left join agent_info on  agent_info.Id=dev_regist.AgentId  or  agent_info.`ParentId`=dev_regist.`AgentId` where ".$where." order by dev_action_log.ActTime Desc) as temp group by DevNo";
         return static::findBySql($sql);
     }
     public static function dynamicPageQuery($tel,$offset=0,$limit=0,$devno,$province,$city,$area){
@@ -339,10 +354,10 @@ left join user_info on dev_regist.UserId=user_info.`Id`
             $username=$model->getAttribute("username");
             return DevRegist::dynamicPageQueryWithName($where,$username,$offset,$limit);
         }
-        $sql="select dev_regist.Province,dev_regist.City,dev_regist.Area,dev_regist.DevBindMobile, dev_action_log.*,dev_location.`Address`,dev_location.`Lat`,dev_location.`Lng` from dev_action_log
+        $sql="select * from (select dev_regist.Province,dev_regist.City,dev_regist.Area,dev_regist.DevBindMobile, dev_action_log.*,dev_location.`Address`,dev_location.`Lat`,dev_location.`Lng` from dev_action_log
               left join dev_location on dev_action_log.`DevNo`=dev_location.`DevNo`
               left join dev_regist on dev_regist.DevNo=dev_action_log.`DevNo`
-              ".(empty($where)?"":"where $where")." order by dev_action_log.ActEndTime desc  limit $offset , $limit";
+              ".(empty($where)?"":"where $where")." order by dev_action_log.ActTime desc) as temp group by DevNo  limit $offset , $limit";
         return static::findBySql($sql);
     }
     public static function dynamicPageQueryWithName($where,$username,$offset=0,$limit=0){
@@ -354,11 +369,11 @@ left join user_info on dev_regist.UserId=user_info.`Id`
         }
 
 
-        $sql="select dev_regist.Province,dev_regist.City,dev_regist.Area, dev_regist.DevBindMobile, dev_action_log.*,dev_location.`Address`,dev_location.`Lat`,dev_location.`Lng` from dev_action_log
+        $sql="select * from ( select dev_regist.Province,dev_regist.City,dev_regist.Area, dev_regist.DevBindMobile, dev_action_log.*,dev_location.`Address`,dev_location.`Lat`,dev_location.`Lng` from dev_action_log
               left join dev_location on dev_action_log.`DevNo`=dev_location.`DevNo`
               left join dev_regist on dev_regist.DevNo=dev_action_log.`DevNo`
-              left join agent_info on agent_info.Id=dev_regist.AgentId or  agent_info.`ParentId`=dev_regist.`AgentId` where
-              " .(empty($where)?"":"where $where")." order by dev_action_log.ActEndTime desc limit $offset , $limit";
+              left join agent_info on agent_info.Id=dev_regist.AgentId or  agent_info.`ParentId`=dev_regist.`AgentId`
+              " .(empty($where)?"":"where $where")." order by dev_action_log.ActTime desc) as temp group by DevNo limit $offset , $limit";
         return static::findBySql($sql);
     }
 

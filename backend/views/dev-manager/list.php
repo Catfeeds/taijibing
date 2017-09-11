@@ -76,37 +76,43 @@ use yii\widgets\LinkPager;
     <table class="table table-hover" style="background:white;">
         <thead>
         <th><input type="checkbox" id="selectAll"/></th>
+        <th>序号</th>
         <th>设备编号</th>
-        <th>设备手机号</th>
+        <th>设备机型</th>
+        <th>设备厂家</th>
+        <th>用户</th>
+<!--        <th>设备手机号</th>  <td>".$val["DevBindMobile"]."</td>-->
         <th>用户手机号</th>
-        <th>厂家</th>
+<!--        <th>厂家</th>  <td>".$val["DevFactory"]."</td>-->
         <th>社区服务中心</th>
         <th>县区运营中心</th>
         <th>设备激活时间</th>
         <th>位置信息</th>
-        <th>最近命令日志</th>
-        <th>最近命令时间</th>
+<!--        <th>最近命令日志</th>  <td>".$val["Cmd"]."</td>-->
+<!--        <th>最近命令时间</th>  <td>".$val["RowTime"]."</td>-->
         <th>操作</th>
         </thead>
         <tbody>
         <?php
         $str='';
+        $no=1;
         foreach($model as $key=>$val)
         {
             $str.= "<tr>
                         <td><input type='checkbox' devno='".$val["DevNo"]."' class='devitem'/></td>
+                        <td>".$no."</td>
                         <td>".$val["DevNo"]."</td>
-                        <td>".$val["DevBindMobile"]."</td>
-                        <td>".$val["Tel"]."</td>
+                        <td>".$val["Type"]."</td>
                         <td>".$val["DevFactory"]."</td>
+                        <td>".$val["UserName"]."</td>
+                        <td>".$val["Tel"]."</td>
                         <td>".$val["agentname"]."</td>
                         <td>".$val["agentpname"]."</td>
                         <td>".$val["Date"]."</td>
                         <td>".$val["Address"]."(".$val["Lat"].",".$val["Lng"].")</td>
-                        <td>".$val["Cmd"]."</td>
-                        <td>".$val["RowTime"]."</td>
                         <td><a href='javascript:void(0);' class='openDialogClass' devno='".$val["DevNo"]."'>下发命令</a></td>
                         </tr>";
+            $no++;
         }
         echo $str;
         ?>
@@ -122,7 +128,7 @@ use yii\widgets\LinkPager;
                    <option value="1">控制命令</option>
                    <option value="2">数量余额</option>
                    <option value="3">水厂白名单</option>
-                   <option value="4">出场初始化</option>
+                   <option value="4">出厂初始化</option>
                </select>
            </div>
             <div id="orderlistc" >

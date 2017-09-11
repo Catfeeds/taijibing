@@ -15,6 +15,7 @@ $this->title = "";
             <?= $this->render('/widgets/_ibox-title') ?>
             <div class="ibox-content">
                 <?php $form = ActiveForm::begin(['options'=>['enctype'=>'multipart/form-data','class'=>'form-horizontal']]); ?>
+                <?= $form->field($model, 'WaterBrand')->dropDownList(\yii\helpers\ArrayHelper::map($water_brands,'BrandNo','BrandName'),['prompt'=>'请选择']) ?>
                 <?= $form->field($model, 'TotalMoney')->textInput(['maxlength' => 10]) ?>
                 <input type="hidden" name="OrderSuccess[Fid]" value="<?=$fid ?>"/>
                 <div class="hr-line-dashed"></div>

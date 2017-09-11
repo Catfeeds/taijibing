@@ -120,7 +120,20 @@ class DevWaterScan extends  ActiveRecord
         return $data;
     }
 
-    public static function totalQuery($selecttime,$xname,$sname,$waterfname){
+
+
+    //查询水厂条码使用记录
+    public static function totalQuery2($waterfname_id){
+
+
+        $sql="select f.*,w.BrandName from factory_wcode as f JOIN water_brand as w on f.WaterBrand=w.BrandNo where f.Fid={$waterfname_id}";
+
+        return ActiveRecord::findBySql($sql);
+    }
+
+
+
+    public static function totalQuery3($DevNo, $selecttime,$xname,$sname,$waterfname){
         $model = User::findOne(['id'=>yii::$app->getUser()->getIdentity()->getId()]);
         $logic_type=$model->getAttribute("logic_type");
         $username='';
@@ -129,6 +142,9 @@ class DevWaterScan extends  ActiveRecord
             $username=$model->getAttribute("username");
         }
         $where =self::getSaomaListWhereStr($selecttime,$xname,$sname,$waterfname,$username);
+//        var_dump($DevNo);exit;
+//        var_dump($where);exit;
+        //先排序，再分组。获取每个设备最近的一条扫码记录（点击详情时才读取该设备的所有记录）
         $sql="select DISTINCT dev_water_scan_log.BarCode,dev_water_scan_log.DevNo,dev_water_scan_log.RowTime,user_info.`Address`,user_info.`Name`,user_info.`Tel`,agent_info.`Name` as agentName,dev_regist.`DevFactory`,factory_info.`Name` as factoryName
  from dev_water_scan
  right join dev_water_scan_log on dev_water_scan_log.`BarCode` = dev_water_scan.`BarCode`
@@ -136,11 +152,14 @@ INNER join user_info on dev_water_scan.`UserId`=user_info.`Id`
 left join dev_regist on dev_water_scan.`DevNo`=dev_regist.`DevNo`
 left join `agent_info` on agent_info.`Id`=dev_regist.`AgentId` ".(empty($username)?"":"agent_info.LoginName='$username' ")."
 left join wcode_info on dev_water_scan.`BarCode`=`wcode_info`.`Code`
-left join `factory_info` on factory_info.`Id`=wcode_info.`FId`
- ".(empty($where)?"":" where $where")." order by dev_water_scan_log.`RowTime` Desc ";
+left join `factory_info` on factory_info.`Id`=wcode_info.`FId` where dev_water_scan_log.DevNo={$DevNo}
+ ".(empty($where)?"":" and $where")." order by dev_water_scan_log.`RowTime` Desc ";
+
+//        var_dump($sql);exit;
         return static::findBySql($sql);
     }
-    public static function pageQuery($offset=0,$limit=0,$selecttime,$xname,$sname,$waterfname){
+
+    public static function pageQuery3($DevNo,$offset=0,$limit=0,$selecttime,$xname,$sname,$waterfname){
         $model = User::findOne(['id'=>yii::$app->getUser()->getIdentity()->getId()]);
         $logic_type=$model->getAttribute("logic_type");
         $username='';
@@ -156,8 +175,61 @@ left join `factory_info` on factory_info.`Id`=wcode_info.`FId`
 left join dev_regist on dev_water_scan.`DevNo`=dev_regist.`DevNo`
 left join `agent_info` on agent_info.`Id`=dev_regist.`AgentId` ".(empty($username)?"":"agent_info.LoginName='$username' ")."
 left join wcode_info on dev_water_scan.`BarCode`=`wcode_info`.`Code`
+left join `factory_info` on factory_info.`Id`=wcode_info.`FId` where dev_water_scan_log.DevNo=$DevNo
+".(empty($where)?"":" and $where")." order by dev_water_scan_log.`RowTime` Desc
+  limit $offset , $limit ";
+
+//        var_dump($sql);exit;
+        return static::findBySql($sql);
+    }
+
+
+
+
+
+
+
+
+    public static function totalQuery($selecttime,$xname,$sname,$waterfname){
+        $model = User::findOne(['id'=>yii::$app->getUser()->getIdentity()->getId()]);
+        $logic_type=$model->getAttribute("logic_type");
+        $username='';
+        if($logic_type==3||$logic_type==4){
+            //代理商
+            $username=$model->getAttribute("username");
+        }
+        $where =self::getSaomaListWhereStr($selecttime,$xname,$sname,$waterfname,$username);
+
+        //先排序，再分组。获取每个设备最近的一条扫码记录（点击详情时才读取该设备的所有记录）
+        $sql="select * from (select DISTINCT dev_water_scan_log.BarCode,dev_water_scan_log.DevNo,dev_water_scan_log.RowTime,user_info.`Address`,user_info.`Name`,user_info.`Tel`,agent_info.`Name` as agentName,dev_regist.`DevFactory`,factory_info.`Name` as factoryName
+ from dev_water_scan
+ right join dev_water_scan_log on dev_water_scan_log.`BarCode` = dev_water_scan.`BarCode`
+INNER join user_info on dev_water_scan.`UserId`=user_info.`Id`
+left join dev_regist on dev_water_scan.`DevNo`=dev_regist.`DevNo`
+left join `agent_info` on agent_info.`Id`=dev_regist.`AgentId` ".(empty($username)?"":"agent_info.LoginName='$username' ")."
+left join wcode_info on dev_water_scan.`BarCode`=`wcode_info`.`Code`
 left join `factory_info` on factory_info.`Id`=wcode_info.`FId`
-".(empty($where)?"":" where $where")." order by dev_water_scan_log.`RowTime` Desc
+ ".(empty($where)?"":" where $where")." order by dev_water_scan_log.`RowTime` Desc) as temp group by DevNo ";
+        return static::findBySql($sql);
+    }
+    public static function pageQuery($offset=0,$limit=0,$selecttime,$xname,$sname,$waterfname){
+        $model = User::findOne(['id'=>yii::$app->getUser()->getIdentity()->getId()]);
+        $logic_type=$model->getAttribute("logic_type");
+        $username='';
+        if($logic_type==3||$logic_type==4){
+            //代理商
+            $username=$model->getAttribute("username");
+        }
+        $where =self::getSaomaListWhereStr($selecttime,$xname,$sname,$waterfname,$username);
+        $sql="select * from (select DISTINCT agent_info.Id as agentId,agent_info.Level,dev_water_scan_log.BarCode,dev_water_scan_log.DevNo,dev_water_scan_log.RowTime,user_info.`Address`,user_info.`Name`,user_info.`Tel`,agent_info.`Name` as agentName,dev_regist.`DevFactory`,factory_info.`Name` as factoryName
+ from dev_water_scan
+ right join dev_water_scan_log on dev_water_scan_log.`BarCode` = dev_water_scan.`BarCode`
+ INNER join user_info on dev_water_scan.`UserId`=user_info.`Id`
+left join dev_regist on dev_water_scan.`DevNo`=dev_regist.`DevNo`
+left join `agent_info` on agent_info.`Id`=dev_regist.`AgentId` ".(empty($username)?"":"agent_info.LoginName='$username' ")."
+left join wcode_info on dev_water_scan.`BarCode`=`wcode_info`.`Code`
+left join `factory_info` on factory_info.`Id`=wcode_info.`FId`
+".(empty($where)?"":" where $where")." order by dev_water_scan_log.`RowTime` Desc) as temp group by DevNo
   limit $offset , $limit ";
         return static::findBySql($sql);
     }
@@ -179,19 +251,20 @@ left join `factory_info` on factory_info.`Id`=wcode_info.`FId`
             if(!empty($where)){
                 $where.=' and ';
             }
-            $where.="agent_info.Level=4 and agent_info.Name='$xname'";
+//            $where.="agent_info.Level=4 and agent_info.Name like '%$xname%'";
+            $where.="agent_info.Level=4 and agent_info.Name like '%$xname%'";
         }
         if(!empty($sname)){
             if(!empty($where)){
                 $where.=' and ';
             }
-            $where.="agent_info.Level=5 and agent_info.Name='$sname'";
+            $where.="agent_info.Level=5 and agent_info.Name like '%$sname%'";
         }
         if(!empty($waterfname)){
             if(!empty($where)){
                 $where.=' and ';
             }
-            $where.="factory_info.`Name`='$waterfname'";
+            $where.="factory_info.`Name` like '%$waterfname%'";
         }
         if(!empty($username)){
             if(!empty($where)){

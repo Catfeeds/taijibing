@@ -21,6 +21,7 @@ class ShopController extends Controller
 
 
     public function actionAgentList(){
+
         $search_content=null;
         $lon=null;
         $lat=null;
@@ -161,7 +162,7 @@ class ShopController extends Controller
     //获取选择省份下的市信息
     function actionGetCity(){
         $pid=\Yii::$app->request->get('id');
-//        $pid=2;
+
         $city=ActiveRecord::findBySql("select * from address_tree where PId=$pid")->asArray()->all();
         return $city;
 //        var_dump($city);

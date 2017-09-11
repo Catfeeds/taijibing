@@ -5,7 +5,7 @@ use yii\widgets\LinkPager;
 <script type="text/javascript" src="/static/js/jquery.min.js"></script>
     <script type="text/javascript" src="/static/js/datepicker/dateRange.js"></script>
 <div class="wrapper wrapper-content">
-
+    <?= $this->render('/widgets/_ibox-title') ?>
         <table class="table table-hover" style="background:white;">
             <thead>
             <th>条码</th>

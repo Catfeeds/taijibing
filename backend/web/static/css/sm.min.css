@@ -1576,21 +1576,31 @@ a:active {
     }
 }
 
+
+
+
+
+
+
 .list-block .item-title {
     width: 70%;
     -webkit-flex-shrink: 1;
     -ms-flex: 0 1 auto;
-    -webkit-flex-shrink: 1;
+    /*-webkit-flex-shrink: 1;*/
     flex-shrink: 1;
-    white-space: nowrap;
+    /*/!*white-space: nowrap;*!/强制在同一行显示*/
     position: relative;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
     font-size: .6rem;
     color: #666;
+
+
+
 }
 .list-block .item-title .item-name {
+    /*white-space: nowrap;*/
     font-size: .8rem;
     color: #000;
 }
@@ -1610,7 +1620,7 @@ a:active {
     text-decoration: line-through;
 }
 
-.list-block .item-title.label {
+.list-block .item-title .label {
     width: 35%;
     -webkit-flex-shrink: 0;
     -ms-flex: 0 0 auto;

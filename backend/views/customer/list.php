@@ -21,22 +21,47 @@ use yii\widgets\LinkPager;
     </div>
         <table class="table table-hover" style="background:white;">
             <thead>
+            <th>序号</th>
+            <th>登陆账号</th>
             <th>用户姓名</th>
             <th>手机号</th>
+            <th>设备编号</th>
             <th>所在地区</th>
             <th>地址</th>
+            <th>所属服务中心</th>
+            <th>入网属性</th>
+            <th>客户类型</th>
             <!--    <th>设备编号</th>-->
             <!--    <th>硬件手机号</th>-->
             <!--    <th>代理商</th>-->
             <!--    <th>激活时间</th>-->
             <th>最近操作时间</th>
+            <th>操作详情</th>
+            <th>管理</th>
             </thead>
             <tbody>
             <?php
             $str='';
+            $no=1;
             foreach($model as $key=>$val)
             {
-                $str.= "<tr><td>".$val["Name"]."</td><td>".$val["Tel"]."</td><td>".($val["Province"]."-".$val["City"]."-".$val["Area"])."</td><td>".$val["Address"]."</td><td>".$val["RowTime"]."</td></tr>";
+                $str.= "<tr>
+                            <td>".$no."</td>
+                            <td>".$val["Tel"]."</td>
+                            <td>".$val["Name"]."</td>
+                            <td>".$val["Tel"]."</td>
+                            <td>".$val["DevNo"]."</td>
+                            <td>".($val["Province"]."-".$val["City"]."-".$val["Area"])."</td>
+                            <td>".$val["Address"]."</td>
+                            <td>".$val["AgentName"]."</td>
+                            <td>".$UserType[$val["UserType"]]."</td>
+                            <td>".$CustomerType[$val["CustomerType"]]."</td>
+                            <td>".$val["RowTime"]."</td>
+                            <td><a href='./?r=customer/detail&id=".$val["Id"]."&DevNo=".$val["DevNo"]."'>详情</a></td>
+                            <td><a href='./?r=customer/update&id=".$val["Id"]."'>修改</a>
+                                <a class='del' id='".$val["Id"]."'  href='javascript:void(0);'>删除</a></td>
+                        </tr>";
+                $no++;
             }
             echo $str;
             ?>
@@ -54,7 +79,27 @@ use yii\widgets\LinkPager;
         var area='<?=$area?>';
     </script>
     <script>
-        $(function(){
+        //删除时弹框提示
+        var id='';
+        $('.del').click(function(){
+            var r = confirm("确定删除吗？");
+            if (r == true) {
+                id=$(this).attr('id');
+
+                $.get('./?r=customer/delete&id='+id,function(data){
+
+                })
+
+            } else {
+
+            }
+        }) ;
+
+
+
+
+
+            $(function(){
             initProvince();
             initListener();
             initAddress();

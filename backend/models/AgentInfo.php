@@ -28,14 +28,25 @@ class AgentInfo extends  ActiveRecord
     public static function pageQuery(){
 
     }
-    public  function insertBaseInfo($loginName='',$pwd='',$logic_type=3){
+    public  function insertBaseInfo($ParentId,$Admin_User_Id,$loginName='',$name,$ContractTel,$ContractUser,
+        $Address,$Province,$pwd='',$City,$Area,$BaiDuLng,$BaiDuLat, $logic_type=3){
+        $this->setAttribute("ParentId",$ParentId);
+        $this->setAttribute("Admin_User_Id",$Admin_User_Id);
         $this->setAttribute("LoginName",$loginName);
+        $this->setAttribute("ContractTel",$ContractTel);
+        $this->setAttribute("ContractUser",$ContractUser);
+        $this->setAttribute("Address",$Address);
+        $this->setAttribute("Province",$Province);
+        $this->setAttribute("City",$City);
+        $this->setAttribute("Area",$Area);
+        $this->setAttribute("BaiDuLng",$BaiDuLng);
+        $this->setAttribute("BaiDuLat",$BaiDuLat);
         $this->setAttribute("LoginPwd",md5($pwd));
         $this->setAttribute("RowTime",date("Y-m-d H:i:s"));
         $this->setAttribute("RegTime",date("Y-m-d H:i:s"));
-        $this->setAttribute("Name",$loginName);
+        $this->setAttribute("Name",$name);
         $this->setAttribute("Level",$logic_type==3?4:5);
-        $this->save(false);
+        return $this->save(false);
     }
     public function updateForm(){
         $provinceid=$this["Province"];

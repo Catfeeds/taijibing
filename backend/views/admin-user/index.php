@@ -36,8 +36,17 @@ $this->title = "Admin";
                         [
                             'class' => 'feehi\grid\CheckboxColumn',
                         ],
+//                        [
+//                            'attribute' => 'id',
+//                            'label' => '平台ID',
+//                        ],
+//                        [
+//                            'attribute' => 'name',
+//                            'label' => '登陆账号',
+//                        ],
                         [
                             'attribute' => 'username',
+//                            'label' => '账户名',
                         ],
                         [
                             'attribute' => 'role',
@@ -46,6 +55,27 @@ $this->title = "Admin";
                                 return AdminRoles::getRoleNameByUid($model->id);
                             },
                         ],
+//                        [
+//                            'attribute' => 'type',
+//                            'label' => '账户类型',
+//                            'value' => function($model){
+//                                return AdminRoles::getRoleNameByUid($model->id);
+//                            },
+//                        ],
+
+//                        [
+//                            'attribute' => 'province',
+//                            'label' => '所在地区',
+//                        ],
+
+//                        [
+//                            'attribute' => 'contacts',
+//                            'label' => '联系人',
+//                        ],
+//                        [
+//                            'attribute' => 'tel',
+//                            'label' => '联系电话',
+//                        ],
 
                         [
                             'attribute' => 'email',

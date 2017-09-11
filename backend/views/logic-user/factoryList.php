@@ -1,5 +1,6 @@
 <?php
 use yii\widgets\LinkPager;
+error_reporting( E_ALL&~E_NOTICE );
 ?>
     <div class="wrapper wrapper-content">
         <div style="margin-bottom:10px;">
@@ -22,12 +23,14 @@ use yii\widgets\LinkPager;
 
         <table class="table table-hover" style="background:white;">
             <thead>
+            <th>序号</th>
             <th>登录名称</th>
             <th>名称</th>
             <th>地址</th>
             <th>所在地区</th>
             <th>联系人</th>
             <th>手机号</th>
+            <th>条码余数</th>
             <th>厂家代码(数字代号)</th>
             <th>最近操作时间</th>
             <th>明细</th>
@@ -36,20 +39,26 @@ use yii\widgets\LinkPager;
             <tbody>
             <?php
             $str='';
+            $no=1;
+//            var_dump($BrandName);
             foreach($model as $key=>$val)
             {
+
                 $str.= "<tr>
+                        <td>".$no."</td>
                         <td>".$val["LoginName"]."</td>
                         <td>".$val["Name"]."</td>
                         <td>".$val["Address"]."</td>
                         <td>".($val["Province"]."-".$val["City"]."-".$val["Area"])."</td>
                         <td>".$val["ContractUser"]."</td>
                         <td>".$val["ContractTel"]."</td>
+                        <td>".$BrandName[$val["Id"]].'&nbsp;'.$LeftAmount[$val["Id"]]."</td>
                          <td>".$val["PreCode"]."</td>
                         <td>".$val["RowTime"]."</td>
                         <td><a href='/index.php?r=recharge/list&pid=".$val["Id"]."'>条码充值记录</a>&nbsp;&nbsp;<a href='/index.php?r=saoma/flist&waterfname=".$val["Name"]."'>条码使用记录</a></td>
                         <td><a href='./?r=factory/update&id=".$val["Id"]."'>修改</a>&nbsp;&nbsp;<a href='./?r=recharge/create&fid=".$val["Id"]."'>充值</a></td>
                         </tr>";
+                $no++;
             }
             echo $str;
             ?>

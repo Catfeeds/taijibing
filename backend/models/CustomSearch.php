@@ -20,9 +20,11 @@ class CustomSearch extends ActiveRecord
     }
     public static function pageQuery($username,$mobile,$province,$city,$area)
     {
-        $where='';
+
+        //读取状态为0的，-1 被删除
+        $where=' user_info.state=0 ';
         if(!empty($username)){
-            $where.=" Name='$username'";
+            $where.=" and Name='$username'";
         }
         if(!empty($mobile)){
             if(!empty($where)){
@@ -55,17 +57,34 @@ class CustomSearch extends ActiveRecord
             $username=$model->getAttribute("username");
             return CustomSearch::pageQueryByname($where,$username);
         }
-        return self::findBySql("select * from user_info ".(empty($where)?"":" where ".$where));
+        return self::findBySql("select * from user_info  ".(empty($where)?"":" where ".$where));
 
 
     }
     public static function pageQueryByname($where,$loginName)
     {
+        //根据登陆名称获取agentid
+        $agint_id=AgentInfo::findOne(['LoginName'=>$loginName])->Id;
 
-        $sql ="select user_info.* from user_info
-left join (select distinct dev_regist.UserId from dev_regist inner join agent_info where agent_info.`Id`=`dev_regist`.`AgentId` or agent_info.`ParentId`= `dev_regist`.`AgentId` and  agent_info.`LoginName`='$loginName') as temp
-on user_info.`Id`=temp.UserId".(empty($where)?"":$where);
-            return CustomSearch::findBySql($sql);
+        //根据agentid获取下面的所以用户id
+        $datas=DevRegist::findAll(['AgentId'=>$agint_id]);
+
+        //获取所有用户
+        $sql="select * from user_info where Id in (select UserId from dev_regist where AgentId={$agint_id})".(empty($where)?"":" and ".$where);
+        return CustomSearch::findBySql($sql);
+
+
+
+
+
+
+
+
+
+//        $sql ="select user_info.*,dev_regist.DevNo from user_info JOIN dev_regist ON user_info.id=dev_regist.UserId
+//left join (select distinct dev_regist.UserId from dev_regist inner join agent_info where agent_info.`Id`=`dev_regist`.`AgentId` or agent_info.`ParentId`= `dev_regist`.`AgentId` and  agent_info.`LoginName`='$loginName') as temp
+//on user_info.`Id`=temp.UserId".(empty($where)?"":" where ".$where);
+//            return CustomSearch::findBySql($sql);
     }
     public static function getLatestData(){
         $dayData=self::getDatasBefore(2);

@@ -79,7 +79,7 @@
             <td><input type="button" class="btn  select_btn" value="清空" onclick="cleardata()"/> </td>
         </tr>
         <tr>
-            <td colspan="6" style="text-align: right"><input type="button" class="btn  select_btn" value="+添加商品" onclick="window.location='/index.php?r=goods/addgood'"/></td>
+            <td colspan="6" style="text-align: left"><input type="button" class="btn  select_btn" value="+添加商品" onclick="window.location='/index.php?r=goods/addgood'"/></td>
         </tr>
     </table>
     <div class="rect" style="display: none;position: absolute;left: 0px;top: 0px">
