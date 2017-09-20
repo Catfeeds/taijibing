@@ -34,16 +34,26 @@ class TeaBrandController extends BaseController
 //茶吧机品牌首页
     public function actionList()
     {
+        //获取搜索内容
+        $search=trim(\Yii::$app->request->post('content'));
+        $where='';
+        if(!empty($search)){
+            $where=" and (goods.name like '%{$search}%' or tea_brand.BrandName like '%{$search}%' or dev_factory.Name  like '%{$search}%')";
+        }
+
+
+
         $datas=ActiveRecord::findBySql("select goods.*,
-            tea_brand.BrandName,tea_brand.BrandNo,dev_factory.CardFactory, dev_factory.Name as devfactory_name from goods
+            tea_brand.BrandName,tea_brand.BrandNo, dev_factory.Name as devfactory_name from goods
            JOIN tea_brand on goods.brand_id=tea_brand.BrandNo
            JOIN dev_factory on goods.factory_id=dev_factory.Id
-           where goods.state=0 and goods.category_id=2
+           where goods.state=0 and goods.category_id=2 $where
            ");//state -1 表示已删除 0 正常   category_id 1：表示袋装水 2：茶吧机
         $pages = new Pagination(['totalCount' => $datas->count(), 'pageSize' => 5]);
         $model = $datas->offset($pages->offset)->limit($pages->limit)->asArray()->all();
 //        var_dump($model);exit;
         return $this->render('list', [
+            'search' => $search,
             'model' => $model,
             'pages' => $pages,
         ]);
@@ -77,6 +87,11 @@ class TeaBrandController extends BaseController
 
             $goods->load(\Yii::$app->getRequest()->post());
             $goods->addtime=time();
+            $goods->stock=0;
+            $goods->originalprice=0;
+            $goods->saleprice=0;
+            $goods->updatetime=0;
+            $goods->state=0;
             $goods->category_id=2;//1为袋装水，2为茶吧机
 //            var_dump($goods->goods_image1,$goods->goods_image2,$goods->goods_image3,$goods->goods_image4,$goods->goods_image5,$goods->goods_image6);exit;
             if($goods->validate()&&$goods->save()){

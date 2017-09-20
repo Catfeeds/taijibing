@@ -9,7 +9,7 @@ use feehi\widgets\ActiveForm;
 ?>
 <div class="col-sm-12">
     <div class="ibox">
-        <?= $this->render('/widgets/_ibox-title') ?>
+        <div style="text-align: right;margin-bottom: 10px"> <?= \yii\bootstrap\Html::a('返回',['admin-user/index'],['class'=>'btn btn-primary'])?></div>
         <div class="ibox-content">
 
             <?php $form = ActiveForm::begin(); ?>

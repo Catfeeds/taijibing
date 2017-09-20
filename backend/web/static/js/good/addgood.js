@@ -172,9 +172,18 @@ function savegood(){
     if(closetime==""){
         closetime="2099-1-1 00:00:00";
     }
-    var now=(new Date()).Format("yyyy-MM-dd hh:mm:ss");
+    //var now=(new Date()).Format("yyyy-MM-dd hh:mm:ss");
     if(opentime=''){
         opentime=now;
+    }
+
+    if(closetime<now){
+        alert("关店时间必须大于当前时间");
+        return;
+    }
+    if(opentime!=""&&closetime!=""&&opentime>closetime){
+        alert("关店时间必须大于开店时间");
+        return;
     }
 
 
@@ -187,8 +196,8 @@ function savegood(){
     data+="&agent2="+encodeURIComponent(agent2);//服务中心id
     data+="&starttime="+encodeURIComponent(starttime);//上架时间
     data+="&endtime="+encodeURIComponent(endtime);//下架时间
-    data+="&opentime="+encodeURIComponent(opentime);//下架时间
-    data+="&closetime="+encodeURIComponent(closetime);//下架时间
+    data+="&opentime="+encodeURIComponent(opentime);//开店时间
+    data+="&closetime="+encodeURIComponent(closetime);//关店时间
     data+="&detail="+encodeURIComponent(detail);//简介
     data+="&id="+encodeURIComponent(id);//商户id
     //data+="&expresstype="+$("input[name='f1']").filter(':checked').attr("value");
@@ -218,7 +227,7 @@ function savegood(){
     var ii=layer.msg("操作中……");
 
     $.getJSON("/index.php?r=goods/savegood&"+data,function(data){
-        alert(data.state);
+        //alert(data.state);
 
         if(data.state!=0){
             layer.alert(data.msg);
@@ -532,10 +541,17 @@ function change1(no){
                 });
                 $('#goodsname'+no).html('');
                 $(html).appendTo('#goodsname'+no);
+                //清空后面的下拉框数据
+                $('#goodsbrand'+no).html("<option value=''>选择商品品牌</option>");
+                $('#goodsfactory'+no).html("<option value=''>选择厂家</option>");
+
             }else{
                 var html="<option value=''>选择商品名称</option>";
                 $('#goodsname'+no).html('');
                 $(html).appendTo('#goodsname'+no);
+                //清空后面的下拉框数据
+                $('#goodsbrand'+no).html("<option value=''>选择商品品牌</option>");
+                $('#goodsfactory'+no).html("<option value=''>选择厂家</option>");
             }
 
         });
@@ -543,6 +559,9 @@ function change1(no){
         var html="<option value=''>选择商品名称</option>";
         $('#goodsname'+no).html('');
         $(html).appendTo('#goodsname'+no);
+        //清空后面的下拉框数据
+        $('#goodsbrand'+no).html("<option value=''>选择商品品牌</option>");
+        $('#goodsfactory'+no).html("<option value=''>选择厂家</option>");
     }
 
 }
@@ -567,10 +586,15 @@ function change2(no){
                 //console.log(html);
                 $('#goodsbrand'+no).html('');
                 $(html).appendTo('#goodsbrand'+no);
+                //清空后面的下拉框数据
+                $('#goodsfactory'+no).html("<option value=''>选择厂家</option>");
+
             }else{
                 var html="<option value=''>选择商品品牌</option>";
                 $('#goodsrand'+no).html('');
                 $(html).appendTo('#goodsbrand'+no);
+                //清空后面的下拉框数据
+                $('#goodsfactory'+no).html("<option value=''>选择厂家</option>");
             }
 
         });
@@ -578,6 +602,8 @@ function change2(no){
         var html="<option value=''>选择商品品牌</option>";
         $('#goodsbrand'+no).html('');
         $(html).appendTo('#goodsbrand'+no);
+        //清空后面的下拉框数据
+        $('#goodsfactory'+no).html("<option value=''>选择厂家</option>");
     }
 
 }

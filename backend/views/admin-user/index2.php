@@ -24,14 +24,14 @@ $this->title = "Admin";
 
 ?>
     <div class="wrapper wrapper-content">
-        <?= $this->render('/widgets/_ibox-title') ?>
+
         <?= Bar::widget([
             'template' => '{refresh} {create}'
         ])?>
 <!--        {delete}-->
         <table class="table table-hover" style="background:white;">
             <thead>
-            <th>平台Id</th>
+            <th>序号</th>
             <th>登陆账号</th>
             <th>账户名称</th>
             <th>账户类型</th>
@@ -46,24 +46,26 @@ $this->title = "Admin";
             <tbody>
             <?php
             $str='';
+            $no=1;
             foreach($model as $key=>$val)
             {
                 $str.= "<tr>
-                            <td>".$val["id"]."</td>
-                            <td>".$val["username"]."</td>
-                            <td>".$val["name"]."</td>
+                            <td>".$no."</td>
+                            <td>".$val["LoginName"]."</td>
+                            <td>".$val["Name"]."</td>
                             <td>".$val["type"]."</td>
-                            <td>".$val["province"].$val["city"].$val["area"]."</td>
-                            <td>".$val["contacts"]."</td>
-                            <td>".$val["tel"]."</td>
+                            <td>".$val["Province"].'-'.$val["City"].'-'.$val["Area"]."</td>
+                            <td>".$val["ContractUser"]."</td>
+                            <td>".$val["ContractTel"]."</td>
                             <td>".$val["email"]."</td>
-                            <td>".$val["created_at"]."</td>
-                            <td>".$val["updated_at"]."</td>
+                            <td>".date('Y-m-d H:i:s',$val["created_at"])."</td>
+                            <td>".date('Y-m-d H:i:s',$val["updated_at"])."</td>
                             <td>
-                                <a href='./?r=admin-user/update&id=".$val['id']."'>编辑</a>
-                                <a onclick='del(".$val['id'].")'>删除</a>
+                                <a href='./?r=admin-user/update&LoginName=".$val['LoginName']."'>编辑</a>
+                                <a class='del' >删除<input type='hidden' value='".$val['LoginName']."'></a>
                             </td>
                          </tr>";
+                $no++;
             }
             echo $str;
             ?>
@@ -76,26 +78,49 @@ $this->title = "Admin";
 <script type="text/javascript" src="./static/js/jquery.min.js"></script>
 <script type="text/javascript" src="./static/js/layer/layer.js"></script>
 <script>
-            function del(id){
-                if(confirm("你确认要删除吗？")){
-                    var ii=layer.msg("操作中……");
-                    $.getJSON("/index.php?r=admin-user/delete&id="+id,function(data){
 
-                        layer.close(ii);
-                        if(data.state!=0){
-                            layer.alert(data.desc);
-                            return;
-                        }
-                        layer.alert("操作成功",function(){
-                            window.location.reload(true);
-                        });
-                    });
-                }else{
-                    return
+    $('.del').click(function(){
+        var LoginName=$(this).find('input').val();
+        if(confirm("你确认要删除吗？")){
+            var ii=layer.msg("操作中……");
+            $.getJSON("/index.php?r=admin-user/delete&LoginName="+LoginName,function(data){
+
+                layer.close(ii);
+                if(data.state!=0){
+                    layer.alert(data.desc);
+                    return;
                 }
+                layer.alert("操作成功",function(){
+                    window.location.reload(true);
+                });
+            });
+        }else{
+            return;
+        }
 
+    });
 
-            }
+//            function del(LoginName){
+//                alert(LoginName)
+//                if(confirm("你确认要删除吗？")){
+//                    var ii=layer.msg("操作中……");
+//                    $.getJSON("/index.php?r=admin-user/delete&LoginName="+LoginName,function(data){
+//
+//                        layer.close(ii);
+//                        if(data.state!=0){
+//                            layer.alert(data.desc);
+//                            return;
+//                        }
+//                        layer.alert("操作成功",function(){
+//                            window.location.reload(true);
+//                        });
+//                    });
+//                }else{
+//                    return
+//                }
+//
+//
+//            }
             //    function updateWaterBrand(brandno){
             //       window.location.href="/index.php?r=water-brand/update&brandno="+brandno;
             //    }

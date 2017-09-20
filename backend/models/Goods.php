@@ -17,6 +17,7 @@ class Goods extends ActiveRecord
             'name' => '商品名称',
             'brand_id' => '商品品牌',
             'factory_id' => '水厂名称',
+            'cardfactory' => '卡片厂家',
 
         ];
     }
@@ -27,7 +28,8 @@ class Goods extends ActiveRecord
             'default' => ['name','category_id','brand_id','stock','factory_id','originalprice',
                 'saleprice','addtime','state','goods_image1','goods_image2',
                 'goods_image3','goods_image4','goods_image5','goods_image6',],
-            'create' => ['name', 'brand_id','factory_id','addtime','goods_image1','goods_image2', 'goods_image3','goods_image4','goods_image5','goods_image6'],
+            'create' => ['cardfactory','name', 'brand_id','factory_id','addtime','goods_image1','goods_image2', 'goods_image3','goods_image4','goods_image5','goods_image6'],
+            'create2' => ['name', 'brand_id','factory_id','addtime','goods_image1','goods_image2', 'goods_image3','goods_image4','goods_image5','goods_image6'],
         ];
     }
 
@@ -35,7 +37,7 @@ class Goods extends ActiveRecord
     {
         return [
 
-            [['name','category_id','brand_id','factory_id','stock','originalprice', 'saleprice','addtime','state',],'required'],
+            [['name','category_id','brand_id','factory_id','stock','originalprice', 'saleprice','addtime','state','cardfactory'],'required'],
 //            [['name'],'unique'],
             [['goods_image1','goods_image2', 'goods_image3','goods_image4','goods_image5','goods_image6',],'safe']
 //            [['brand_id'],'required'],

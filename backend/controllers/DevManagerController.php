@@ -9,6 +9,8 @@
 namespace backend\controllers;
 
 use backend\models\Address;
+use backend\models\AdminRoles;
+use backend\models\AdminRoleUser;
 use backend\models\AgentInfo;
 use backend\models\CustomSearch;
 use backend\models\DevCmd;
@@ -26,22 +28,18 @@ class DevManagerController extends BaseController
     public function actionList()
     {
 
-        $devno=yii::$app->request->post("devno");
-        $xname=yii::$app->request->post("xname");
-        $sname=yii::$app->request->post("sname");
-        $mobile=yii::$app->request->post("mobile");
-        $devf=yii::$app->request->post("devf");
-        $tel=$this->getParam("tel");
+        $search=$this->getParam("search");
         $province=$this->getParam("province");
         $city=$this->getParam("city");
         $area=$this->getParam("area");
 
-        $datas =DevRegist::allQuery($devno,$xname,$sname,$mobile,$devf,$tel,$province,$city,$area);
+//        $datas =DevRegist::allQuery($devno,$xname,$sname,$mobile,$devf,$tel,$province,$city,$area);
+        $datas =DevRegist::allQuery2($search,$province,$city,$area);
+//        var_dump($datas);exit;
+
         $pages = new Pagination(['totalCount' => $datas->count(), 'pageSize' => 10]);
-        $querys =DevRegist::pageQuery($pages->offset,$pages->limit,$devno,$xname,$sname,$mobile,$devf,$tel,$province,$city,$area);
+        $querys =DevRegist::pageQuery2($pages->offset,$pages->limit,$search,$province,$city,$area);
         $model =$this->listWrapData($querys->asArray()->all());
-        //获取机型、用户明
-//        var_dump($model);exit;
         foreach($model as &$v){
             $data=DevFactory::findOne(['Name'=>$v['DevFactory']]);
             if($data){
@@ -60,11 +58,20 @@ class DevManagerController extends BaseController
 //            var_dump($v['UserName']);exit;
         }
 
+        $address=(new Address())->allQuery()->asArray()->all();
 
-//        var_dump($model);exit;
+        //根据登陆者的信息，获取登陆者的角色
+        $login_id=Yii::$app->user->id;
+        //获取角色id
+        $role_id=AdminRoleUser::findOne(['uid'=>$login_id])->role_id;
+
+
+
         $waterFlist=FactoryInfo::find()->asArray()->all();
         $address=(new Address())->allQuery()->asArray()->all();
         return $this->render('list', [
+            'search' => $search,
+            'role_id' => $role_id,
             'model' => $model,
             'pages' => $pages,
             'devno' =>empty($devno)?"":$devno,
@@ -125,15 +132,15 @@ class DevManagerController extends BaseController
     }
     public function actionDynamic(){
 
-        $tel=yii::$app->request->get("tel");
-        $devno=yii::$app->request->get("devno");
+//        $tel=yii::$app->request->get("tel");
+        $content=yii::$app->request->get("content");
         $province=yii::$app->request->get("province");
         $city=yii::$app->request->get("city");
         $area=yii::$app->request->get("area");
 
-        $datas =DevRegist::dynamicAllQuery($tel,$devno,$province,$city,$area);
+        $datas =DevRegist::dynamicAllQuery($content,$province,$city,$area);
         $pages = new Pagination(['totalCount' => $datas->count(), 'pageSize' => 10]);
-        $querys =DevRegist::dynamicPageQuery($tel,$pages->offset,$pages->limit,$devno,$province,$city,$area);
+        $querys =DevRegist::dynamicPageQuery($pages->offset,$pages->limit,$content,$province,$city,$area);
         $areas=Address::allQuery()->asArray()->all();
         $model = $querys->asArray()->all();
         //获取用户名
@@ -153,8 +160,8 @@ class DevManagerController extends BaseController
             'model' => $model,
             'areas' =>$areas,
             'pages' => $pages,
-            'tel' =>empty($tel)?"":$tel,
-            'devno' =>empty($devno)?"":$devno,
+//            'tel' =>empty($tel)?"":$tel,
+            'content' =>empty($content)?"":$content,
             'province' =>empty($province)?"":$province,
             'city' =>empty($city)?"":$city,
             'area' =>empty($area)?"":$area,
@@ -346,13 +353,13 @@ class DevManagerController extends BaseController
 
     //详情
     public function actionDetail($DevNo){
-        if(!$DevNo) return $this->render('/error/error', [
+        if($DevNo=='') return $this->render('/error/error', [
             'code' => '403',
             'name' => 'Params required',
             'message' => yii::t('app', "DevNo doesn't exit"),
         ]);
         //获取该设备的所有操作记录
-        $datas=yii\db\ActiveRecord::findBySql("select * from dev_action_log where DevNo=$DevNo");
+        $datas=yii\db\ActiveRecord::findBySql("select * from dev_action_log where DevNo=$DevNo order by dev_action_log.ActTime desc ");
         $pages = new Pagination(['totalCount' => $datas->count(), 'defaultPageSize' => 10]);
         $model=$datas->asArray()->all();
 

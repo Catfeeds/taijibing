@@ -338,7 +338,7 @@ function query(){
     {
         op=2;
         $("#mytitle").html("修改商品&nbsp;&nbsp;&nbsp;");
-        var ii=layer.msg("加载中……");
+        //var ii=layer.msg("加载中……");
         $.ajax({
             type: "POST",
             url: "./listgood?ajax=1",

@@ -26,9 +26,14 @@ class AdminLogSearch extends AdminLog
         ];
     }
 
-    public function search($params)
+    public function search($params,$user_id='')
     {
-        $query = self::find()->orderBy("id desc");
+        if($user_id){
+            $query = self::find()->where(['user_id'=>$user_id])->orderBy("id desc");
+        }else{
+            $query = self::find()->orderBy("id desc");
+        }
+
         $query->joinWith(['user']);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

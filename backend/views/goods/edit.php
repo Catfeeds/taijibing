@@ -25,7 +25,7 @@
 <div class="main-title">
     <h2 id="mytitle"></h2>
 </div>
-<?= $this->render('/widgets/_ibox-title') ?>
+<div style="text-align: right;margin-bottom: 10px"> <?= \yii\bootstrap\Html::a('返回',['goods/list'],['class'=>'btn btn-primary'])?></div>
 <div class="content_middle">
     <!--    <div class="f1">-->
     <!--        <input type="button" class="btn select_btn" value="+添加新频道" onclick="openUrl()"/>-->
@@ -85,7 +85,7 @@
         <div class="split"></div>
 
         <div class="item" style="height: 640px;line-height: 240px">
-            <div class="ftitle"><span class="tip">*</span><span class="title"> 2、商品图片：</span></div>
+            <div class="ftitle"><span class="tip">*</span><span class="title"> 2、商户店铺图片：</span></div>
             <div class="fcontent">
                 <div class="goodpic" style="float: left;background: none;border: none;width:400px;height: 240px">
                     <div  class="item" style="margin-bottom:10px;height: 100px;line-height: 100px">
@@ -170,10 +170,10 @@
                 </div>
                 <div class="goodpic" style="float: left;height: 240px">
                     <div class="item">提示：</div>
-                    <div class="item">1、列表图：显示在大频道页；</div>
-                    <div class="item">2、细节图：显示在商品详情页；</div>
-                    <div  class="item" style="float: left;width: 18px;">3、</div>
-                    <div class="item" style="float: left;width: 260px;word-wrap: break-word; ">具体尺寸大小 ：洗车列表图（220*220），洗车细节图（750*370）， 旅游列表图（*）， 旅游细节图（*）；</div>
+                    <div class="item">1.最多上传6张相关图片。</div>
+                    <div class="item">2.显示尺寸大小：缩略图(220*220)，详情图（720×1080）</div>
+                    <div  class="item" style="float: left;width: 18px;">3.</div>
+                    <div class="item" style="float: left;width: 260px;word-wrap: break-word; ">手机详情总体大小：图片+文字+音频应小于等于1.5M，图片仅支持JPG、GIF、PNG格式；</div>
                 </div>
             </div>
         </div>
@@ -287,9 +287,12 @@
 <script type="text/javascript">
     $('#merchantid').attr("disabled","disabled");
     $('#categoryid').attr("disabled","disabled");
-
-    $('#opentime').val(shop[0].opent_time);
+//alert(shop[0].close_time)
+    $('#opentime').val(shop[0].open_time);
     $('#closetime').val(shop[0].close_time);
+//    console.log(baseGood[0]);
+    $('#starttime').val(baseGood[0].starttime);
+    $('#endtime').val(baseGood[0].endtime);
 
 
 
@@ -338,9 +341,6 @@ function addGoodTypeWithData(index){
         '<div style="clear:both;"></div>'+
         '</div>';
 
-//    $('#realPrice'+currentIndex).val(baseGood[index].realPrice);
-//    $('#originalPrice'+currentIndex).val(baseGood[index].originalPrice);
-
 
     //添加商品分类数据
     $.get('./?r=goods/get-category',function(data){
@@ -361,93 +361,115 @@ function addGoodTypeWithData(index){
     });
 
     //选中商品
+    var category_id=baseGood[index].goodscategory;
 
-            //添加商品名称数据
-            $.get('./?r=goods/get-all-goods',function(data){
-                if(data!=''){
-                    var html="<option value=''>选择商品名称</option>";
-                    $(data).each(function(i,v){
-                        if(v){
-                            if(v.name==baseGood[index].goodsname){
-                                html+="<option selected='selected' value='"+v.name+"'>"+ v.name+"</option>"
-                            }else{
-                                html+="<option value='"+v.name+"'>"+ v.name+"</option>"
-                            }
+    if(category_id){
+        //添加商品名称数据
+        $.get('./?r=goods/get-goods',{'category_id':category_id},function(data){
+            if(data!=''){
+                var html="<option value=''>选择商品名称</option>";
+                $(data).each(function(i,v){
+                    if(v){
 
+                        if(v.name==baseGood[index].goodsname){
+                            html+="<option selected='selected' value='"+v.name+"'>"+ v.name+"</option>"
+                        }else{
+                            html+="<option value='"+v.name+"'>"+ v.name+"</option>"
                         }
 
-                    });
-                    $('#goodsname'+currentIndex).html('');
-                    $(html).appendTo('#goodsname'+currentIndex);
-                }else{
-                    var html="<option value=''>选择商品名称</option>";
-                    $('#goodsname'+currentIndex).html('');
-                    $(html).appendTo('#goodsname'+currentIndex);
-                }
 
-            });
 
-    //选中商品品牌
-    $.get('./?r=goods/get-all-brand',function(data){
-//        console.log(data);
-        if(data!=''){
-            var html="<option value=''>选择商品品牌</option>";
-            $(data).each(function(i,v){
-                if(v){
-
-                    if(v.BrandNo==baseGood[index].goodsbrand){
-                        html+="<option selected='selected' value='"+v.BrandNo+"'>"+ v.BrandName+"</option>"
-                    }else{
-                        html+="<option value='"+v.BrandNo+"'>"+ v.BrandName+"</option>"
+//                        html+="<option value='"+v.name+"'>"+ v.name+"</option>"
                     }
 
-                }
+                });
+                $('#goodsname'+currentIndex).html('');
+                $(html).appendTo('#goodsname'+currentIndex);
+            }else{
+                var html="<option value=''>选择商品名称</option>";
+                $('#goodsname'+currentIndex).html('');
+                $(html).appendTo('#goodsname'+currentIndex);
+            }
 
-            });
-            //console.log(html);
-            $('#goodsbrand'+currentIndex).html('');
-            $(html).appendTo('#goodsbrand'+currentIndex);
-        }else{
-            var html="<option value=''>选择商品品牌</option>";
-            $('#goodsrand'+currentIndex).html('');
-            $(html).appendTo('#goodsbrand'+currentIndex);
-        }
+        });
+    }else{
+        var html="<option value=''>选择商品名称</option>";
+        $('#goodsname'+currentIndex).html('');
+        $(html).appendTo('#goodsname'+currentIndex);
+    }
 
-    });
 
-    //选中厂家
-    $.get('./?r=goods/get-all-factory',function(data){
-        //console.log(data);
-        if(data!=''){
-            var html="<option value=''>选择厂家</option>";
-            $(data).each(function(i,v){
-                if(v){
 
-                    if(v.Id==baseGood[index].goodsfactory){
-                        html+="<option selected='selected' value='"+v.Id+"'>"+v.Name+"</option>"
-                    }else {
-                        html += "<option value='" + v.Id + "'>" + v.Name + "</option>"
+//选中商品品牌
+    var goodsname=baseGood[index].goodsname;
+    if(category_id){
+        //添加商品名称数据
+        $.get('./?r=goods/get-brand',{'goodsname':goodsname,'category_id':category_id},function(data){
+            //console.log(data);
+            if(data!=''){
+                var html="<option value=''>选择商品品牌</option>";
+                $(data).each(function(i,v){
+                    if(v){
+                        if(v.BrandNo==baseGood[index].goodsbrand){
+                            html+="<option selected='selected' value='"+v.BrandNo+"'>"+ v.BrandName+"</option>"
+                        }else{
+                            html+="<option value='"+v.BrandNo+"'>"+ v.BrandName+"</option>"
+                        }
+
                     }
-                }
 
-            });
-            //console.log(html);
-            $('#goodsfactory'+currentIndex).html('');
-            $(html).appendTo('#goodsfactory'+currentIndex);
-        }else{
-            var html="<option value=''>选择厂家</option>";
-            $('#goodsfactory'+currentIndex).html('');
-            $(html).appendTo('#goodsfactory'+currentIndex);
-        }
+                });
+                //console.log(html);
+                $('#goodsbrand'+currentIndex).html('');
+                $(html).appendTo('#goodsbrand'+currentIndex);
+            }else{
+                var html="<option value=''>选择商品品牌</option>";
+                $('#goodsrand'+currentIndex).html('');
+                $(html).appendTo('#goodsbrand'+currentIndex);
+            }
 
-    });
+        });
+    }else{
+        var html="<option value=''>选择商品品牌</option>";
+        $('#goodsbrand'+currentIndex).html('');
+        $(html).appendTo('#goodsbrand'+currentIndex);
+    }
 
+//选中厂家
+    var brand_id=baseGood[index].goodsbrand;
 
+    if(brand_id){
+        //添加商品名称数据
+        $.get('./?r=goods/get-factory',{'goodsname':goodsname,'category_id':category_id,'brand_id':brand_id},function(data){
+            //console.log(data);
+            if(data!=''){
+                var html="<option value=''>选择厂家</option>";
+                $(data).each(function(i,v){
+                    if(v){
+                        if(v.Id==baseGood[index].goodsfactory){
+                            html+="<option selected='selected' value='"+v.Id+"'>"+v.Name+"</option>"
+                        }else {
+                            html += "<option value='" + v.Id + "'>" + v.Name + "</option>"
+                        }
 
+                    }
 
+                });
+                //console.log(html);
+                $('#goodsfactory'+currentIndex).html('');
+                $(html).appendTo('#goodsfactory'+currentIndex);
+            }else{
+                var html="<option value=''>选择厂家</option>";
+                $('#goodsfactory'+currentIndex).html('');
+                $(html).appendTo('#goodsfactory'+currentIndex);
+            }
 
-
-
+        });
+    }else{
+        var html="<option value=''>选择厂家</option>";
+        $('#goodsfactory'+currentIndex).html('');
+        $(html).appendTo('#goodsfactory'+currentIndex);
+    }
 
 
     $("#good_sub_type_c").append($(itemStr));
@@ -458,10 +480,6 @@ function addGoodTypeWithData(index){
 
 
 }
-
-
-
-
 
 
     //选择运营中心后获取对应的服务中心

@@ -31,16 +31,16 @@ use feehi\widgets\Bar;
         ?>
         </tbody>
     </table>
-<!--    <select class="form-control"  id="addresses" >-->
-<!--    </select>-->
+    <select class="form-control"  id="addresses" >
+    </select>
     <script type="text/javascript" src="./static/js/jquery.min.js"></script>
     <script type="text/javascript" src="./static/js/layer/layer.js"></script>
     <script>
-//        var data=<?//=$data?>//;
+        var data=<?=$data?>;
     </script>
 <script>
     $(function(){
-//        initAddressSelect();
+        initAddressSelect();
     });
     function deleteAddress(id){
         var ii=layer.msg("操作中……");

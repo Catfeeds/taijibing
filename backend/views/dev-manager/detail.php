@@ -14,7 +14,7 @@ function getActType($type){
 ?>
 <div class="wrapper wrapper-content">
 
-    <?= $this->render('/widgets/_ibox-title') ?>
+    <div style="text-align: right;margin-bottom: 10px"> <?= \yii\bootstrap\Html::a('返回',['dev-manager/dynamic'],['class'=>'btn btn-primary'])?></div>
     <table class="table table-hover" style="background:white;">
         <thead>
         <th>序号</th>

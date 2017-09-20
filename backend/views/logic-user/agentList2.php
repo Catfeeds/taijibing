@@ -4,7 +4,7 @@ use yii\widgets\LinkPager;
     <div class="wrapper wrapper-content">
         <div style="margin-bottom:10px;">
             <form action="/index.php?r=logic-user/<?php echo $level==5?"agentslist":"agentxlist" ?>" method="post">
-                <span><label>名称:</label><input type="text" placeholder="请输入名称" name="username" value="<?=$username?>"/></span>
+                <span><label>关键字:</label><input type="text" placeholder="请输入名称或运营中心" name="username" value="<?=$username?>"/></span>
                 <span style="padding-left:10px;"><label>手机号:</label><input type="text" placeholder="请输入手机号" value="<?=$mobile?>" name="mobile"/></span>
                 <label style="padding-left:10px;">地区:</label>
                 <select class="control-label" name="province"  id="province">
@@ -21,14 +21,17 @@ use yii\widgets\LinkPager;
         </div>
         <table class="table table-hover" style="background:white;">
             <thead>
-            <th>序号</th>
-            <th>登录名称</th>
-            <th>名称</th>
-            <th>所在地区</th>
-            <th>联系人</th>
-            <th>手机号</th>
-            <th>最近操作时间</th>
-            <?= $role=='超级管理员'?'<th>操作详情</th>':''?>
+            <th style="width: 5%">序号</th>
+            <?= $role=='超级管理员'?'<th style="width: 8%">登录账号</th>':''?>
+            <th style="width: 10%">名称</th>
+            <th  style="width: 9%">所在地区</th>
+            <th  style="width: 18%">地址</th>
+            <th style="width: 8%">联系人</th>
+            <th style="width: 8%">联系电话</th>
+            <th style="width: 10%">所属运营中心</th>
+
+            <?= $role=='超级管理员'?'<th style="width: 15%">最近操作时间</th>':''?>
+            <?= $role=='超级管理员'?'<th style="width: 8%">操作详情</th>':''?>
             </thead>
             <tbody>
             <?php
@@ -42,10 +45,12 @@ use yii\widgets\LinkPager;
                         <td>".$val["LoginName"]."</td>
                         <td>".$val["Name"]."</td>
                         <td>".($val["Province"]."-".$val["City"]."-".$val["Area"])."</td>
+                        <td>".$val["Address"]."</td>
                         <td>".$val["ContractUser"]."</td>
                         <td>".$val["ContractTel"]."</td>
+                        <td>".$val["ParentName"]."</td>
                         <td>".$val["RowTime"]."</td>
-                        <td><a href='./?r=logic-user/active-log&id=".$val["Id"]."'>详情</a></td>
+                        <td><a href='./?r=log/index&user_id=".$val["Id"]."'>详情</a></td>
                         </tr>";
                     $no++;
                 }
@@ -54,12 +59,13 @@ use yii\widgets\LinkPager;
                 {
                     $str.= "<tr>
                         <td>".$no."</td>
-                        <td>".$val["LoginName"]."</td>
                         <td>".$val["Name"]."</td>
                         <td>".($val["Province"]."-".$val["City"]."-".$val["Area"])."</td>
+                        <td>".$val["Address"]."</td>
                         <td>".$val["ContractUser"]."</td>
                         <td>".$val["ContractTel"]."</td>
-                        <td>".$val["RowTime"]."</td>
+                        <td>".$val["ParentName"]."</td>
+
                         </tr>";
                     $no++;
                 }

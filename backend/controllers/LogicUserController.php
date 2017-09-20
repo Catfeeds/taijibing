@@ -36,7 +36,15 @@ class LogicUserController extends BaseController
          $model = $datas->offset($pages->offset)->limit($pages->limit)->asArray()->all();
 
          $address=(new Address())->allQuery()->asArray()->all();
+
+         //根据登陆者的信息，获取登陆者的角色
+         $login_id=Yii::$app->user->id;
+         //获取角色id
+         $role_id=AdminRoleUser::findOne(['uid'=>$login_id])->role_id;
+
+
          return $this->render('devfactoryList', [
+             'role_id' => $role_id,
              'model' => $model,
              'pages' => $pages,
              'address'=>$address,
@@ -65,12 +73,21 @@ class LogicUserController extends BaseController
         $city=$this->getParam("city");
         $area=$this->getParam("area");
         $level=4;//县区运营中心
-        $datas = AgentInfo::pageQueryWithCondition($username,$mobile,$province,$city,$area,$level);
+        $datas = AgentInfo::pageQueryWithCondition2($username,$mobile,$province,$city,$area,$level);
         $pages = new Pagination(['totalCount' => $datas->count(), 'pageSize' => 10]);
         $model = $datas->offset($pages->offset)->limit($pages->limit)->asArray()->all();
         $address=(new Address())->allQuery()->asArray()->all();
         //县级代理
+        //根据登陆者的信息，获取登陆者的角色
+        $login_id=Yii::$app->user->id;
+        //获取角色id
+        $role_id=AdminRoleUser::findOne(['uid'=>$login_id])->role_id;
+        //获取角色
+
+
+
         return $this->render('agentList', [
+            'role_id' => $role_id,
             'model' => $model,
             'pages' => $pages,
             'level'=>$level,
@@ -85,15 +102,17 @@ class LogicUserController extends BaseController
 
     //社区服务中心
     public function actionAgentslist(){
-        $username=$this->getParam("username");
+        $username=addslashes($this->getParam("username"));
         $mobile=$this->getParam("mobile");
         $province=$this->getParam("province");
         $city=$this->getParam("city");
         $area=$this->getParam("area");
         $level=5;//社区服务中心
         $datas =AgentInfo::pageQueryWithCondition($username,$mobile,$province,$city,$area,$level);
+//var_dump($datas);exit;
         $pages = new Pagination(['totalCount' => $datas->count(), 'pageSize' => 10]);
         $model = $datas->offset($pages->offset)->limit($pages->limit)->asArray()->all();
+//        var_dump($datas);exit;
         $address=(new Address())->allQuery()->asArray()->all();
         //根据登陆者的信息，获取登陆者的角色
         $login_id=Yii::$app->user->id;
@@ -127,12 +146,13 @@ class LogicUserController extends BaseController
         $city=$this->getParam("city");
         $area=$this->getParam("area");
         $datas = FactoryInfo::findWithCondition($username,$mobile,$province,$city,$area);
+//        var_dump($datas);exit;
         $pages = new Pagination(['totalCount' => $datas->count(), 'pageSize' => 10]);
         $model = $datas->offset($pages->offset)->limit($pages->limit)->asArray()->all();
         $address=(new Address())->allQuery()->asArray()->all();
 //var_dump($model);exit;
         //获取每个水厂剩余条码数最少的品牌
-        $least=yii\db\ActiveRecord::findBySql('select * from (select * from factory_wcode ORDER BY LeftAmount ASC ) as tamp GROUP BY Fid ')->asArray()->all();
+        $least=yii\db\ActiveRecord::findBySql('select * from (select * from factory_wcode ORDER BY LeftAmount ASC ) as tamp GROUP BY Fid ORDER BY LeftAmount')->asArray()->all();
         $BrandName=[];
         $LeftAmount=[];
         foreach($least as $v){
@@ -145,13 +165,31 @@ class LogicUserController extends BaseController
 //                $brandname[$v['Fid']]=$data[0]['BrandName'];
 //                $least[$v['Fid']]=$v['LeftAmount'];
                 $BrandName[$v['Fid']]=$data[0]['BrandName'];
-                $LeftAmount[$v['Fid']]=$v['LeftAmount'];
+//                $LeftAmount[$v['Fid']]=$v['LeftAmount'];
 
+            }else{
+                $BrandName[$v['Fid']]='未知品牌';
+//                $LeftAmount[$v['Fid']]=$v['LeftAmount'];
             }
+
+            $LeftAmount[$v['Fid']]=$v['LeftAmount'];
+
         }
-//        var_dump($BrandName);exit;
+
+//        var_dump($BrandName,$LeftAmount);exit;
+
+        //根据登陆者的信息，获取登陆者的角色
+        $login_id=Yii::$app->user->id;
+        //获取角色id
+        $role_id=AdminRoleUser::findOne(['uid'=>$login_id])->role_id;
+        //获取角色
+//        $role=AdminRoles::findOne(['id'=>$role_id])->role_name;
+
+
+
 
         return $this->render('factoryList', [
+            'role_id' => $role_id,
             'BrandName'=>$BrandName,
             'LeftAmount'=>$LeftAmount,
             'model' => $model,
@@ -168,6 +206,7 @@ class LogicUserController extends BaseController
 
     //服务中心操作详情
     public function actionActiveLog(){
+
 
     }
 

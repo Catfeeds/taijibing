@@ -50,12 +50,13 @@ use yii\widgets\LinkPager;
     <form action="/index.php?r=dev-manager/list" method="post">
         <div style="margin-bottom:10px;">
 
-            <span style="padding-left:5px;display:inline-block"><label>设备编号:</label><input type="text" name="devno" value="<?=$devno?>"/></span>
-            <span style="padding-left:5px;display:inline-block"><label>设备手机号:</label><input type="text" name="mobile" value="<?=$mobile?>"/></span>
-            <span style="padding-left:5px;display:inline-block"><label>用户手机号:</label><input type="text" name="tel" value="<?=$tel?>"/></span>
-            <span style="padding-left:5px;display:inline-block"><label>厂家:</label><input type="text" name="devf" value="<?=$devf?>"/></span>
-            <span style="padding-left:5px;display:inline-block"><label>社区服务中心:</label><input type="text" name="sname" value="<?=$sname?>"/></span>
-            <span style="padding-left:5px;display:inline-block"><label>县区运营中心:</label><input type="text" name="xname" value="<?=$xname?>"/></span>
+<!--            <span style="padding-left:5px;display:inline-block"><label>设备编号:</label><input type="text" name="devno" value="--><?//=$devno?><!--"/></span>-->
+<!--            <span style="padding-left:5px;display:inline-block"><label>设备手机号:</label><input type="text" name="mobile" value="--><?//=$mobile?><!--"/></span>-->
+<!--            <span style="padding-left:5px;display:inline-block"><label>用户手机号:</label><input type="text" name="tel" value="--><?//=$tel?><!--"/></span>-->
+<!--            <span style="padding-left:5px;display:inline-block"><label>厂家:</label><input type="text" name="devf" value="--><?//=$devf?><!--"/></span>-->
+<!--            <span style="padding-left:5px;display:inline-block"><label>社区服务中心:</label><input type="text" name="sname" value="--><?//=$sname?><!--"/></span>-->
+<!--            <span style="padding-left:5px;display:inline-block"><label>县区运营中心:</label><input type="text" name="xname" value="--><?//=$xname?><!--"/></span>-->
+            <span style="padding-left:5px;display:inline-block"><label>搜索内容:</label><input placeholder="请输入关键词" id="search" type="text" name="search" value="<?=$search?>"/></span>
             <span style="padding-left:5px;display:inline-block">
                 <label>地区:</label>
                  <select class="control-label" name="province"  id="province">
@@ -75,46 +76,73 @@ use yii\widgets\LinkPager;
     <a href="javascript:batchOpenDialog();" style="color:white;display:inline-block;margin-bottom:10px;"><input type="button" class="btn" value="批量下发"/></a>
     <table class="table table-hover" style="background:white;">
         <thead>
-        <th><input type="checkbox" id="selectAll"/></th>
-        <th>序号</th>
-        <th>设备编号</th>
-        <th>设备机型</th>
-        <th>设备厂家</th>
-        <th>用户</th>
-<!--        <th>设备手机号</th>  <td>".$val["DevBindMobile"]."</td>-->
-        <th>用户手机号</th>
-<!--        <th>厂家</th>  <td>".$val["DevFactory"]."</td>-->
-        <th>社区服务中心</th>
-        <th>县区运营中心</th>
-        <th>设备激活时间</th>
-        <th>位置信息</th>
+        <th style="width: 1%"><input type="checkbox" id="selectAll"/></th>
+        <th style="width: 5%">序号</th>
+        <th style="width: 4%">设备编号</th>
+        <th style="width: 5%">ICCID</th>
+        <th style="width: 9%">设备机型</th>
+        <th style="width: 9%">设备厂家</th>
+        <th style="width: 9%">用户姓名</th>
+        <th style="width: 4%">手机号</th>
+        <th style="width: 10%">设备激活时间</th>
+        <th style="width: 9%">所在区域</th>
+        <th style="width: 11%">位置信息</th>
+        <th style="width: 9%">服务中心</th>
+        <th style="width: 9%">运营中心</th>
 <!--        <th>最近命令日志</th>  <td>".$val["Cmd"]."</td>-->
 <!--        <th>最近命令时间</th>  <td>".$val["RowTime"]."</td>-->
-        <th>操作</th>
+        <?= $role_id==1?'<th style="width: 6%">操作</th>':''?>
         </thead>
         <tbody>
         <?php
         $str='';
         $no=1;
-        foreach($model as $key=>$val)
-        {
-            $str.= "<tr>
+        if($role_id==1){
+            foreach($model as $key=>$val)
+            {
+                $str.= "<tr>
                         <td><input type='checkbox' devno='".$val["DevNo"]."' class='devitem'/></td>
                         <td>".$no."</td>
                         <td>".$val["DevNo"]."</td>
+                        <td>".$val["HwNo"]."</td>
                         <td>".$val["Type"]."</td>
                         <td>".$val["DevFactory"]."</td>
                         <td>".$val["UserName"]."</td>
                         <td>".$val["Tel"]."</td>
+                        <td>".$val["RowTime"]."</td>
+                        <td>".$val["Province"].'-'.$val["City"].'-'.$val["Area"]."</td>
+                        <td>".$val["Address"].")</td>
                         <td>".$val["agentname"]."</td>
                         <td>".$val["agentpname"]."</td>
-                        <td>".$val["Date"]."</td>
-                        <td>".$val["Address"]."(".$val["Lat"].",".$val["Lng"].")</td>
                         <td><a href='javascript:void(0);' class='openDialogClass' devno='".$val["DevNo"]."'>下发命令</a></td>
                         </tr>";
-            $no++;
+                $no++;
+            }
+            echo $str;
+        }else{
+            foreach($model as $key=>$val)
+            {
+                $str.= "<tr>
+                        <td><input type='checkbox' devno='".$val["DevNo"]."' class='devitem'/></td>
+                        <td>".$no."</td>
+                        <td>".$val["DevNo"]."</td>
+                        <td>".$val["HwNo"]."</td>
+                        <td>".$val["Type"]."</td>
+                        <td>".$val["DevFactory"]."</td>
+                        <td>".$val["UserName"]."</td>
+                        <td>".$val["Tel"]."</td>
+                        <td>".$val["RowTime"]."</td>
+                        <td>".$val["Province"].'-'.$val["City"].'-'.$val["Area"]."</td>
+                        <td>".$val["Address"].")</td>
+                        <td>".$val["agentname"]."</td>
+                        <td>".$val["agentpname"]."</td>
+                        </tr>";
+                $no++;
+            }
+            echo $str;
         }
-        echo $str;
+
+
         ?>
         </tbody>
     </table>
@@ -179,6 +207,27 @@ use yii\widgets\LinkPager;
     var area='<?=$area?>';
 </script>
 <script>
+
+    $(function(){
+        $('.pagination a').click(function(){
+
+            var search=$('#search').val();
+            var province=$('#province option:selected').val();
+            var city=$('#city option:selected').val();
+            var area=$('#area option:selected').val();
+
+            var href=$(this).attr('href');
+
+            $(this).attr('href',href+'&search='+search+'&province='+province+'&city='+city+'&area='+area);
+//                var href2=$(this).attr('href');
+//                alert(href2)
+        });
+    });
+
+
+
+
+
     var devList=new Array();
     $(function(){
         $("#selectAll").on("change",function(){

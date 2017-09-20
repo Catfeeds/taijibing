@@ -1,6 +1,7 @@
 <?php
 namespace backend\models;
 
+use backend\controllers\AdminUserController;
 use feehi\libs\File;
 use Yii;
 use yii\base\NotSupportedException;
@@ -42,16 +43,17 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username','password','repassword','password_hash','avatar','name',
-            'contacts','address','province','city','area'], 'string'],
+            [['username','type','password','repassword','password_hash','avatar','name',
+            'contacts','address','province','city','area'], 'required'],
             ['email', 'email'],
             ['email', 'unique'],
+            ['agent', 'string'],
             [['repassword'], 'compare','compareAttribute'=>'password'],
 //            [['username','email','password', 'repassword','url'], 'required', 'on'=>['create']],
             [['username','email','password', 'repassword','name','type','lng','lat',
                 'contacts','address','province','tel'], 'required'],
             [['username','email'], 'required', 'on'=>['update', 'self-update']],
-            [['username'], 'unique', 'on'=>'create'],
+            [['username'], 'unique'],
             [['city','area','agent'],'safe'],
         ];
     }
@@ -64,8 +66,7 @@ class User extends ActiveRecord implements IdentityInterface
             'create' => ['username', 'email', 'password','repassword', 'type','name','contacts',
                 'tel','address','lng','lat','province','city','area','agent'],
 //            'update' => ['username', 'email', 'password', 'avatar'],
-            'update' => [[ 'email','type','name','contacts',
-                'tel','address','lng','lat','province','city','area','agent']],
+            'update' => [[ 'email','type','agent']],
 
             'self-update' => ['username', 'email', 'password', 'avatar', 'old_password', 'repassword'],
         ];
@@ -313,6 +314,9 @@ class User extends ActiveRecord implements IdentityInterface
 
 
     }
+
+
+
 
 }
 

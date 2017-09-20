@@ -14,6 +14,8 @@ use feehi\widgets\Bar;
 $this->title = "Admin Log";
 ?>
 <div class="row" xmlns="http://www.w3.org/1999/html">
+    <div style="text-align: right;margin-bottom: 10px"> <?php if($user_id) echo \yii\bootstrap\Html::a('返回',['logic-user/agentslist'],['class'=>'btn btn-primary'])?></div>
+
     <div class="col-sm-12">
         <div class="ibox">
             <?= $this->render('/widgets/_ibox-title') ?>

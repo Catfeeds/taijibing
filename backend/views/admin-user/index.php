@@ -10,6 +10,7 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use backend\models\AdminRoles;
 use feehi\widgets\Bar;
+use backend\models\LogicUserInfo;
 
 $assignment = function($url, $model){
     return Html::a('<i class="fa fa-tablet"></i> '.yii::t('app', 'Assign Roles'), Url::to(['assign','uid'=>$model['id']]), [
@@ -36,46 +37,67 @@ $this->title = "Admin";
                         [
                             'class' => 'feehi\grid\CheckboxColumn',
                         ],
-//                        [
-//                            'attribute' => 'id',
-//                            'label' => '平台ID',
-//                        ],
-//                        [
-//                            'attribute' => 'name',
-//                            'label' => '登陆账号',
-//                        ],
+                        [
+                            'attribute'=>'id',
+                            'label'=>'平台Id',
+                        ],
+
                         [
                             'attribute' => 'username',
-//                            'label' => '账户名',
                         ],
                         [
+                            'attribute' => 'nickname',
+                            'label'=>'账户名称',
+                            'value' => function($model){
+                                return LogicUserInfo::getNickNameByRoleType($model);
+                            },
+                        ],
+
+                        [
                             'attribute' => 'role',
-                            'label' => yii::t('app', 'Role'),
+                            'label' => '账户类型',
                             'value' => function($model){
                                 return AdminRoles::getRoleNameByUid($model->id);
                             },
                         ],
+
+                        [
+                            'attribute' => 'address',
+                            'label'=>'所在地区',
+                            'value' => function($model){
+                                return LogicUserInfo::getAddressDes($model);
+                            },
+                        ],
+                        [
+                            'attribute' => 'contactName',
+                            'label'=>'联系人',
+                            'value' => function($model){
+                                if($model->logic_type==0){
+                                    return "--";
+                                }
+                                $user=LogicUserInfo::getLogicModel($model);
+                                return $user["ContractUser"];
+                            },
+                        ],
+                        [
+                            'attribute' => 'contactTel',
+                            'label'=>'联系电话',
+                            'value' => function($model){
+                                if($model->logic_type==0){
+                                    return "--";
+                                }
+                                $user=LogicUserInfo::getLogicModel($model);
+                                return $user["ContractTel"];
+                            },
+                        ],
 //                        [
-//                            'attribute' => 'type',
-//                            'label' => '账户类型',
+//                            'attribute' => 'address',
 //                            'value' => function($model){
-//                                return AdminRoles::getRoleNameByUid($model->id);
+//                                return LogicUserInfo::getAddressDes($model);
 //                            },
 //                        ],
 
-//                        [
-//                            'attribute' => 'province',
-//                            'label' => '所在地区',
-//                        ],
 
-//                        [
-//                            'attribute' => 'contacts',
-//                            'label' => '联系人',
-//                        ],
-//                        [
-//                            'attribute' => 'tel',
-//                            'label' => '联系电话',
-//                        ],
 
                         [
                             'attribute' => 'email',

@@ -13,13 +13,16 @@ use backend\models\AdminLog;
 
 class LogController extends BaseController{
 
-    public function actionIndex()
+    public function actionIndex($user_id='')
     {
         $searchModel = new AdminLogSearch();
-        $dataProvider = $searchModel->search(yii::$app->getRequest()->getQueryParams());
+
+        $dataProvider = $searchModel->search(yii::$app->getRequest()->getQueryParams(),$user_id);
+//        var_dump($dataProvider);exit;
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
+            'user_id' => $user_id,
         ]);
     }
 

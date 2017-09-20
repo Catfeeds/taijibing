@@ -60,11 +60,11 @@ class AddressController extends BaseController
 
 
 
-//        $data=(new Address())->allQuery()->asArray()->all();
+        $data=(new Address())->allQuery()->asArray()->all();
         return $this->render('index', [
             'model' => $model,
             'pages' => $pages,
-//            "data"=>json_encode($data)
+            "data"=>json_encode($data)
         ]);
     }
     public function actionDelete($id)

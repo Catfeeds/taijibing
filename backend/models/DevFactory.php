@@ -18,8 +18,26 @@ class DevFactory extends ActiveRecord
     {
         return 'dev_factory';
     }
+    public  function insertBaseInfo2($Admin_User_Id,$loginName='',$Name,$Address,$ContractTel,
+         $ContractUser,$Province,$City,$Area,$BaiDuLng,$BaiDuLat){
+        $this->setAttribute("Admin_User_Id",$Admin_User_Id);
+        $this->setAttribute("LoginName",$loginName);
+        $this->setAttribute("Address",$Address);
+        $this->setAttribute("ContractTel",$ContractTel);
+        $this->setAttribute("ContractUser",$ContractUser);
+        $this->setAttribute("Province",$Province);
+        $this->setAttribute("City",$City);
+        $this->setAttribute("Area",$Area);
+        $this->setAttribute("BaiDuLng",$BaiDuLng);
+        $this->setAttribute("BaiDuLat",$BaiDuLat);
+//        $this->setAttribute("LoginPwd",md5($pwd));
+        $this->setAttribute("Name",$Name);
+        $this->setAttribute("RowTime",date("Y-m-d H:i:s"));
+        return $this->save(false);
+    }
+
     public  function insertBaseInfo($Admin_User_Id,$loginName='',$Name,$Address,$ContractTel,
-         $ContractUser,$Province,$City,$Area,$BaiDuLng,$BaiDuLat,$pwd=''){
+                                    $ContractUser,$Province,$City,$Area,$BaiDuLng,$BaiDuLat,$pwd=''){
         $this->setAttribute("Admin_User_Id",$Admin_User_Id);
         $this->setAttribute("LoginName",$loginName);
         $this->setAttribute("Address",$Address);
@@ -52,12 +70,13 @@ class DevFactory extends ActiveRecord
     {
         return [
             'default' => ['Name', 'ContractTel','ContractUser','Address','Type','CardFactory','Province','City','Area','BaiDuLat','BaiDuLng'],
+            'update' => ['LoginName','Name', 'ContractTel','ContractUser','Address','Type','CardFactory','Province','City','Area','BaiDuLat','BaiDuLng'],
         ];
     }
     public static function findWithCondition($username,$mobile,$province,$city,$area){
         $where='';
         if(!empty($username)){
-            $where.=" Name='$username'";
+            $where.=" Name like '%$username%'";
         }
         if(!empty($mobile)){
             if(!empty($where)){
@@ -87,5 +106,11 @@ class DevFactory extends ActiveRecord
 
 
     }
+
+
+    public static function findByName($name=""){
+        return self::findBySql("select * from dev_factory where LoginName='$name'")->asArray()->one();
+    }
+
 
 }

@@ -4,11 +4,16 @@
     <file url="file://$PROJECT_DIR$/backend/controllers/ShopController.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/controllers/TeaBrandController.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/models/Customer.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/models/FactoryWcode.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/models/Goods.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/models/TeaBrand.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/views/admin-user/assign.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/views/admin-user/index.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/views/admin-user/index2.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/views/admin-user/index3.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/views/admin-user/update2.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/views/auth-user/assign.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/views/auth-user/authlist.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/views/customer/update.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/views/recharge/recharge.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/views/tea-brand/add.php" charset="UTF-8" />

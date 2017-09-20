@@ -18,66 +18,149 @@ class CustomSearch extends ActiveRecord
     {
         return "user_info";
     }
-    public static function pageQuery($username,$mobile,$province,$city,$area)
+    public static function pageQuery($content,$usetype,$customertype,$province,$city,$area)
     {
 
         //读取状态为0的，-1 被删除
-        $where=' user_info.state=0 ';
-        if(!empty($username)){
-            $where.=" and Name='$username'";
-        }
-        if(!empty($mobile)){
+        $where=' user_info.State=0 ';
+//        if(!empty($username)){
+//            $where.=" and Name='$username'";
+//        }
+//        if(!empty($mobile)){
+//            if(!empty($where)){
+//                $where.=" and ";
+//            }
+//            $where.="Tel='$mobile' ";
+//        }
+
+        if(!empty($content)){
             if(!empty($where)){
                 $where.=" and ";
             }
-            $where.="Tel='$mobile' ";
+            $where.=" (dev_regist.DevNo like '%$content%' or user_info.Name  like '%$content%'
+                      or dev_regist.UseType like '%$content%' or dev_regist.CustomerType like '%$content%'
+                       or agent_info.Name like '%$content%' or user_info.Tel like '%$content%')";
         }
+
+        if(!empty($usetype)){
+            if(!empty($where)){
+                $where.=" and ";
+            }
+            $where.=" dev_regist.UseType='$usetype' ";
+        }
+
+        if(!empty($customertype)){
+            if(!empty($where)){
+                $where.=" and ";
+            }
+            $where.=" dev_regist.CustomerType='$customertype' ";
+        }
+
+
         if(!empty($province)){
             if(!empty($where)){
                 $where.=" and ";
             }
-            $where.="Province='$province' ";
+            $where.=" dev_regist.Province='$province' ";
         }
         if(!empty($city)){
             if(!empty($where)){
                 $where.=" and ";
             }
-            $where.="City='$city' ";
+            $where.=" dev_regist.City='$city' ";
         }
         if(!empty($area)){
             if(!empty($where)){
                 $where.=" and ";
             }
-            $where.="Area='$area' ";
+            $where.=" dev_regist.Area='$area' ";
         }
         $model = User::findOne(['id' => yii::$app->getUser()->getIdentity()->getId()]);
         $logic_type = $model->getAttribute("logic_type");
         if ($logic_type == 3||$logic_type == 4) {
             //代理商
             $username=$model->getAttribute("username");
-            return CustomSearch::pageQueryByname($where,$username);
+            return CustomSearch::pageQueryByname($where,$username,$logic_type);
         }
-        return self::findBySql("select * from user_info  ".(empty($where)?"":" where ".$where));
-
+        return self::findBySql("select DISTINCT user_info.Id, user_info.Name,
+        user_info.Tel,dev_regist.Province,dev_regist.City,dev_regist.Area,
+        dev_regist.Address,dev_regist.DevNo ,dev_regist.UseType,
+        dev_regist.CustomerType,dev_regist.RowTime,agent_info.Name as AgentName
+        from user_info
+        JOIN dev_regist ON user_info.Id=dev_regist.UserId
+        JOIN agent_info ON dev_regist.AgentId=agent_info.Id
+        ".(empty($where)?"":" where ".$where)."ORDER BY dev_regist.RowTime DESC ");
 
     }
-    public static function pageQueryByname($where,$loginName)
+    public static function pageQueryByname($where,$loginName,$logic_type)
     {
-        //根据登陆名称获取agentid
-        $agint_id=AgentInfo::findOne(['LoginName'=>$loginName])->Id;
 
-        //根据agentid获取下面的所以用户id
-        $datas=DevRegist::findAll(['AgentId'=>$agint_id]);
+
+        $str='';
+        $agent_id=-1;
+        if($logic_type==3){//运营中心
+            //获取改运营中心下的所有服务中心
+            //获取运营中心id
+            $data=AgentInfo::findOne(['LoginName'=>$loginName]);
+
+            if($data){
+                $agent_id=$data->Id;//运营中心id
+                //获取下面的服务中心id
+                $str="(select agent_info.Id from agent_info where agent_info.ParentId = $agent_id)";
+                //获取下面的服务中心
+//                $datas=AgentInfo::findAll(['ParentId'=>$agint_id]);
+//
+//                foreach($datas as $v){
+//                    $ids[]=$v->Id;//所有服务中心的id
+//                }
+
+                //根据agentid获取下面的所有用户id
+//                $datas=DevRegist::find()->where(['in' , 'AgentId' , $ids])->all();
+
+            }
+        }else{//服务中心
+
+            //根据登陆名称获取agentid
+            $data=AgentInfo::findOne(['LoginName'=>$loginName]);
+            if($data){
+//                $agint_id=$data->Id;
+                $str="(select agent_info.Id from agent_info where agent_info.LoginName='{$loginName}')";
+//                $ids[]=$agint_id;
+                //根据agentid获取下面的所有用户id
+//                $datas=DevRegist::findAll(['AgentId'=>$agint_id]);
+            }
+
+
+        }
+
+
+
+//        $sr="where dev_regist.AgentId in ".$ids;
+
+//        return $str;
 
         //获取所有用户
-        $sql="select * from user_info where Id in (select UserId from dev_regist where AgentId={$agint_id})".(empty($where)?"":" and ".$where);
+        $sql="select user_info.Id, user_info.Name,
+        user_info.Tel,dev_regist.Province,dev_regist.City,dev_regist.Area,
+        dev_regist.Address,dev_regist.DevNo ,dev_regist.UseType,
+        dev_regist.CustomerType,dev_regist.RowTime,agent_info.Name as AgentName
+            from user_info
+            JOIN dev_regist ON user_info.Id=dev_regist.UserId
+            JOIN agent_info ON dev_regist.AgentId=agent_info.Id
+            where dev_regist.AgentId={$agent_id} or dev_regist.AgentId in $str".(empty($where)?"":" and ".$where);
+
+//        $sql2="select user_info.*,dev_regist.DevNo ,dev_regist.UseType,dev_regist.CustomerType,agent_info.Name as AgentName
+// from user_info
+//left join (select distinct dev_regist.UserId from dev_regist inner join agent_info where agent_info.`Id`=`dev_regist`.`AgentId` or agent_info.`ParentId`= `dev_regist`.`AgentId` and  agent_info.`LoginName`='$loginName') as temp
+//on user_info.`Id`=temp.UserId
+//JOIN dev_regist ON user_info.Id=dev_regist.UserId
+//            JOIN agent_info ON dev_regist.AgentId=agent_info.Id
+//".(empty($where)?"":" where ".$where);
+
+
+
+
         return CustomSearch::findBySql($sql);
-
-
-
-
-
-
 
 
 

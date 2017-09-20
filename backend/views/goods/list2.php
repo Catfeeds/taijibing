@@ -52,36 +52,43 @@
     <h2>在售商品管理&nbsp;&nbsp;&nbsp;</h2>
 </div>
 <div id="sample_2_wrapper" class="dataTables_wrapper form-inline" role="grid" style="padding-left:10px;">
+    <form action="./?r=goods/list" method="post">
+        商户名称：<input id="search" placeholder="请输入商户名" value="<?=$search?>" type="text" name="content">
+        <input type="submit" value="搜索" >
+    </form>
     <table style="margin: 5px 0 10px 0;width: 100%" cellpadding="5px">
-        <tr>
-            <td style="width: 100px;text-align: left">供应商名称：</td>
-            <td style="width: 200px;text-align: left">
-                <select id="categoryid" style="width: 180px">
-                    <option value="0">请选择</option>
-                </select> </td>
-            <td style="width: 100px;text-align: right">商品频道：</td>
-            <td style="width: 200px">
-                <select id="" style="width: 180px">
-                    <option value="0">请选择</option>
-                </select>
-            </td>
-            <td style="text-align: left">商品ID：</td>
-            <td style="text-align: left"><input id="goodid"  type="text"  style="width:180px"/> </td>
-        </tr>
-        <tr>
-            <td style="width: 80px;text-align: left">商品名称：</td>
-            <td style="width: 200px;text-align: left"><input id="name" type="text" maxlength="25" style="width:180px"/> </td>
-            <td style="width: 80px;text-align: right">上架时间：</td>
-            <td style="width: 200px">
-                <input id="time" type="text" maxlength="11" style="width:180px"/>
-            </td>
-            <td style="width: 80px;text-align: right"><input type="button" class="btn  select_btn" value="查询" onclick="query()"/> </td>
-            <td><input type="button" class="btn  select_btn" value="清空" onclick="cleardata()"/> </td>
-        </tr>
+<!--<!--        <tr>-->
+<!--<!--            <td style="width: 100px;text-align: left">商品分类：</td>-->
+<!--<!--            <td style="width: 200px;text-align: left">-->
+<!--<!--                <select id="categoryid" style="width: 180px">-->
+<!--<!--                    <option value="0">请选择</option>-->
+<!--<!--                </select> </td>-->
+<!--<!--            <td style="width: 100px;text-align: right">商品品牌：</td>-->
+<!--<!--            <td style="width: 200px">-->
+<!--<!--                <select id="" style="width: 180px">-->
+<!--<!--                    <option value="0">请选择</option>-->
+<!--<!--                </select>-->
+<!--<!--            </td>-->
+<!--<!--            <td style="text-align: left">商品厂家：</td>-->
+<!--<!--            <td style="text-align: left"><input id="goodid"  type="text"  style="width:180px"/> </td>-->
+<!--<!--        </tr>-->
+<!--        <tr >-->
+<!--            <td style="width: 60px;text-align: left">商品名称：</td>-->
+<!--            <td style=" width: 10px;text-align: left"><input id="name" type="text" maxlength="25" style="width:180px"/> </td>-->
+<!--<!--            <td style="width: 80px;text-align: right">上架时间：</td>-->
+<!--<!--            <td style="width: 200px">-->
+<!--<!--                <input id="time" type="text" maxlength="11" style="width:180px"/>-->
+<!--<!--            </td>-->
+<!--            <td style="width: 10px;text-align: left"><input type="button" class="btn  select_btn" value="查询" onclick="query()"/> </td>-->
+<!--            <td style="width: 700px;text-align: left"></td>-->
+<!--<!--            <td><input type="button" class="btn  select_btn" value="清空" onclick="cleardata()"/> </td>-->
+<!--        </tr>-->
         <tr>
             <td colspan="6" style="text-align: left"><input type="button" class="btn  select_btn" value="+添加商户" onclick="window.location='/index.php?r=goods/addgood'"/></td>
         </tr>
     </table>
+
+
 <!--    <div class="rect" style="display: none;position: absolute;left: 0px;top: 0px">-->
 <!--        <div onclick="waittingsale()"><a>待售</a></div>-->
 <!--        <div onclick="shelf()"><a>失效</a></div>-->
@@ -144,13 +151,19 @@
 
 <script src="./static/js/datepicker/dateRange.js"></script>
 <script>
-    var category=<?=json_encode($category)?>;
+//    var category=<?//=json_encode($category)?>//;
     var merchant='';
     var addr='';
 //    var merchant=<?//=json_encode($merchant)?>//;
 //    var addr='<?//=$preview?>//';
 </script>
 <script type="text/javascript">
+
+//    var search=<?//=$search?>
+//
+//    $('#search').val(search);
+
+
 
     //删除
     var ii=layer.msg("操作中……");
@@ -204,17 +217,17 @@
         });
 
 //        query();
-        $("#categoryid").empty();
-//        $("#merchantid").empty();
-        var html="<option value='0'>请选择</option>";
-//        $("<option value='0'>请选择</option>").appendTo($("#categoryid"));
-        $(category).each(function(i,v){
-            if(v){
-                html+="<option value="+ v.category_id+">"+ v.name+"</option>";
-            }
-        });
-
-        $(html).appendTo('#categoryid');
+//        $("#categoryid").empty();
+////        $("#merchantid").empty();
+//        var html="<option value='0'>请选择</option>";
+////        $("<option value='0'>请选择</option>").appendTo($("#categoryid"));
+//        $(category).each(function(i,v){
+//            if(v){
+//                html+="<option value="+ v.category_id+">"+ v.name+"</option>";
+//            }
+//        });
+//
+//        $(html).appendTo('#categoryid');
 
 
 //        $("<option value='0'>请选择</option>").appendTo($("#merchantid"));

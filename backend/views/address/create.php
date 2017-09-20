@@ -16,10 +16,25 @@
                     <form id="w0" class="form-horizontal" action="/index.php?r=address/create" method="post">
 
                         <div class="form-group field-user-username required ">
-                            <label class="col-sm-2 control-label" for="user-username">上级地区</label>
+                            <label class="col-sm-2 control-label" for="user-username">选择地区</label>
                             <div class="col-sm-10"> <select class="form-control" name="Address[PId]" id="addresses" >
                                 <option value="0">请选择</option>
                             </select>
+
+<!--                                <label class="col-sm-2 control-label" for="user-username">选择地区</label>-->
+<!--                                <div class="col-sm-3"> <select class="form-control" name="Address[province]" id="province" >-->
+<!--                                        <option value="0">请选择</option>-->
+<!--                                    </select>-->
+<!---->
+<!--<!--                            <label class="col-sm-2 control-label" for="user-username">上级地区</label>-->
+<!--                            <div class="col-sm-3"> <select class="form-control" name="Address[city]" id="city" >-->
+<!--                                    <option value="0">请选择</option>-->
+<!--                            </select>-->
+<!---->
+<!--<!--                            <label class="col-sm-2 control-label" for="user-username">上级地区</label>-->
+<!--                            <div class="col-sm-3"> <select class="form-control" name="Address[area]" id="area" >-->
+<!--                                    <option value="0">请选择</option>-->
+<!--                            </select>-->
                         </div>
                         </div>
                         <div class="form-group field-user-username required ">

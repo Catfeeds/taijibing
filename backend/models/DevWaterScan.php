@@ -133,7 +133,7 @@ class DevWaterScan extends  ActiveRecord
 
 
 
-    public static function totalQuery3($DevNo, $selecttime,$xname,$sname,$waterfname){
+    public static function totalQuery3($DevNo,$selecttime,$content){
         $model = User::findOne(['id'=>yii::$app->getUser()->getIdentity()->getId()]);
         $logic_type=$model->getAttribute("logic_type");
         $username='';
@@ -141,11 +141,11 @@ class DevWaterScan extends  ActiveRecord
             //代理商
             $username=$model->getAttribute("username");
         }
-        $where =self::getSaomaListWhereStr($selecttime,$xname,$sname,$waterfname,$username);
+        $where =self::getSaomaListWhereStr2($selecttime,$content,$username);
 //        var_dump($DevNo);exit;
 //        var_dump($where);exit;
         //先排序，再分组。获取每个设备最近的一条扫码记录（点击详情时才读取该设备的所有记录）
-        $sql="select DISTINCT dev_water_scan_log.BarCode,dev_water_scan_log.DevNo,dev_water_scan_log.RowTime,user_info.`Address`,user_info.`Name`,user_info.`Tel`,agent_info.`Name` as agentName,dev_regist.`DevFactory`,factory_info.`Name` as factoryName
+        $sql="select DISTINCT dev_water_scan_log.BarCode,dev_water_scan_log.DevNo,dev_water_scan_log.RowTime,user_info.`Address`,user_info.`Name`,user_info.`Tel`,agent_info.`Name` as agentName,dev_regist.`DevFactory`,dev_regist.`Province`,dev_regist.`City`,dev_regist.`Area`,factory_info.`Name` as factoryName
  from dev_water_scan
  right join dev_water_scan_log on dev_water_scan_log.`BarCode` = dev_water_scan.`BarCode`
 INNER join user_info on dev_water_scan.`UserId`=user_info.`Id`
@@ -156,10 +156,11 @@ left join `factory_info` on factory_info.`Id`=wcode_info.`FId` where dev_water_s
  ".(empty($where)?"":" and $where")." order by dev_water_scan_log.`RowTime` Desc ";
 
 //        var_dump($sql);exit;
+//        return $sql;
         return static::findBySql($sql);
     }
 
-    public static function pageQuery3($DevNo,$offset=0,$limit=0,$selecttime,$xname,$sname,$waterfname){
+    public static function pageQuery3($DevNo,$offset=0,$limit=0,$selecttime,$content){
         $model = User::findOne(['id'=>yii::$app->getUser()->getIdentity()->getId()]);
         $logic_type=$model->getAttribute("logic_type");
         $username='';
@@ -167,8 +168,8 @@ left join `factory_info` on factory_info.`Id`=wcode_info.`FId` where dev_water_s
             //代理商
             $username=$model->getAttribute("username");
         }
-        $where =self::getSaomaListWhereStr($selecttime,$xname,$sname,$waterfname,$username);
-        $sql="select DISTINCT agent_info.Id as agentId,agent_info.Level,dev_water_scan_log.BarCode,dev_water_scan_log.DevNo,dev_water_scan_log.RowTime,user_info.`Address`,user_info.`Name`,user_info.`Tel`,agent_info.`Name` as agentName,dev_regist.`DevFactory`,factory_info.`Name` as factoryName
+        $where =self::getSaomaListWhereStr2($selecttime,$content,$username);
+        $sql="select DISTINCT agent_info.Id as agentId,agent_info.Level,dev_water_scan_log.BarCode,dev_water_scan_log.DevNo,dev_water_scan_log.RowTime,user_info.`Address`,user_info.`Name`,user_info.`Tel`,agent_info.`Name` as agentName,dev_regist.`DevFactory`,dev_regist.`Province`,dev_regist.`City`,dev_regist.`Area`,factory_info.`Name` as factoryName
  from dev_water_scan
  right join dev_water_scan_log on dev_water_scan_log.`BarCode` = dev_water_scan.`BarCode`
  INNER join user_info on dev_water_scan.`UserId`=user_info.`Id`
@@ -190,7 +191,7 @@ left join `factory_info` on factory_info.`Id`=wcode_info.`FId` where dev_water_s
 
 
 
-    public static function totalQuery($selecttime,$xname,$sname,$waterfname){
+    public static function totalQuery($selecttime,$content,$province,$city,$area){
         $model = User::findOne(['id'=>yii::$app->getUser()->getIdentity()->getId()]);
         $logic_type=$model->getAttribute("logic_type");
         $username='';
@@ -198,21 +199,22 @@ left join `factory_info` on factory_info.`Id`=wcode_info.`FId` where dev_water_s
             //代理商
             $username=$model->getAttribute("username");
         }
-        $where =self::getSaomaListWhereStr($selecttime,$xname,$sname,$waterfname,$username);
+        $where =self::getSaomaListWhereStr($selecttime,$content,$username,$province,$city,$area);
 
         //先排序，再分组。获取每个设备最近的一条扫码记录（点击详情时才读取该设备的所有记录）
-        $sql="select * from (select DISTINCT dev_water_scan_log.BarCode,dev_water_scan_log.DevNo,dev_water_scan_log.RowTime,user_info.`Address`,user_info.`Name`,user_info.`Tel`,agent_info.`Name` as agentName,dev_regist.`DevFactory`,factory_info.`Name` as factoryName
+        $sql="select * from (select DISTINCT dev_water_scan_log.BarCode,dev_water_scan_log.DevNo,dev_water_scan_log.RowTime,user_info.`Address`,user_info.`Name`,user_info.`Tel`,agent_info.`Name` as agentName,dev_regist.`Province`,dev_regist.`City`,dev_regist.`Area`,dev_regist.`DevFactory`,factory_info.`Name` as factoryName
  from dev_water_scan
  right join dev_water_scan_log on dev_water_scan_log.`BarCode` = dev_water_scan.`BarCode`
-INNER join user_info on dev_water_scan.`UserId`=user_info.`Id`
+INNER join user_info on dev_water_scan_log.`UserId`=user_info.`Id`
 left join dev_regist on dev_water_scan.`DevNo`=dev_regist.`DevNo`
-left join `agent_info` on agent_info.`Id`=dev_regist.`AgentId` ".(empty($username)?"":"agent_info.LoginName='$username' ")."
+left join `agent_info` on agent_info.`Id`=dev_regist.`AgentId`
 left join wcode_info on dev_water_scan.`BarCode`=`wcode_info`.`Code`
 left join `factory_info` on factory_info.`Id`=wcode_info.`FId`
  ".(empty($where)?"":" where $where")." order by dev_water_scan_log.`RowTime` Desc) as temp group by DevNo ";
+//       return $sql;  ".(empty($username)?"":" and agent_info.LoginName='$username' ")."
         return static::findBySql($sql);
     }
-    public static function pageQuery($offset=0,$limit=0,$selecttime,$xname,$sname,$waterfname){
+    public static function pageQuery($offset=0,$limit=0,$selecttime,$content,$province,$city,$area){
         $model = User::findOne(['id'=>yii::$app->getUser()->getIdentity()->getId()]);
         $logic_type=$model->getAttribute("logic_type");
         $username='';
@@ -220,20 +222,21 @@ left join `factory_info` on factory_info.`Id`=wcode_info.`FId`
             //代理商
             $username=$model->getAttribute("username");
         }
-        $where =self::getSaomaListWhereStr($selecttime,$xname,$sname,$waterfname,$username);
-        $sql="select * from (select DISTINCT agent_info.Id as agentId,agent_info.Level,dev_water_scan_log.BarCode,dev_water_scan_log.DevNo,dev_water_scan_log.RowTime,user_info.`Address`,user_info.`Name`,user_info.`Tel`,agent_info.`Name` as agentName,dev_regist.`DevFactory`,factory_info.`Name` as factoryName
+        $where =self::getSaomaListWhereStr($selecttime,$content,$username,$province,$city,$area);
+        $sql="select * from (select DISTINCT agent_info.Id as agentId,agent_info.Level,dev_water_scan_log.BarCode,dev_water_scan_log.DevNo,dev_water_scan_log.RowTime,user_info.`Address`,user_info.`Name`,user_info.`Tel`,agent_info.`Name` as agentName,dev_regist.`DevFactory`,dev_regist.`Province`,dev_regist.`City`,dev_regist.`Area`,factory_info.`Name` as factoryName
  from dev_water_scan
  right join dev_water_scan_log on dev_water_scan_log.`BarCode` = dev_water_scan.`BarCode`
  INNER join user_info on dev_water_scan.`UserId`=user_info.`Id`
 left join dev_regist on dev_water_scan.`DevNo`=dev_regist.`DevNo`
-left join `agent_info` on agent_info.`Id`=dev_regist.`AgentId` ".(empty($username)?"":"agent_info.LoginName='$username' ")."
+left join `agent_info` on agent_info.`Id`=dev_regist.`AgentId`
 left join wcode_info on dev_water_scan.`BarCode`=`wcode_info`.`Code`
 left join `factory_info` on factory_info.`Id`=wcode_info.`FId`
 ".(empty($where)?"":" where $where")." order by dev_water_scan_log.`RowTime` Desc) as temp group by DevNo
   limit $offset , $limit ";
+//        return $sql;  ".(empty($username)?"":" and agent_info.LoginName='$username' ")."
         return static::findBySql($sql);
     }
-    private static function getSaomaListWhereStr($selecttime,$xname,$sname,$waterfname,$username){
+    private static function getSaomaListWhereStr($selecttime,$content,$username,$province,$city,$area){
         $startTime='';
         $endTime='';
         $where='';
@@ -245,32 +248,99 @@ left join `factory_info` on factory_info.`Id`=wcode_info.`FId`
             }
         }
         if(!empty($startTime)&&!empty($endTime)){
-            $where.="dev_water_scan.RowTime>='$startTime' and dev_water_scan.RowTime<='$endTime'";
+            $where.="dev_water_scan_log.RowTime >= '$startTime' and dev_water_scan_log.RowTime <= '$endTime'";
         }
-        if(!empty($xname)){
+
+
+        if(!empty($content)){
             if(!empty($where)){
                 $where.=' and ';
             }
-//            $where.="agent_info.Level=4 and agent_info.Name like '%$xname%'";
-            $where.="agent_info.Level=4 and agent_info.Name like '%$xname%'";
+            $where.="(dev_water_scan_log.DevNo like '%$content%' or user_info.Name like '%$content%' or agent_info.Name like '%$content%' or user_info.Tel like '%$content%')";
         }
-        if(!empty($sname)){
+
+
+        if(!empty($province)){
             if(!empty($where)){
                 $where.=' and ';
             }
-            $where.="agent_info.Level=5 and agent_info.Name like '%$sname%'";
+            $where.=" dev_regist.Province='$province'";
         }
-        if(!empty($waterfname)){
+        if(!empty($city)){
             if(!empty($where)){
                 $where.=' and ';
             }
-            $where.="factory_info.`Name` like '%$waterfname%'";
+            $where.=" dev_regist.City='$city'";
         }
+        if(!empty($area)){
+            if(!empty($where)){
+                $where.=' and ';
+            }
+            $where.=" dev_regist.Area='$area'";
+        }
+
         if(!empty($username)){
             if(!empty($where)){
                 $where.=' and ';
             }
-            $where.="agent_info.LoginName='$username'";
+            $where.="agent_info.LoginName = '$username'";
+//            $where.="SELECT agent_info.Id from agent_info where agent_info.LoginName='$username'";
+        }
+        return $where;
+
+
+    }
+
+
+    private static function getSaomaListWhereStr2($selecttime,$content,$username){
+        $startTime='';
+        $endTime='';
+        $where='';
+        if(!empty($selecttime)){
+            $dateArr=explode("至",$selecttime);
+            if(count($dateArr)==2){
+                $startTime=$dateArr[0];
+                $endTime=$dateArr[1];
+            }
+        }
+        if(!empty($startTime)&&!empty($endTime)){
+            $where.="dev_water_scan_log.RowTime >= '$startTime' and dev_water_scan_log.RowTime <= '$endTime'";
+        }
+
+
+        if(!empty($content)){
+            if(!empty($where)){
+                $where.=' and ';
+            }
+            $where.=" dev_water_scan_log.BarCode like '%$content%'";
+        }
+
+
+//        if(!empty($province)){
+//            if(!empty($where)){
+//                $where.=' and ';
+//            }
+//            $where.=" dev_regist.Province='$province'";
+//        }
+//        if(!empty($city)){
+//            if(!empty($where)){
+//                $where.=' and ';
+//            }
+//            $where.=" dev_regist.City='$city'";
+//        }
+//        if(!empty($area)){
+//            if(!empty($where)){
+//                $where.=' and ';
+//            }
+//            $where.=" dev_regist.Area='$area'";
+//        }
+
+        if(!empty($username)){
+            if(!empty($where)){
+                $where.=' and ';
+            }
+            $where.="agent_info.LoginName = '$username'";
+//            $where.="SELECT agent_info.Id from agent_info where agent_info.LoginName='$username'";
         }
         return $where;
 

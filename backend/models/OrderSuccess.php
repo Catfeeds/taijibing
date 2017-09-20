@@ -45,6 +45,14 @@ class OrderSuccess extends ActiveRecord
                          'Amount','Volume','WaterBrand'],
         ];
     }
+//    public function rules(){
+//        return[
+//            [['OrderNo', 'Fid','TotalMoney',
+//                'OrderMoney','CouponMoney',
+//                'Amount','Volume','WaterBrand'],'required']
+//        ];
+//    }
+
     public function attributeLabels()
     {
         return [
@@ -63,10 +71,15 @@ class OrderSuccess extends ActiveRecord
      */
     public function checkForm(){
         $WaterBrand=$this->getAttribute("WaterBrand");//对应的品牌
+//        return $WaterBrand;exit;
         $Fid=$this->getAttribute("Fid");
+
         $TotalMoney=$this->getAttribute("TotalMoney");
+//        return $TotalMoney;exit;
         $CouponMoney=$this->getAttribute("CouponMoney");
+//        return $CouponMoney;exit;
         $OrderMoney=$this->getAttribute("OrderMoney");
+//        return $CouponMoney;exit;
         $Volume=$this->getAttribute("Volume");
         $Amount=$this->getAttribute("Amount");
         if(!is_numeric($OrderMoney)||!is_numeric($Fid)||!is_numeric($TotalMoney)||!is_numeric($CouponMoney)||!is_numeric($Volume)||!is_numeric($Amount)||empty($WaterBrand)){//对应的品牌不为空
@@ -78,17 +91,31 @@ class OrderSuccess extends ActiveRecord
      * 水厂充值
      */
     public  function createOrder(){
+        $transaction =$this->beginTransaction();
         try{
 
-            $transaction =$this->beginTransaction();
+//            $transaction =$this->beginTransaction();
+
+
             $sql1=$this->getCreateOrderSql();
+            $res=$this->getDb()->createCommand($sql1)->execute();
+            if(!$res){
+                throw new \yii\db\Exception($this->errors);
+            }
+
             $sql2=$this->getUpdateFactoryWcodeSql();
-            $this->getDb()->createCommand($sql1)->execute();
-            $this->getDb()->createCommand($sql2)->execute();
+            $res2=$this->getDb()->createCommand($sql2)->execute();
+
+            if(!$res2){
+                throw new \yii\db\Exception($this->errors);
+            }
+
             $transaction->commit();
             return true;
         }catch(Exception $e){
             $transaction->rollBack();
+
+//            return $e->getMessage();
             return false;
         }
     }

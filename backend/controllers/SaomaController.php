@@ -8,7 +8,7 @@
 
 namespace backend\controllers;
 
-
+use backend\models\Address;
 use backend\models\AgentInfo;
 use backend\models\DevWaterScan;
 use yii\data\Pagination;
@@ -17,23 +17,34 @@ class SaomaController extends  BaseController
 {
     public function actionList()
     {
-        $selecttime=yii::$app->request->post("selecttime");
-        $xname=yii::$app->request->post("xname");
-        $sname=yii::$app->request->post("sname");
-        $waterfname=yii::$app->request->post("waterfname");
+        $province=yii::$app->request->post("province");
+        $city=yii::$app->request->post("city");
+        $area=yii::$app->request->post("area");
+//        var_dump($province,$city,$area);exit;
 
-        $datas = DevWaterScan::totalQuery($selecttime,$xname,$sname,$waterfname);
+        $selecttime=yii::$app->request->post("selecttime");
+        $content=yii::$app->request->post("content");
+//        $xname=yii::$app->request->post("xname");
+//        $sname=yii::$app->request->post("sname");
+//        $waterfname=yii::$app->request->post("waterfname");
+
+        $datas = DevWaterScan::totalQuery($selecttime,$content,$province,$city,$area);
+//        var_dump($content,$datas);exit;
         $pages = new Pagination(['totalCount' => $datas->count(), 'pageSize' => 10]);
-        $model =$this->listWrapData(DevWaterScan::pageQuery($pages->offset,$pages->limit,$selecttime,$xname,$sname,$waterfname)->asArray()->all());
+        $model =$this->listWrapData(DevWaterScan::pageQuery($pages->offset,$pages->limit,$selecttime,$content,$province,$city,$area)->asArray()->all());
 //        var_dump($model);exit;
+        $areas=Address::allQuery()->asArray()->all();
+
 
         return $this->render('list', [
             'model' => $model,
             'pages' => $pages,
             'selecttime'=>$selecttime,
-            'xname'=>$xname,
-            'sname'=>$sname,
-            'waterfname'=>$waterfname
+            'content'=>$content,
+            'areas' =>$areas,
+            'province'=>empty($province)?"":$province,
+            'city'=>empty($city)?"":$city,
+            'area'=>empty($area)?"":$area,
         ]);
     }
     public function actionFlist()
@@ -101,23 +112,28 @@ class SaomaController extends  BaseController
     public function actionDetail(){
         $DevNo=$this->getParam("DevNo");
         $selecttime=yii::$app->request->post("selecttime");
-        $xname=yii::$app->request->post("xname");
-        $sname=yii::$app->request->post("sname");
-        $waterfname=yii::$app->request->post("waterfname");
+//        $province=yii::$app->request->post("province");
+//        $city=yii::$app->request->post("city");
+//        $area=yii::$app->request->post("area");
+        $content=yii::$app->request->post("content");
 
-        $datas = DevWaterScan::totalQuery3($DevNo, $selecttime,$xname,$sname,$waterfname);
-
+        $datas = DevWaterScan::totalQuery3($DevNo,$selecttime,$content);
+//var_dump($datas);exit;
         $pages = new Pagination(['totalCount' => $datas->count(), 'pageSize' => 10]);
-        $model =$this->listWrapData(DevWaterScan::pageQuery3($DevNo,$pages->offset,$pages->limit,$selecttime,$xname,$sname,$waterfname)->asArray()->all());
+        $model =$this->listWrapData(DevWaterScan::pageQuery3($DevNo,$pages->offset,$pages->limit,$selecttime,$content)->asArray()->all());
+
+        $areas=Address::allQuery()->asArray()->all();
 
         return $this->render('detail', [
             'model' => $model,
             'DevNo' => $DevNo,
             'pages' => $pages,
             'selecttime'=>$selecttime,
-            'xname'=>$xname,
-            'sname'=>$sname,
-            'waterfname'=>$waterfname
+            'content'=>$content,
+//            'province'=>$province,
+//            'city'=>$city,
+//            'area'=>$area,
+            'areas' =>$areas,
         ]);
 
 

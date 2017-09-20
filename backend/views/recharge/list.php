@@ -2,7 +2,10 @@
 use yii\widgets\LinkPager;
 ?>
 <div class="wrapper wrapper-content">
-    <?= $this->render('/widgets/_ibox-title') ?>
+<!--    <a href="./?r=logic-user/factory-list">返回</a>-->
+   <div style="text-align: right;margin-bottom: 10px"> <?= \yii\bootstrap\Html::a('返回',['logic-user/factory-list'],['class'=>'btn btn-primary'])?></div>
+
+
         <table class="table table-hover" style="background:white;">
             <thead>
             <th>品牌</th>

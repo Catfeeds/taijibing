@@ -21,33 +21,56 @@ use yii\widgets\LinkPager;
         </div>
         <table class="table table-hover" style="background:white;">
             <thead>
-            <th>序号</th>
-            <th>登录名称</th>
-            <th>名称</th>
-            <th>所在地区</th>
-            <th>联系人</th>
-            <th>手机号</th>
-            <th>最近操作时间</th>
+            <th style="width: 5%">序号</th>
+
+            <?= $role_id==1?'<th style="width: 8%">登录账号</th>':''?>
+            <th style="width: 10%">名称</th>
+            <th style="width: 9%">所在地区</th>
+            <th style="width: 18%">地址</th>
+            <th style="width: 8%">联系人</th>
+            <th style="width: 6%">联系电话</th>
+
+            <?= $role_id==1?'<th style="width: 10%">最近操作时间</th>':''?>
 <!--            <th>修改</th>-->
             </thead>
             <tbody>
             <?php
             $str='';
             $no=1;
-            foreach($model as $key=>$val)
-            {
-                $str.= "<tr>
+            if($role_id==1){
+                foreach($model as $key=>$val)
+                {
+                    $str.= "<tr>
                         <td>".$no."</td>
                         <td>".$val["LoginName"]."</td>
                         <td>".$val["Name"]."</td>
                         <td>".($val["Province"]."-".$val["City"]."-".$val["Area"])."</td>
+                        <td>".$val["Address"]."</td>
                         <td>".$val["ContractUser"]."</td>
                         <td>".$val["ContractTel"]."</td>
                         <td>".$val["RowTime"]."</td>
                         </tr>";//<td><a href='./?r=agent/update&id=".$val["Id"]."'>修改</a></td>
-                $no++;
+                    $no++;
+                }
+                echo $str;
+            }else{
+                foreach($model as $key=>$val)
+                {
+                    $str.= "<tr>
+                        <td>".$no."</td>
+
+                        <td>".$val["Name"]."</td>
+                        <td>".($val["Province"]."-".$val["City"]."-".$val["Area"])."</td>
+                        <td>".$val["Address"]."</td>
+                        <td>".$val["ContractUser"]."</td>
+                        <td>".$val["ContractTel"]."</td>
+
+                        </tr>";//<td><a href='./?r=agent/update&id=".$val["Id"]."'>修改</a></td>
+                    $no++;
+                }
+                echo $str;
             }
-            echo $str;
+
             ?>
             </tbody>
         </table>

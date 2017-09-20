@@ -42,29 +42,29 @@ $this->title = "Admin";
     <div class="col-sm-12">
         <div class="ibox">
 
-            <?= $this->render('/widgets/_ibox-title') ?>
+            <div style="text-align: right;margin-bottom: 10px"> <?= \yii\bootstrap\Html::a('返回',['admin-user/index'],['class'=>'btn btn-primary'])?></div>
             <div class="ibox-content">
                 <?php $form = ActiveForm::begin(['options'=>['enctype'=>'multipart/form-data','class'=>'form-horizontal']]); ?>
-                <?= $form->field($model['model'], 'name')->textInput(['maxlength' => 64])->label('账户名称') ?>
-                <?= $form->field($model['model'], 'contacts')->textInput(['maxlength' => 64])->label('联系人') ?>
-                <?= $form->field($model['model'], 'tel')->textInput(['maxlength' => 64])->label('联系电话') ?>
+                <?= $form->field($model['model'], 'Name')->textInput(['maxlength' => 64])->label('账户名称') ?>
+                <?= $form->field($model['model'], 'ContractUser')->textInput(['maxlength' => 64])->label('联系人') ?>
+                <?= $form->field($model['model'], 'ContractTel')->textInput(['maxlength' => 64])->label('联系电话') ?>
 
                 <div class="hr-line-dashed"></div>
-                <?= $form->field($model['model'], 'username')->textInput(['maxlength' => 64])->label('登陆账号') ?>
-                <?= $form->field($model['model'], 'email')->textInput(['maxlength' => 64]) ?>
+                <?= $form->field($model['model'], 'LoginName')->textInput(['maxlength' => 64])->label('登陆账号') ?>
+                <?= $form->field($model['admin_user'], 'email')->textInput(['maxlength' => 64]) ?>
                 <div class="hr-line-dashed"></div>
 
                 <!--地址-->
                 <div class="form-group field-adminroleuser-role_id required" style="margin-bottom: 80px">
                     <label class="col-sm-2 control-label" for="adminroleuser-role_id">地址</label>
                     <div class="col-sm-10" id="check_address">
-                        <select class="control-label" name="User[province]" id="province" style="width:150px;margin-right: 20px">
+                        <select class="control-label" name="<?=$name?>[Province]" id="province" style="width:150px;margin-right: 20px">
                             <option value="">请选择</option>
                         </select>
-                        <select class="control-label" name="User[city]" id="city" style="width:150px;margin-right: 20px">
+                        <select class="control-label" name="<?=$name?>[City]" id="city" style="width:150px;margin-right: 20px">
                             <option value="">请选择</option>
                         </select>
-                        <select class="control-label" name="User[area]" id="area" style="width:150px;margin-right: 20px">
+                        <select class="control-label" name="<?=$name?>[Area]" id="area" style="width:150px;margin-right: 20px">
                             <option value="">请选择</option>
                         </select>
                     </div>
@@ -73,7 +73,7 @@ $this->title = "Admin";
                 <div class="item"  style="margin-bottom: 15px">
                     <div class="ftitle"><span class="title"> </span></div>
                     <div class="fcontent" style="padding-left: 0">
-                        <input id="address" value="<?=$model['model']['address']?>" name="User[address]" type="text" class="baseinput" placeholder="请输入详细地址"/>
+                        <input id="address" value="<?=$model['model']['Address']?>" name="<?=$name?>[Address]" type="text" class="baseinput" placeholder="请输入详细地址"/>
                         <!--                        <div class=" col-md-3 field-address">-->
                         <!---->
                         <!--                            <div class="col-sm-10"><input type="text" id="address" class="baseinput form-control" name="User[address]" placeholder="请填写详细地址信息">-->
@@ -92,7 +92,7 @@ $this->title = "Admin";
                         <!--                        </div>-->
 
 
-                        <input id="lng" value="<?=$model['model']['lng']?>" name="User[lng]" type="text" class="baseinput" style="width: 80px"/>
+                        <input id="lng" value="<?=$model['model']['BaiDuLng']?>" name="<?=$name?>[BaiDuLng]" type="text" class="baseinput" style="width: 80px"/>
 
                         <span>纬度：</span>
                         <!--                        <div class="baseinput col-md-2 field-lat">-->
@@ -102,7 +102,7 @@ $this->title = "Admin";
                         <!---->
                         <!--                        </div>-->
 
-                        <input id="lat" value="<?=$model['model']['lat']?>" name="User[lat]" type="text" class="baseinput" style="width: 80px"/>
+                        <input id="lat" value="<?=$model['model']['BaiDuLat']?>" name="<?=$name?>[BaiDuLat]" type="text" class="baseinput" style="width: 80px"/>
                         <span class="mark">（用于部分商品前端显示距离）</span>
                     </div>
                 </div>
@@ -173,9 +173,9 @@ $this->title = "Admin";
 
 <script>
         var data=<?=$model["data"]?>;
-        var province='<?=$model["model"]["province"]?>';
-        var city='<?=$model["model"]["city"]?>';
-        var area='<?=$model["model"]["area"]?>';
+        var province='<?=$model["model"]["Province"]?>';
+        var city='<?=$model["model"]["City"]?>';
+        var area='<?=$model["model"]["Area"]?>';
 
 
     //    var geoc;
@@ -189,12 +189,7 @@ $this->title = "Admin";
 <script type="text/javascript" src="./static/js/jquery.min.js"></script>
 <script>
 
-    //选择地址改变时
-    $('#check_address select').change(function(){
-        $('#type').val('');
-        $('#parent').hide();
 
-    });
 
 
 
@@ -257,45 +252,88 @@ $this->title = "Admin";
 
 
 
-            var type= "<?=$model['model']['type']?>";
-        var agent= "<?=$model['model']['agent']?>";
-//        alert(type);
+            var type= "<?=$model['admin_user']['type']?>";
+        var agent= "<?=$model['admin_user']['agent']?>";
+        var role_id= "<?=$model['role_id']?>";
+//        var agent= "<?//=$model['agent']?>//";
+
+//alert(role_id);
+        if(role_id!=3){
+            //选择地址改变时
+            $('#check_address select').change(function(){
+                $('#type').val('');
+                $('#parent').hide();
+
+            });
+        }
+
+
+
+
+
+//        alert(agent);
 //        alert(agent);
         if(type){
             $('#type').val(type);
             if(type=='服务中心'){
 
-                //获取地址
-                var province=$('#province option:selected').attr('value');
-                var city=$('#city option:selected').attr('value');
-                var area=$('#area option:selected').attr('value');
-
-                //获取符合该地址的所有运营中心
-                $.get('./?r=admin-user/get-agent',{'province':province,'city':city,'area':area},function(data){
-
-                    if(data!=''){
-                        $("#agent").html('');
-                        var html="<option value=''>请选择</option>";
-                        $(data).each(function(i,v){
-                            html+="<option value="+ v.Name+">"+ v.Name+"</option>";
-                        });
 
 
-                        $(html).appendTo("#agent");
-                        $('#agent').val(agent);
+                //运营中心登陆，选中不能修改
+                if(role_id==3){
+
+                    var sex=document.getElementById("type");
+                    sex.onclick = function() {
+                        var index = this.selectedIndex;
+                        this.onchange = function () {
+                            this.selectedIndex = index;
+                        };
+                    };
+
+                    $('#type').css({'background':'#e6e6e6'});
+                    $('#agent').css({'background':'#e6e6e6'});
+                    $("#agent").html('');
+                    $("#type").html('');
+                    var html="<option value="+ agent+">"+ agent+"</option>";
+                    var html2="<option value='服务中心'>服务中心</option>";
+                    $(html).appendTo("#agent");
+                    $(html2).appendTo("#type");
+                    $('#parent').show();
+                }else{
+                    //获取地址
+                    var province=$('#province option:selected').attr('value');
+                    var city=$('#city option:selected').attr('value');
+                    var area=$('#area option:selected').attr('value');
+
+                    //获取符合该地址的所有运营中心
+                    $.get('./?r=admin-user/get-agent',{'province':province,'city':city,'area':area},function(data){
+                        console.log(data);
+                        if(data!=''){
+                            $("#agent").html('');
+                            var html="<option value=''>请选择</option>";
+                            $(data).each(function(i,v){
+                                html+="<option value="+ v.Name+">"+ v.Name+"</option>";
+                            });
+
+
+                            $(html).appendTo("#agent");
+                            $('#agent').val(agent);
 //                        alert(agent);
 
-                        $('#parent').show();
-                    }
-                    if(data==''){
-                        $("#agent").html('');
-                        html="<option value='太极兵运营中心'>太极兵运营中心</option>";
-                        $(html).appendTo("#agent");
-                        $('#parent').show();
-                    }
+                            $('#parent').show();
+                        }
+                        if(data==''){
+                            $("#agent").html('');
+                            html="<option value='太极兵运营中心'>太极兵运营中心</option>";
+                            $(html).appendTo("#agent");
+                            $('#parent').show();
+                        }
 
 
-                });
+                    });
+                }
+
+
 
 
 

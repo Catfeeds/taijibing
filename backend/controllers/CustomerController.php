@@ -8,6 +8,8 @@
 
 namespace backend\controllers;
 
+use backend\models\AdminRoles;
+use backend\models\AdminRoleUser;
 use backend\models\AgentInfo;
 use backend\models\Customer;
 use backend\models\CustomSearch;
@@ -22,6 +24,8 @@ class CustomerController extends BaseController
 {
     //入网属性
         public $UserType=[
+                            ''=>'',
+                            0=>'',
                             1=>'自购',
                             2=>'押金',
                             3=>'买水送机',
@@ -31,8 +35,10 @@ class CustomerController extends BaseController
                             ];
     //客户类型
         public $CustomerType=[
-                                1=>'家用',
-                                2=>'办公',
+                                ''=>'',
+                                0=>'',
+                                1=>'家庭',
+                                2=>'公司',
                                 3=>'集团',
                                 99=>'其他',
                                 ];
@@ -42,35 +48,39 @@ class CustomerController extends BaseController
 
 
 
-        $username=$this->getParam("username");
-        $mobile=$this->getParam("mobile");
+//        $username=$this->getParam("username");
+//        $mobile=$this->getParam("mobile");
+        $content=$this->getParam("content");
+        $usetype=$this->getParam("usetype");
+        $customertype=$this->getParam("customertype");
         $province=$this->getParam("province");
         $city=$this->getParam("city");
         $area=$this->getParam("area");
         $address=(new Address())->allQuery()->asArray()->all();
-        $datas = CustomSearch::pageQuery($username,$mobile,$province,$city,$area);
+        $datas = CustomSearch::pageQuery($content,$usetype,$customertype,$province,$city,$area);
+//        var_dump($datas);exit;
         $pages = new Pagination(['totalCount' => $datas->count(), 'defaultPageSize' => 10]);
 //        var_dump($pages->offset,$pages->limit);exit;
         $model = $datas->offset($pages->offset)->limit($pages->limit)->asArray()->all();
-        //获取DevNo、AgentId
-        foreach($model as &$v){
-            $data=DevRegist::findOne(['UserId'=>$v['Id']]);
-            $v['DevNo']=$data->DevNo;
-            $v['UserType']=$data->UseType;
-            $v['CustomerType']=$data->CustomerType;
-            $v['AgentName']=AgentInfo::findOne(['Id'=>$data->AgentId])['Name'];
-        }
-
-
 //        var_dump($model);exit;
+        //根据登陆者的信息，获取登陆者的角色
+        $login_id=Yii::$app->user->id;
+        //获取角色id
+        $role_id=AdminRoleUser::findOne(['uid'=>$login_id])->role_id;
+
+
         return $this->render('list', [
+            'usetype' => $usetype,
+            'role_id' => $role_id,
+            'customertype' => $customertype,
             'UserType' => $this->UserType,
             'CustomerType' => $this->CustomerType,
             'model' => $model,
             'pages' => $pages,
             'address'=>$address,
-            'username'=>empty($username)?"":$username,
-            'mobile'=>empty($mobile)?"":$mobile,
+            'content'=>empty($content)?"":$content,
+//            'username'=>empty($username)?"":$username,
+//            'mobile'=>empty($mobile)?"":$mobile,
             'province'=>empty($province)?"":$province,
             'city'=>empty($city)?"":$city,
             'area'=>empty($area)?"":$area,
@@ -99,15 +109,17 @@ class CustomerController extends BaseController
     //修改用户
     public function actionUpdate($id){
 
-        if(!$id) return $this->render('/error/error', [
+        $devno=Yii::$app->request->get('devno');
+
+        if(!$id||!$devno) return $this->render('/error/error', [
             'code' => '403',
             'name' => 'Params required',
             'message' => yii::t('app', "Id doesn't exit"),
         ]);
         //获取该用户信息
         $model=Customer::findone(['Id'=>$id]);
-        //获取该用户的设备编号、客户类型、入网属性
-        $data2=DevRegist::findOne(['UserId'=>$id]);
+        //获取该用户id和设备编号对应的用户数据   客户类型、入网属性
+        $data2=DevRegist::find()->where(['UserId'=>$id])->andWhere(['DevNo'=>$devno])->one();
         //获取地址数据
         $data=(new Address())->allQuery()->asArray()->all();
 
@@ -130,10 +142,10 @@ class CustomerController extends BaseController
                         if(!$model->save()){
                             throw new \Exception('保存失败！');
                         }
-                        $data2->Province=$model->Province;
-                        $data2->City=$model->City;
-                        $data2->Area=$model->Area;
-                        $data2->Address=$model->Address;
+//                        $data2->Province=$model->Province;
+//                        $data2->City=$model->City;
+//                        $data2->Area=$model->Area;
+//                        $data2->Address=$model->Address;
                         if(!$data2->save()){
                             throw new \Exception('保存失败！');
                         }

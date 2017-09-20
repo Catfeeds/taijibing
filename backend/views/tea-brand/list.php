@@ -4,21 +4,27 @@ use feehi\widgets\Bar;
 ?>
 
 <div class="wrapper wrapper-content">
+
+    <form action="./?r=tea-brand/list" method="post">
+        关键词：<input id="search" placeholder="请输入名称、品牌或厂家"  value="<?=$search?>"  type="text" name="content">
+        <input type="submit" value="搜索" >
+    </form>
+
     <?= Bar::widget([
         'template' => '{create}'
     ])?>
     <table class="table table-hover" style="background:white;">
         <thead>
-        <th>序号</th>
-        <th>商品名称</th>
-        <th>商品品牌</th>
-        <th>设备厂家</th>
-        <th>品牌编号</th>
-        <th>设备图片</th>
-        <th>卡片厂家</th>
-        <th>添加时间</th>
-        <th>修改时间</th>
-        <th>操作</th>
+        <th style="width:5%">序号</th>
+        <th style="width:8%">商品名称</th>
+        <th style="width:8%">商品品牌</th>
+        <th style="width:8%">设备厂家</th>
+        <th style="width:8%">品牌编号</th>
+        <th style="width:8%">设备图片</th>
+        <th style="width:8%">卡片厂家</th>
+        <th style="width:8%">添加时间</th>
+        <th style="width:8%">修改时间</th>
+        <th style="width:8%">操作</th>
         </thead>
         <tbody>
         <?php
@@ -34,7 +40,7 @@ use feehi\widgets\Bar;
                         <td>".$val["devfactory_name"]."</td>
                         <td>".$val["BrandNo"]."</td>
                         <td>查看</td>
-                        <td>".$val["CardFactory"]."</td>
+                        <td>".$val["cardfactory"]."</td>
                         <td>".date('Y-m-d H:i:s',$val["addtime"])."</td>
                         <td>".$updatetime."</td>
                         <td>
@@ -49,11 +55,12 @@ use feehi\widgets\Bar;
         </tbody>
     </table>
     <table>
-        <th
+
     </table>
     <script type="text/javascript" src="./static/js/jquery.min.js"></script>
     <script type="text/javascript" src="./static/js/layer/layer.js"></script>
 <script>
+
     function deleteWaterBrand(brandno){
         if(confirm("你确认要删除吗？")){
             var ii=layer.msg("操作中……");

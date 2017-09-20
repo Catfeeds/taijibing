@@ -15,18 +15,18 @@ function getActType($type){
 <div class="wrapper wrapper-content">
         <div class="form-group" >
 
-            <div class="col-sm-10" style="margin-bottom:20px;">
-               <span><label>设备手机号:</label> <input name="tel" type="text" id="tel" placeholder="设备手机号" value="<?=$tel?>"/></span>
-                <span style="padding-left:5px;"><label>设备编号:</label><input name="devno" type="text"  id="devno" placeholder="设备编号" value="<?=$devno?>"/></span>
-                <span style="padding-left:5px;">所属地区</span>
+            <div class="col-sm-12" style="margin-bottom:20px;">
+<!--               <span><label>设备手机号:</label> <input name="tel" type="text" id="tel" placeholder="设备手机号" value="--><?//=$tel?><!--"/></span>-->
+                <span style="padding-left:5px;"><label>搜索内容:</label><input name="content" type="text"  id="content" placeholder="设备编号或用户" value="<?=$content?>"/></span>
+                <span style="padding-left:5px;">地区</span>
                 <select id="province">
-                    <option value="">请选择所属省</option>
+                    <option value="">请选择</option>
                 </select>
                 <select id="city">
-                    <option value="">请选择所属城市</option>
+                    <option value="">请选择</option>
                 </select>
                 <select id="area">
-                    <option value="">请选择所属区</option>
+                    <option value="">请选择</option>
                 </select>
                 <button style="padding-left:10px;" class="btn-primary btn form-label" type="button" style="padding:0px;line-height:26px;height:26px;width:60px;" id="query">查询</button>
             </div>
@@ -34,22 +34,22 @@ function getActType($type){
 
     <table class="table table-hover" style="background:white;">
         <thead>
-        <th>序号</th>
-        <th>设备编号</th>
-        <th>最近操作</th>
+        <th style="width: 45px">序号</th>
+        <th style="width: 80px">设备编号</th>
+        <th style="width: 80px">最近操作</th>
 
 <!--        <th>操作日志</th>-->
-        <th>用水量</th>
-        <th>剩余水量</th>
-        <th>TDS</th>
-        <th>水温</th>
+        <th style="width: 60px">用水量</th>
+        <th style="width: 70px">剩余水量</th>
+        <th style="width: 45px">TDS</th>
+        <th style="width: 45px">水温</th>
 <!--         -->
-        <th>所属地区</th>
-        <th>位置信息</th>
-        <th>用户名</th>
-        <th>手机号</th>
-        <th>最近操作时间</th>
-        <th>操作日志</th>
+        <th style="width: 90px">所在区域</th>
+        <th style="width: 200px">位置信息</th>
+        <th style="width: 80px">用户姓名</th>
+        <th style="width: 60px">手机号</th>
+        <th style="width: 100px">最近操作时间</th>
+        <th style="width: 80px">操作日志</th>
         </thead>
         <tbody>
         <?php
@@ -65,7 +65,7 @@ function getActType($type){
                         <td>".(empty($val["WaterRest"])?"——":round($val["WaterRest"] ,2))."</td>
                         <td>".(empty($val["Dts"])?"——":$val["Dts"])."</td>
                         <td>".(empty($val["Degrees"])?"":$val["Degrees"])."</td>
-                        <td>".($val["Province"].$val["City"].$val["Area"])."</td>
+                        <td>".($val["Province"].'-'.$val["City"].'-'.$val["Area"])."</td>
                         <td>".$val["Address"]."(".$val["Lat"].",".$val["Lng"].")</td>
                         <td>".$val["UserName"]."</td>
                         <td>".$val["DevBindMobile"]."</td>
@@ -94,12 +94,12 @@ function getActType($type){
 <script>
     $(function(){
       $("#query").on("click",function(){
-          var tel=$("#tel").val();
-          var devno=$("#devno").val();
+//          var tel=$("#tel").val();
+          var content=$("#content").val();
           var province=$("#province").val();
           var city=$("#city").val();
           var area=$("#area").val();
-          window.location.href="/index.php?r=dev-manager/dynamic&tel="+tel+"&devno="+devno+"&province="+province+"&city="+city+"&area="+area;
+          window.location.href="/index.php?r=dev-manager/dynamic&content="+content+"&province="+province+"&city="+city+"&area="+area;
       });
         $("#province").on("change",function(){
             onProvinceChange();
@@ -126,12 +126,12 @@ function getActType($type){
     }
     function onProvinceChange(){
         var areaId=getAreaIdByName($("#province").val());
-        emptySelect($("#city"),"请选择所属城市");
+        emptySelect($("#city"),"请选择");
         initAddress(areaId,$("#city"));
     }
     function onCityChange(){
         var areaId=getAreaIdByName($("#city").val());
-        emptySelect($("#area"),"请选择所属地区");
+        emptySelect($("#area"),"请选择");
         initAddress(areaId,$("#area"));
     }
     function initAddress(_pid,_obj){

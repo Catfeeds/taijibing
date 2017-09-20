@@ -23,9 +23,12 @@ class RechargeController extends BaseController
         if(Yii::$app->request->getIsPost()){
             $model->setScenario("create");
 
+
             if($model->load(Yii::$app->request->post())&&$model->checkForm()&&$model->createOrder()){
                 Yii::$app->getSession()->setFlash('success', "充值成功");
+                return $this->redirect(['logic-user/factory-list']);
             }else{
+
 
                 Yii::$app->getSession()->setFlash('error', "参数错误");
             }
@@ -41,6 +44,8 @@ class RechargeController extends BaseController
 
        return  $this->render("recharge",["fid"=>$fid,"model"=>$model,'water_brands'=>$water_brands]);
     }
+
+
     public function actionList(){
         $pid=Yii::$app->request->get("pid");
         if(empty($pid)){
@@ -62,15 +67,13 @@ class RechargeController extends BaseController
                     $v['least']=$data[0]['LeftAmount'];
 
             }else{
-                $v['total']=0;
-                $v['least']=0;
+
+                $data=yii\db\ActiveRecord::findBySql("select * from factory_wcode where Fid='{$v['Fid']}' and Volume={$v['Volume']}")->asArray()->all();
+
+                $v['total']=$data[0]['Amount'];
+                $v['least']=$data[0]['LeftAmount'];
             }
-
-
-
         }
-
-
 
         //根据BrandNo获取品牌名称
         foreach($model as &$v){
@@ -86,9 +89,6 @@ class RechargeController extends BaseController
         }
 
 //        var_dump($model);exit;
-
-
-
         return $this->render('list', [
             'model' => $model,
             'pages' => $pages,

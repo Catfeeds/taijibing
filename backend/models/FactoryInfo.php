@@ -17,8 +17,30 @@ class FactoryInfo extends  ActiveRecord
     {
         return 'factory_info';
     }
+    //修改时用的
+    public  function insertBaseInfo2($Admin_User_Id,$loginName='',$Name,$Address,$ContractTel,
+         $ContractUser,$Province,$City,$Area,$BaiDuLng,$BaiDuLat){
+        $this->setAttribute("Admin_User_Id",$Admin_User_Id);
+        $this->setAttribute("LoginName",$loginName);
+        $this->setAttribute("Address",$Address);
+        $this->setAttribute("ContractTel",$ContractTel);
+        $this->setAttribute("ContractUser",$ContractUser);
+        $this->setAttribute("Province",$Province);
+        $this->setAttribute("City",$City);
+        $this->setAttribute("Area",$Area);
+        $this->setAttribute("BaiDuLng",$BaiDuLng);
+        $this->setAttribute("BaiDuLat",$BaiDuLat);
+//        $this->setAttribute("LoginPwd",md5($pwd));
+        $this->setAttribute("RowTime",date("Y-m-d H:i:s"));
+//        $this->setAttribute("Level",1);
+//        $this->setAttribute("PreCode",$this->getMaxprecode());
+        $this->setAttribute("Name",$Name);
+        $this->setScenario("update");
+        return $this->save(false);
+    }
+    //创建时用的
     public  function insertBaseInfo($Admin_User_Id,$loginName='',$Name,$Address,$ContractTel,
-         $ContractUser,$Province,$City,$Area,$BaiDuLng,$BaiDuLat,$pwd=''){
+                                    $ContractUser,$Province,$City,$Area,$BaiDuLng,$BaiDuLat,$pwd=''){
         $this->setAttribute("Admin_User_Id",$Admin_User_Id);
         $this->setAttribute("LoginName",$loginName);
         $this->setAttribute("Address",$Address);
@@ -46,7 +68,7 @@ class FactoryInfo extends  ActiveRecord
     public function rules()
     {
         return [
-            [['Name','ContractTel','ContractUser', 'PreCode','WaterBrandNo','Level'], 'required'],
+            [['LoginName','Name', 'ContractTel','ContractUser','Address','Province','City','Area','RowTime','BaiDuLng','BaiDuLat', 'PreCode','WaterBrandNo','Level'], 'required'],
         ];
     }
     public function attributeLabels()
@@ -67,6 +89,7 @@ class FactoryInfo extends  ActiveRecord
         return [
             'default' => ['Name', 'ContractTel','ContractUser','Address','PreCode','WaterBrandNo','Level','Province','City','Area','BaiDuLat','BaiDuLng'],
             'create' => ['LoginName', 'LoginPwd','RowTime','WaterBrandNo','Level'],
+            'update' => ['LoginName','Name', 'ContractTel','ContractUser','Address','Province','City','Area','RowTime','BaiDuLng','BaiDuLat'],
 
         ];
     }
@@ -76,7 +99,7 @@ class FactoryInfo extends  ActiveRecord
     public static function findWithCondition($username,$mobile,$province,$city,$area){
             $where='';
             if(!empty($username)){
-                $where.=" Name='$username'";
+                $where.=" Name like '%$username%'";
             }
             if(!empty($mobile)){
                 if(!empty($where)){
@@ -102,6 +125,26 @@ class FactoryInfo extends  ActiveRecord
             }
             $where.="Area='$area' ";
         }
+
+        //根据登陆者的信息，获取登陆者的角色
+        $login_id=\Yii::$app->user->id;
+        //获取角色id
+        $role_id=AdminRoleUser::findOne(['uid'=>$login_id])->role_id;
+        //获取角色
+//        $role=AdminRoles::findOne(['id'=>$role_id])->role_name;
+
+
+        //如果是水厂登陆，只显示对应的水厂
+        if($role_id==2){
+            if(!empty($where)){
+                $where.=" and ";
+            }
+            $where.="Admin_User_id= '$login_id' ";
+        }
+
+
+
+
         return self::findBySql("select * from factory_info ".(empty($where)?"":" where ".$where));
 
 

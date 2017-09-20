@@ -190,10 +190,10 @@ $this->title = '商品';
                             </div>
                             <div class="goodpic" style="float: left;height: 240px">
                                 <div class="item">提示：</div>
-                                <div class="item">1、列表图：显示在大频道页；</div>
-                                <div class="item">2、细节图：显示在商品详情页；</div>
-                                <div  class="item" style="float: left;width: 18px;">3、</div>
-                                <div class="item" style="float: left;width: 260px;word-wrap: break-word; ">具体尺寸大小 ：洗车列表图（220*220），洗车细节图（750*370）， 旅游列表图（*）， 旅游细节图（*）；</div>
+                                <div class="item">1. 最多上传6张相关图片。</div>
+                                <div class="item">2. 显示尺寸大小：缩略图(220*220)，详情图（720×1080）</div>
+                                <div  class="item" style="float: left;width: 18px;">3. </div>
+                                <div class="item" style="float: left;width: 260px;word-wrap: break-word; ">手机详情总体大小：图片+文字+音频应小于等于1.5M，图片仅支持JPG、GIF、PNG格式；</div>
                             </div>
                         </div>
                     </div>

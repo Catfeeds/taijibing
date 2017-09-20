@@ -4,9 +4,18 @@ use feehi\widgets\Bar;
 ?>
 
 <div class="wrapper wrapper-content">
+
+    <form action="./?r=water-brand/list" method="post">
+        关键词：<input id="search" placeholder="请输入名称、品牌或厂家" value="<?=$search?>" type="text" name="content">
+        <input type="submit" value="搜索" >
+    </form>
+
     <?= Bar::widget([
         'template' => '{create}'
     ])?>
+
+
+
     <table class="table table-hover" style="background:white;">
         <thead>
         <th>序号</th>
@@ -54,6 +63,8 @@ use feehi\widgets\Bar;
     <script type="text/javascript" src="./static/js/jquery.min.js"></script>
     <script type="text/javascript" src="./static/js/layer/layer.js"></script>
 <script>
+
+
     function deleteWaterBrand(brandno){
         if(confirm("你确认要删除吗？")){
             var ii=layer.msg("操作中……");

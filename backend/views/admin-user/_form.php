@@ -176,9 +176,14 @@ var merchant='';
 
 <script>
     var data=<?=$model["data"]?>;
-//    var province='<?//=$model["model"]["Province"]?>//';
-//    var city='<?//=$model["model"]["City"]?>//';
-//    var area='<?//=$model["model"]["Area"]?>//';
+    var province='<?=$model["model"]["province"]?>';
+    var city='<?=$model["model"]["city"]?>';
+    var area='<?=$model["model"]["area"]?>';
+    var address='<?=$model["model"]["address"]?>';
+    var lat='<?=$model["model"]["lat"]?>';
+    var lng='<?=$model["model"]["lng"]?>';
+    var type='<?=$model["model"]["type"]?>';
+    var agent='<?=$model["model"]["agent"]?>';
 
 
 //    var geoc;
@@ -191,6 +196,18 @@ var merchant='';
 
 <script type="text/javascript" src="./static/js/jquery.min.js"></script>
 <script>
+
+    $('#address').val(address);
+    $('#lng').val(lng);
+    $('#lat').val(lat);
+    $('#type').val(type);
+    if(type=='服务中心'){
+        $('#parent').show();
+        $('#agent').append("<option selected='selected' value="+agent+">"+agent+"</option>");
+    }
+
+
+
 
     //选择地址改变时
     $('#check_address select').change(function(){
@@ -258,7 +275,7 @@ var merchant='';
 
         initProvince();
         initListener();
-//        initAddress();
+        initAddress();
 //        initMap();
     });
 

@@ -13,14 +13,14 @@ $this->title = "";
 <div class="row">
     <div class="col-sm-12">
         <div class="ibox">
-            <?= $this->render('/widgets/_ibox-title') ?>
+            <div style="text-align: right;margin-bottom: 10px"> <?= \yii\bootstrap\Html::a('返回',['customer/list'],['class'=>'btn btn-primary'])?></div>
             <div class="ibox-content">
                 <?php $form = ActiveForm::begin(['options'=>['enctype'=>'multipart/form-data','class'=>'form-horizontal']]); ?>
-                <?= $form->field($model["model"], 'Name')->textInput(['maxlength' => 64]) ?>
+                <?= $form->field($model["model"], 'Name')->textInput(['maxlength' => 64,'readonly'=>'true']) ?>
                 <div class="hr-line-dashed"></div>
-                <?= $form->field($model["model"], 'Tel')->textInput(['maxlength' => 11]) ?>
+                <?= $form->field($model["model"], 'Tel')->textInput(['maxlength' => 11,'readonly'=>'true']) ?>
                 <div class="hr-line-dashed"></div>
-                <?= $form->field($model["data2"], 'CustomerType')->dropDownList(['1' => '家用','2' => '办公','3' => '集团','99' => '其他'])->label('客户类型') ?>
+                <?= $form->field($model["data2"], 'CustomerType')->dropDownList(['1' => '家庭','2' => '公司','3' => '集团','99' => '其他'])->label('客户类型') ?>
                 <div class="hr-line-dashed"></div>
                 <?= $form->field($model["data2"], 'UseType')->dropDownList(['1' => '自购','2' => '押金','3' => '买水送机','4' => '买机送水','5' => '免费','99' => '其他'])->label('入网属性') ?>
                 <div class="hr-line-dashed"></div>
@@ -31,20 +31,20 @@ $this->title = "";
                 <div class="form-group field-adminroleuser-role_id required">
                     <label class="col-sm-2 control-label" for="adminroleuser-role_id">地址</label>
                     <div class="col-sm-10">
-                        <select class="control-label" name="Customer[Province]" id="province">
+                        <select class="control-label" name="DevRegist[Province]" id="province">
                             <option value="">请选择</option>
                         </select>
-                        <select class="control-label" name="Customer[City]" id="city">
+                        <select class="control-label" name="DevRegist[City]" id="city">
                             <option value="">请选择</option>
                         </select>
-                        <select class="control-label" name="Customer[Area]" id="area">
+                        <select class="control-label" name="DevRegist[Area]" id="area">
                             <option value="">请选择</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="hr-line-dashed"></div>
-                <?= $form->field($model["model"], 'Address')->textInput(['maxlength' => 64]) ?>
+                <?= $form->field($model["data2"], 'Address')->textInput(['maxlength' => 64])->label('地址') ?>
                 <div class="hr-line-dashed"></div>
 
                 <?= $form->defaultButtons() ?>

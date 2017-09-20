@@ -36,16 +36,26 @@ class WaterBrandController extends BaseController
     }
     public function actionList()
     {
+
+        //获取搜索内容
+        $search=trim(Yii::$app->request->post('content'));
+        $where='';
+        if(!empty($search)){
+            $where=" and (goods.name like '%{$search}%' or water_brand.BrandName like '%{$search}%' or factory_info.Name  like '%{$search}%')";
+        }
+
+
         $datas=yii\db\ActiveRecord::findBySql("select goods.*,
             water_brand.BrandName,water_brand.BrandNo, factory_info.Name as factory_name from goods
            JOIN water_brand on goods.brand_id=water_brand.BrandNo
            JOIN factory_info on goods.factory_id=factory_info.Id
-           where goods.state=0 and goods.category_id=1
+           where goods.state=0 and goods.category_id=1 $where
            ");//state -1 表示已删除 0 正常   category_id 1：表示袋装水 2：茶吧机
         $pages = new Pagination(['totalCount' => $datas->count(), 'pageSize' => 5]);
         $model = $datas->offset($pages->offset)->limit($pages->limit)->asArray()->all();
 //        var_dump($model);exit;
         return $this->render('list', [
+            'search' => $search,
             'model' => $model,
             'pages' => $pages,
         ]);
@@ -170,11 +180,16 @@ class WaterBrandController extends BaseController
 
         $goods=new Goods();
 
-        $goods->setScenario('create');
+        $goods->setScenario('create2');
         if ( Yii::$app->getRequest()->getIsPost() ) {
 
             $goods->load(yii::$app->getRequest()->post());
             $goods->addtime=time();
+            $goods->stock=0;
+            $goods->originalprice=0;
+            $goods->saleprice=0;
+            $goods->updatetime=0;
+            $goods->state=0;
             $goods->category_id=1;//1为袋装水，2为茶吧机
 //            var_dump($goods->goods_image1,$goods->goods_image2,$goods->goods_image3,$goods->goods_image4,$goods->goods_image5,$goods->goods_image6);exit;
             if($goods->validate()&&$goods->save()){

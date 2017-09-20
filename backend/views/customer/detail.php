@@ -31,7 +31,7 @@ function getActType($type){
 <!--                <button style="padding-left:10px;" class="btn-primary btn form-label" type="button" style="padding:0px;line-height:26px;height:26px;width:60px;" id="query">查询</button>-->
 <!--            </div>-->
 <!--        </div>-->
-    <?= $this->render('/widgets/_ibox-title') ?>
+    <div style="text-align: right;margin-bottom: 10px"> <?= \yii\bootstrap\Html::a('返回',['customer/list'],['class'=>'btn btn-primary'])?></div>
     <table class="table table-hover" style="background:white;">
         <thead>
         <th>序号</th>
