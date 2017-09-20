@@ -57,8 +57,8 @@ use yii\widgets\LinkPager;
                             <td>".$val["DevFactory"]."</td>
                             <td>".$val["agentpname"]."</td>
                             <td>".$val["agentname"]."</td>
-                            <td>".$val["Address"]."</td>
                             <td>".$val["Province"]."-".$val["City"]."-".$val["Area"]."</td>
+                            <td>".$val["Address"]."</td>
                             <td>".$val["Name"]."</td>
                             <td>".$val["Tel"]."</td>
                             <td>".$val["RowTime"]."</td>

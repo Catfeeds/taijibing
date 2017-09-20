@@ -145,11 +145,12 @@ class DevWaterScan extends  ActiveRecord
 //        var_dump($DevNo);exit;
 //        var_dump($where);exit;
         //先排序，再分组。获取每个设备最近的一条扫码记录（点击详情时才读取该设备的所有记录）
-        $sql="select DISTINCT dev_water_scan_log.BarCode,dev_water_scan_log.DevNo,dev_water_scan_log.RowTime,user_info.`Address`,user_info.`Name`,user_info.`Tel`,agent_info.`Name` as agentName,dev_regist.`DevFactory`,dev_regist.`Province`,dev_regist.`City`,dev_regist.`Area`,factory_info.`Name` as factoryName
+        $sql="select DISTINCT dev_water_scan_log.BarCode,dev_water_scan_log.DevNo,dev_water_scan_log.RowTime,dev_location.`Address`,user_info.`Name`,user_info.`Tel`,agent_info.`Name` as agentName,dev_regist.`DevFactory`,dev_regist.`Province`,dev_regist.`City`,dev_regist.`Area`,factory_info.`Name` as factoryName
  from dev_water_scan
  right join dev_water_scan_log on dev_water_scan_log.`BarCode` = dev_water_scan.`BarCode`
 INNER join user_info on dev_water_scan.`UserId`=user_info.`Id`
 left join dev_regist on dev_water_scan.`DevNo`=dev_regist.`DevNo`
+left join dev_location on dev_water_scan.`DevNo`=dev_location.`DevNo`
 left join `agent_info` on agent_info.`Id`=dev_regist.`AgentId` ".(empty($username)?"":"agent_info.LoginName='$username' ")."
 left join wcode_info on dev_water_scan.`BarCode`=`wcode_info`.`Code`
 left join `factory_info` on factory_info.`Id`=wcode_info.`FId` where dev_water_scan_log.DevNo={$DevNo}
@@ -169,11 +170,12 @@ left join `factory_info` on factory_info.`Id`=wcode_info.`FId` where dev_water_s
             $username=$model->getAttribute("username");
         }
         $where =self::getSaomaListWhereStr2($selecttime,$content,$username);
-        $sql="select DISTINCT agent_info.Id as agentId,agent_info.Level,dev_water_scan_log.BarCode,dev_water_scan_log.DevNo,dev_water_scan_log.RowTime,user_info.`Address`,user_info.`Name`,user_info.`Tel`,agent_info.`Name` as agentName,dev_regist.`DevFactory`,dev_regist.`Province`,dev_regist.`City`,dev_regist.`Area`,factory_info.`Name` as factoryName
+        $sql="select DISTINCT agent_info.Id as agentId,agent_info.Level,dev_water_scan_log.BarCode,dev_water_scan_log.DevNo,dev_water_scan_log.RowTime,dev_location.`Address`,user_info.`Name`,user_info.`Tel`,agent_info.`Name` as agentName,dev_regist.`DevFactory`,dev_regist.`Province`,dev_regist.`City`,dev_regist.`Area`,factory_info.`Name` as factoryName
  from dev_water_scan
  right join dev_water_scan_log on dev_water_scan_log.`BarCode` = dev_water_scan.`BarCode`
  INNER join user_info on dev_water_scan.`UserId`=user_info.`Id`
 left join dev_regist on dev_water_scan.`DevNo`=dev_regist.`DevNo`
+left join dev_location on dev_water_scan.`DevNo`=dev_location.`DevNo`
 left join `agent_info` on agent_info.`Id`=dev_regist.`AgentId` ".(empty($username)?"":"agent_info.LoginName='$username' ")."
 left join wcode_info on dev_water_scan.`BarCode`=`wcode_info`.`Code`
 left join `factory_info` on factory_info.`Id`=wcode_info.`FId` where dev_water_scan_log.DevNo=$DevNo
@@ -202,11 +204,12 @@ left join `factory_info` on factory_info.`Id`=wcode_info.`FId` where dev_water_s
         $where =self::getSaomaListWhereStr($selecttime,$content,$username,$province,$city,$area);
 
         //先排序，再分组。获取每个设备最近的一条扫码记录（点击详情时才读取该设备的所有记录）
-        $sql="select * from (select DISTINCT dev_water_scan_log.BarCode,dev_water_scan_log.DevNo,dev_water_scan_log.RowTime,user_info.`Address`,user_info.`Name`,user_info.`Tel`,agent_info.`Name` as agentName,dev_regist.`Province`,dev_regist.`City`,dev_regist.`Area`,dev_regist.`DevFactory`,factory_info.`Name` as factoryName
+        $sql="select * from (select DISTINCT dev_water_scan_log.BarCode,dev_water_scan_log.DevNo,dev_water_scan_log.RowTime,dev_location.`Address`,user_info.`Name`,user_info.`Tel`,agent_info.`Name` as agentName,dev_regist.`Province`,dev_regist.`City`,dev_regist.`Area`,dev_regist.`DevFactory`,factory_info.`Name` as factoryName
  from dev_water_scan
  right join dev_water_scan_log on dev_water_scan_log.`BarCode` = dev_water_scan.`BarCode`
 INNER join user_info on dev_water_scan_log.`UserId`=user_info.`Id`
 left join dev_regist on dev_water_scan.`DevNo`=dev_regist.`DevNo`
+left join dev_location on dev_water_scan.`DevNo`=dev_location.`DevNo`
 left join `agent_info` on agent_info.`Id`=dev_regist.`AgentId`
 left join wcode_info on dev_water_scan.`BarCode`=`wcode_info`.`Code`
 left join `factory_info` on factory_info.`Id`=wcode_info.`FId`
@@ -223,11 +226,12 @@ left join `factory_info` on factory_info.`Id`=wcode_info.`FId`
             $username=$model->getAttribute("username");
         }
         $where =self::getSaomaListWhereStr($selecttime,$content,$username,$province,$city,$area);
-        $sql="select * from (select DISTINCT agent_info.Id as agentId,agent_info.Level,dev_water_scan_log.BarCode,dev_water_scan_log.DevNo,dev_water_scan_log.RowTime,user_info.`Address`,user_info.`Name`,user_info.`Tel`,agent_info.`Name` as agentName,dev_regist.`DevFactory`,dev_regist.`Province`,dev_regist.`City`,dev_regist.`Area`,factory_info.`Name` as factoryName
+        $sql="select * from (select DISTINCT agent_info.Id as agentId,agent_info.Level,dev_water_scan_log.BarCode,dev_water_scan_log.DevNo,dev_water_scan_log.RowTime,dev_location.`Address`,user_info.`Name`,user_info.`Tel`,agent_info.`Name` as agentName,dev_regist.`DevFactory`,dev_regist.`Province`,dev_regist.`City`,dev_regist.`Area`,factory_info.`Name` as factoryName
  from dev_water_scan
  right join dev_water_scan_log on dev_water_scan_log.`BarCode` = dev_water_scan.`BarCode`
  INNER join user_info on dev_water_scan.`UserId`=user_info.`Id`
 left join dev_regist on dev_water_scan.`DevNo`=dev_regist.`DevNo`
+left join dev_location on dev_water_scan.`DevNo`=dev_location.`DevNo`
 left join `agent_info` on agent_info.`Id`=dev_regist.`AgentId`
 left join wcode_info on dev_water_scan.`BarCode`=`wcode_info`.`Code`
 left join `factory_info` on factory_info.`Id`=wcode_info.`FId`

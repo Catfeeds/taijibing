@@ -285,13 +285,8 @@ class AdminUserController extends BaseController
             exit();
         }
 
-
-
         //获取地址数据
         $data=(new Address())->allQuery()->asArray()->all();
-
-//        $model = (new User())->findOne(['id'=>$id]);
-//            var_dump($id);exit;
 
             //判断修改的数据来自哪张表
             $admin_user = User::findOne(['username'=>$LoginName]);
@@ -314,27 +309,42 @@ class AdminUserController extends BaseController
             }
 
 
-
-
-
-//            $username=$model->username;
-//            var_dump($model);exit;
-
-//        var_dump($logic_type);exit;
         $model->setScenario('update');
         $admin_user->setScenario('update');
 
+        //根据登陆者的信息，获取登陆者的角色
+        $login_id=Yii::$app->user->id;
+        $LogiName=User::findOne(['id'=>$login_id])->username;
+        $dat=AgentInfo::findOne(['LoginName'=>$LogiName]);
+        $agent='';
+        if($dat){
+            $agent=$dat->Name;
+        }
+
+        //获取角色id
+        $role_id=AdminRoleUser::findOne(['uid'=>$login_id])->role_id;
+
+
+
+
+
             if(yii::$app->getRequest()->getIsPost()){
-//                var_dump( $model);
+
                 $model->load(yii::$app->getRequest()->Post());
-//                var_dump( $model->Province,$model->City,$model->Area);exit;
+                //验证数据（agnet_info 或 dev_factory 或 factory_info ）
+
+
+
+
+
+
                 $model->RowTime=date("Y-m-d H:i:s");
-//                $admin_user->load(yii::$app->getRequest()->Post());//email、type、agent
+
                 $datas=(yii::$app->getRequest()->Post());//email、type、agent
                 $user=$datas['User'];//email、type、agent
-//var_dump($admin_user);exit;
+
 //                var_dump( $model->Name,$model->LoginName,$model->Area);exit;
-//var_dump($model->LoginName);exit;
+
 //                $model->LoginPwd=md5($admin_user->);
                 $admin_user->username=$model->LoginName;
                 $admin_user->updated_at=time();
@@ -381,60 +391,6 @@ class AdminUserController extends BaseController
                     $AdminRoleUser->role_id=5;
                 }
 
-//var_dump($model,$admin_user);exit;
-
-//                var_dump($admin_user);exit;
-
-//                $logic_type=$admin_user->logic_type;
-//                $password=$admin_user->password;
-//                $datas=Yii::$app->request->post();
-//                var_dump($datas);exit;
-//                $model->username=$datas['User']['username'];
-//                $model->email=$datas['User']['email'];
-//                $model->updated_at=time();
-//                $model->contacts=$datas['User']['contacts'];
-//                $model->tel=$datas['User']['tel'];
-//                $model->name=$datas['User']['name'];
-//                $model->province=$datas['User']['province'];
-//                $model->city=$datas['User']['city'];
-//                $model->area=$datas['User']['area'];
-//                $model->address=$datas['User']['address'];
-//                $model->lng=$datas['User']['lng'];
-//                $model->lat=$datas['User']['lat'];
-//                $model->type=$datas['User']['type'];
-//                $model->agent=isset($datas['User']['agent'])?$datas['User']['agent']:'';
-
-//                var_dump($datas['User']['name']);exit;
-
-
-
-
-
-
-//                $rolesModel = (new AdminRoleUser())->findOne(['uid'=>$id]);//admin_role_user 用户和角色关联表
-//                if($model->type=='管理员'){
-//                    $model->logic_type=0;
-//                    $rolesModel->role_id=1;
-//                }
-//                if($model->type=='水厂'){
-//                    $model->logic_type=1;
-//                    $rolesModel->role_id=2;
-//                }
-//                if($model->type=='设备厂家'){
-//                    $model->logic_type=2;
-//                    $rolesModel->role_id=4;
-//                }
-//                if($model->type=='运营中心'){
-//                    $model->logic_type=3;
-//                    $rolesModel->role_id=3;
-//                }
-//                if($model->type=='服务中心'){
-//                    $model->logic_type=4;
-//                    $rolesModel->role_id=5;
-//                }
-
-
-
 
 //            var_dump($model->validate());exit;
                 $transaction=Yii::$app->db->beginTransaction();
@@ -446,45 +402,10 @@ class AdminUserController extends BaseController
                     }
 
 
-//                    $rolesModel->uid = $model->getPrimaryKey();
                     $AdminRoleUser->updated_at = time();
                     if(!$AdminRoleUser->validate()||!$AdminRoleUser->save()){//保存到admin_role_user表
                         throw new yii\db\Exception('admin_role_user表操作失败2');
                     }
-
-                    //根据$logic_type 再保存到对应的表
-//                    if($logic_type==$admin_user->logic_type && $admin_user->logic_type==1){//没有修改账户类型
-//                        //水厂
-//
-//                        $res=   (new FactoryInfo())->findOne(['LoginName'=>$LoginName])->insertBaseInfo($id,$model["username"],$model["name"],
-//                            $model["address"],$model["tel"],$model["contacts"],
-//                            $model["province"],$model["city"],
-//                            $model["area"],$model["lng"],$model["lat"],
-//                            $model["password"]);
-//                    }
-//                    if($logic_type==$admin_user->logic_type && $admin_user->logic_type==2){
-//                        //设备厂家
-//                        $res=  (new DevFactory())->findOne(['LoginName'=>$LoginName])->insertBaseInfo($id,$model["username"],
-//                            $model["name"],$model["address"],$model["tel"],$model["contacts"],
-//                            $model["province"],$model["city"],$model["area"],$model["lng"],
-//                            $model["lat"],$model['password']);
-////                    $res=   (new DevFactory())->insertBaseInfo($model["username"],$model["password"]);
-//                    }
-//                    if(($logic_type==$admin_user->logic_type && $admin_user->logic_type==3)||($logic_type==$admin_user->logic_type && $admin_user->logic_type==4)){
-//
-//                        if($model->logic_type==3){
-//                            $ParentId=0;
-//                        }else{
-//                            $ParentId=AgentInfo::findOne(['Name'=>$model->agent])->Id;
-//                        }
-//
-//                        //区域代理(agent_info Level 4:运营中心  5：服务中心)
-//                        $res=   (new AgentInfo())->findOne(['LoginName'=>$LoginName])->insertBaseInfo($ParentId,$id,$model["username"],$model['name'],
-//                            $model["tel"],$model["contacts"],$model["address"],
-//                            $model["province"],$model["password"],$model["city"],
-//                            $model["area"],$model["lng"],$model["lat"],$model->logic_type);
-////                    var_dump($res);exit;
-//                    }
 
                     //修改了账户类型
                     if($logic_type!=$admin_user->logic_type){
@@ -517,11 +438,6 @@ class AdminUserController extends BaseController
                             }
                         }
 
-//                        if(!$re){//删除原来的失败
-//                            throw new yii\db\Exception('操作失败3');
-//                        }
-
-
 
                         //根据$admin_user->logic_type 再保存到对应的表
 
@@ -553,10 +469,10 @@ class AdminUserController extends BaseController
 
                             if($admin_user->logic_type==3){
                             $ParentId=0;
-                        }else{
-                            $ParentId=AgentInfo::findOne(['Name'=>$admin_user->agent])->Id;
+                            }else{
+                                $ParentId=AgentInfo::findOne(['Name'=>$admin_user->agent])->Id;
 
-                        }
+                            }
                             //区域代理(agent_info Level 4:运营中心  5：服务中心)
                             $res=   (new AgentInfo())->insertBaseInfo2($ParentId,$id,$model->LoginName,$model->Name,
                                 $model->Address,$model->ContractTel,$model->ContractUser,
@@ -580,8 +496,6 @@ class AdminUserController extends BaseController
                         }
                     }
 
-
-
                     $transaction->commit();
                     \Yii::$app->getSession()->setFlash('success', \Yii::t('app', 'Success'));
                     return $this->redirect(['index']);
@@ -594,35 +508,12 @@ class AdminUserController extends BaseController
                     Yii::$app->getSession()->setFlash('error', $e->getMessage());
 
                     return $this->redirect(['index']);
-
-
                 }
-
-
-//            var_dump($model->type);exit;
-
             }
 
-//        $temp = AdminRoles::find()->asArray()->all();
-//        $roles = [];
-//        foreach ($temp as $v){
-//            $roles[$v['id']] = $v['role_name'];
-//        }
 
-            //根据登陆者的信息，获取登陆者的角色
-            $login_id=Yii::$app->user->id;
-            $LogiName=User::findOne(['id'=>$login_id])->username;
-            $dat=AgentInfo::findOne(['LoginName'=>$LogiName]);
-            $agent='';
-            if($dat){
-                $agent=$dat->Name;
-            }
 
-//            $agent=User::findOne(['Id'=>$login_id])->agent;
-//            var_dump($login_id,$agent);exit;
-//            $dat=Address::findOne(['Name'=>$agent]);
-            //获取角色id
-            $role_id=AdminRoleUser::findOne(['uid'=>$login_id])->role_id;
+
 
 
             return $this->render('update2', [
@@ -776,6 +667,31 @@ class AdminUserController extends BaseController
         return $agents;
 
     }
+
+    //重置密码
+    public function actionResetPassword($LoginName){
+        if(empty($LoginName)){
+            $this->jsonErrorReturn("参数错误");
+            return;
+        }
+        //找到该用户
+        $admin_user=User::findOne(['username'=>$LoginName]);
+        if(!$admin_user){
+            $this->jsonErrorReturn("该账号不存在");
+            return ;
+        }
+        //重置该用户密码为：123456
+        $admin_user->password_hash=Yii::$app->security->generatePasswordHash('123456');
+        if($admin_user->save(false)){
+            $this->jsonReturn(["state"=>0]);
+        }else{
+            $this->jsonReturn(["state"=>-1]);
+        }
+    }
+
+
+
+
 
     //删除
     public function actionDelete($LoginName)

@@ -159,38 +159,61 @@ class GoodsController extends BaseController
         return $data;
     }
 
+    //ajax获取商品品牌数据
+    public function actionGetBrand($category_id){
+        //获取品牌id
+//        $brand_ids=ActiveRecord::findBySql("select DISTINCT brand_id from goods where category_id=$category_id")->asArray()->all();
+        $data='';
+        if($category_id==1){//查询袋装水品牌
+
+            $data=ActiveRecord::findBySql("select BrandNo,BrandName from water_brand")->asArray()->one();
+        }
+
+        if($category_id==2){//查询茶吧机品牌
+
+            $data=ActiveRecord::findBySql("select BrandNo,BrandName from tea_brand")->asArray()->one();
+
+        }
+
+        return $data;
+
+    }
+
+
+
+
     //ajax获取商品数据
     public function actionGetGoods($category_id){
         $data=ActiveRecord::findBySql("select DISTINCT name from goods where category_id=$category_id")->asArray()->all();
         return $data;
     }
 
-    //ajax获取商品品牌数据
-    public function actionGetBrand($goodsname,$category_id){
-        //获取品牌id
-        $brand_ids=ActiveRecord::findBySql("select DISTINCT brand_id from goods where category_id=$category_id and name='{$goodsname}'")->asArray()->all();
-        $data=[];
-        if($category_id==1){//查询袋装水品牌
-            foreach($brand_ids as $v){
-                $brand=ActiveRecord::findBySql("select BrandNo,BrandName from water_brand where BrandNo='{$v['brand_id']}'")->asArray()->one();
-                $data[]=$brand;
-
-            }
-        }
-
-        if($category_id==2){//查询茶吧机品牌
-            foreach($brand_ids as $v){
-                $brand=ActiveRecord::findBySql("select BrandNo,BrandName from tea_brand where BrandNo='{$v['brand_id']}'")->asArray()->one();
-                $data[]=$brand;
-
-            }
-        }
-
-//var_dump($data);exit;
-
-        return $data;
-
-    }
+//    //ajax获取商品品牌数据
+//    public function actionGetBrand($goodsname,$category_id){
+//        //获取品牌id
+//        $brand_ids=ActiveRecord::findBySql("select DISTINCT brand_id from goods where category_id=$category_id and name='{$goodsname}'")->asArray()->all();
+//        $data=[];
+//        if($category_id==1){//查询袋装水品牌
+//            foreach($brand_ids as $v){
+//                $brand=ActiveRecord::findBySql("select BrandNo,BrandName from water_brand where BrandNo='{$v['brand_id']}'")->asArray()->one();
+//                $data[]=$brand;
+//
+//            }
+//        }
+//
+//        if($category_id==2){//查询茶吧机品牌
+//            foreach($brand_ids as $v){
+//                $brand=ActiveRecord::findBySql("select BrandNo,BrandName from tea_brand where BrandNo='{$v['brand_id']}'")->asArray()->one();
+//                $data[]=$brand;
+//
+//            }
+//        }
+//
+////var_dump($data);exit;
+//
+//        return $data;
+//
+//    }
 
     //ajax获取对应水厂数据
     public function actionGetFactory($goodsname,$category_id,$brand_id){

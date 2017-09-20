@@ -137,7 +137,7 @@ class WaterBrandController extends BaseController
 
 //        var_dump($goods);exit;
 
-        $goods->setScenario('create');
+        $goods->setScenario('create2');
         if ( Yii::$app->getRequest()->getIsPost() ) {
 
             $goods->load(yii::$app->getRequest()->post());

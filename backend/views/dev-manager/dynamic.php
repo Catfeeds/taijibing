@@ -68,7 +68,7 @@ function getActType($type){
                         <td>".($val["Province"].'-'.$val["City"].'-'.$val["Area"])."</td>
                         <td>".$val["Address"]."(".$val["Lat"].",".$val["Lng"].")</td>
                         <td>".$val["UserName"]."</td>
-                        <td>".$val["DevBindMobile"]."</td>
+                        <td>".$val["Tel"]."</td>
                         <td>".$val["ActTime"]."</td>
                         <th><a href='./?r=dev-manager/detail&DevNo=".$val["DevNo"]."'>详情</a></th>
                     </tr>";

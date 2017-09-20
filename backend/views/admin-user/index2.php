@@ -31,17 +31,17 @@ $this->title = "Admin";
 <!--        {delete}-->
         <table class="table table-hover" style="background:white;">
             <thead>
-            <th>序号</th>
-            <th>登陆账号</th>
-            <th>账户名称</th>
-            <th>账户类型</th>
-            <th>所在地区</th>
-            <th>联系人</th>
-            <th>联系电话</th>
-            <th>邮箱</th>
-            <th>创建时间</th>
-            <th>最后更新</th>
-            <th>操作</th>
+            <th style="width: 5%">序号</th>
+            <th style="width: 10%">登陆账号</th>
+            <th style="width: 10%">账户名称</th>
+            <th style="width: 8%">账户类型</th>
+            <th style="width: 13%">所在地区</th>
+            <th style="width: 8%">联系人</th>
+            <th style="width: 8%">联系电话</th>
+            <th style="width: 8%">邮箱</th>
+            <th style="width: 10%">创建时间</th>
+            <th style="width: 10%">最后更新</th>
+            <th style="width: 10%">操作</th>
             </thead>
             <tbody>
             <?php
@@ -63,6 +63,7 @@ $this->title = "Admin";
                             <td>
                                 <a href='./?r=admin-user/update&LoginName=".$val['LoginName']."'>编辑</a>
                                 <a class='del' >删除<input type='hidden' value='".$val['LoginName']."'></a>
+                                <a class='reset_password' >重置密码<input type='hidden' value='".$val['LoginName']."'></a>
                             </td>
                          </tr>";
                 $no++;
@@ -78,6 +79,32 @@ $this->title = "Admin";
 <script type="text/javascript" src="./static/js/jquery.min.js"></script>
 <script type="text/javascript" src="./static/js/layer/layer.js"></script>
 <script>
+    //重置密码
+    $('.reset_password').click(function(){
+        var Name=$(this).find('input').val();
+        if(confirm("你确定要重置密码吗？" +
+                "重置后密码将变为123456")){
+            var ii=layer.msg("操作中……");
+            $.getJSON("/index.php?r=admin-user/reset-password&LoginName="+Name,function(data){
+
+                layer.close(ii);
+                if(data.state!=0){
+                    layer.alert(data.desc);
+                    return;
+                }
+                layer.alert("操作成功",function(){
+                    window.location.reload(true);
+                });
+            });
+        }else{
+            return;
+        }
+    });
+
+
+
+
+
 
     $('.del').click(function(){
         var LoginName=$(this).find('input').val();

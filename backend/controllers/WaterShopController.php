@@ -6,7 +6,7 @@
  * Time: 下午2:12
  */
 
-namespace app\controllers;
+namespace backend\controllers;
 
 
 
@@ -58,7 +58,6 @@ class WaterShopController extends Controller
 
         //从门店表获取门店信息(shop_name:门店名称、Address:地址、image1:门店图片)
         $datas=ActiveRecord::findBySql("select agent_shop.*,agent_info.Address,agent_info.BaiDuLat,agent_info.BaiDuLng from agent_shop JOIN agent_info ON agent_shop.agent_id=agent_info.Id where agent_shop.close_time > now() and agent_shop.open_time < now()")->asArray()->all();
-
 
 //        $where="level=5";
 //        $datas=AgentInfo::findBySql("select * from agent_info where $where")->asArray()->all();

@@ -246,58 +246,6 @@ function savegood(){
 
 }
 
-//下面是添加的-------
-//function getGoodType(){
-//    var starttime=$("#starttime").val();
-//    var endtime= $("#endtime").val();
-//    var now = (new Date()).Format("yyyy-MM-dd hh:mm:ss");
-//    if(starttime>now){
-//        //待售
-//        return 1;
-//    }
-//    if(endtime<now){
-//        //失效
-//        return -1;
-//    }
-//    if(starttime<now&&endtime>now){
-//        //在售
-//        return 0;
-//    }
-//}
-//
-//Date.prototype.Format = function(fmt)
-//{ //author: meizz
-//    var o = {
-//        "M+" : this.getMonth()+1,                 //月份
-//        "d+" : this.getDate(),                    //日
-//        "h+" : this.getHours(),                   //小时
-//        "m+" : this.getMinutes(),                 //分
-//        "s+" : this.getSeconds(),                 //秒
-//        "q+" : Math.floor((this.getMonth()+3)/3), //季度
-//        "S"  : this.getMilliseconds()             //毫秒
-//    };
-//    if(/(y+)/.test(fmt))
-//        fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
-//    for(var k in o)
-//        if(new RegExp("("+ k +")").test(fmt))
-//            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
-//    return fmt;
-//}
-//
-//function addMark(obj){
-//    $(obj).parent().parent().insertBefore();
-//}
-//
-//function deleteMark(obj){
-//    if($(obj).parent().parent().find("div").size()==1) {
-//        $(obj).parent().parent().parent().parent().remove();
-//        return;
-//    }
-//    $(obj).parent().remove();
-//}
-//
-
-//上面是添加的-------
 
 function existDetail(){
     var tips=$("#tips").val();
@@ -489,8 +437,8 @@ function  addGoodType(){
     var itemStr=' <div class="item" id="item'+currentIndex+'" itemid="100">'+
         '<div class="good_sub_type">'+
         '<select onchange="change1('+currentIndex+')" id="goodscategory'+currentIndex+'" type="text" class="realPrice baseinput fl" style="width:100px;margin-right:15px"><option value="">商品属性</option></select>'+
-        '<select onchange="change2('+currentIndex+')" id="goodsname'+currentIndex+'" type="text" class="realPrice baseinput fl" style="width:100px;margin-right:15px"><option value="">商品名称</option></select>'+
-        '<select onchange="change3('+currentIndex+')" id="goodsbrand'+currentIndex+'" type="text" class="realPrice baseinput fl" style="width:100px;margin-right:15px"><option value="">商品品牌</option></select>'+
+        '<select onchange="change2('+currentIndex+')" id="goodsbrand'+currentIndex+'" type="text" class="realPrice baseinput fl" style="width:100px;margin-right:15px"><option value="">商品品牌</option></select>'+
+        '<select onchange="change3('+currentIndex+')" id="goodsname'+currentIndex+'" type="text" class="realPrice baseinput fl" style="width:100px;margin-right:15px"><option value="">商品名称</option></select>'+
         '<select id="goodsfactory'+currentIndex+'" type="text" class="realPrice baseinput fl" style="width:100px;margin-right:15px"><option value="">商品厂家</option></select>'+
         '<label for="realPrice'+currentIndex+'" style="margin-left:10px;" class="fl">商品结算价</label><input id="realPrice'+currentIndex+'" type="text" class="realPrice baseinput fl" style="width:50px;"/>'+
         '<label for="originalPrice'+currentIndex+'" style="margin-left:10px;" class="fl"><span style="color: red">元</span>&nbsp;&nbsp;&nbsp;商品原价</label><input id="originalPrice'+currentIndex+'" type="text" class="originalPrice baseinput fl" style="width:50px;"/>'+
@@ -524,47 +472,93 @@ function  addGoodType(){
 
 }
 
-//商品分类改变时，获取对应的商品
+////商品分类改变时，获取对应的商品
+//function change1(no){
+//    var category_id=$('#goodscategory'+no+' option:selected').attr('value');
+//
+//    if(category_id){
+//        //添加商品名称数据
+//        $.get('./?r=goods/get-goods',{'category_id':category_id},function(data){
+//            if(data!=''){
+//                var html="<option value=''>选择商品名称</option>";
+//                $(data).each(function(i,v){
+//                    if(v){
+//                        html+="<option value='"+v.name+"'>"+ v.name+"</option>"
+//                    }
+//
+//                });
+//                $('#goodsname'+no).html('');
+//                $(html).appendTo('#goodsname'+no);
+//                //清空后面的下拉框数据
+//                $('#goodsbrand'+no).html("<option value=''>选择商品品牌</option>");
+//                $('#goodsfactory'+no).html("<option value=''>选择厂家</option>");
+//
+//            }else{
+//                var html="<option value=''>选择商品名称</option>";
+//                $('#goodsname'+no).html('');
+//                $(html).appendTo('#goodsname'+no);
+//                //清空后面的下拉框数据
+//                $('#goodsbrand'+no).html("<option value=''>选择商品品牌</option>");
+//                $('#goodsfactory'+no).html("<option value=''>选择厂家</option>");
+//            }
+//
+//        });
+//    }else{
+//        var html="<option value=''>选择商品名称</option>";
+//        $('#goodsname'+no).html('');
+//        $(html).appendTo('#goodsname'+no);
+//        //清空后面的下拉框数据
+//        $('#goodsbrand'+no).html("<option value=''>选择商品品牌</option>");
+//        $('#goodsfactory'+no).html("<option value=''>选择厂家</option>");
+//    }
+//
+//}
+
+
+//商品分类改变时，获取对应的商品品牌
 function change1(no){
     var category_id=$('#goodscategory'+no+' option:selected').attr('value');
 
-    if(category_id){
-        //添加商品名称数据
-        $.get('./?r=goods/get-goods',{'category_id':category_id},function(data){
-            if(data!=''){
-                var html="<option value=''>选择商品名称</option>";
-                $(data).each(function(i,v){
-                    if(v){
-                        html+="<option value='"+v.name+"'>"+ v.name+"</option>"
-                    }
+    if(category_id) {
+        if (category_id) {
+            //添加商品名称数据
+            $.get('./?r=goods/get-brand', {'category_id': category_id}, function (data) {
+                //console.log(data);
+                if (data != '') {
+                    var html = "<option value=''>选择商品品牌</option>";
+                    $(data).each(function (i, v) {
+                        if (v) {
+                            html += "<option value='" + v.BrandNo + "'>" + v.BrandName + "</option>"
+                        }
 
-                });
-                $('#goodsname'+no).html('');
-                $(html).appendTo('#goodsname'+no);
-                //清空后面的下拉框数据
-                $('#goodsbrand'+no).html("<option value=''>选择商品品牌</option>");
-                $('#goodsfactory'+no).html("<option value=''>选择厂家</option>");
+                    });
+                    //console.log(html);
+                    $('#goodsbrand' + no).html('');
+                    $(html).appendTo('#goodsbrand' + no);
+                    //清空后面的下拉框数据
+                    $('#goodsfactory' + no).html("<option value=''>选择厂家</option>");
 
-            }else{
-                var html="<option value=''>选择商品名称</option>";
-                $('#goodsname'+no).html('');
-                $(html).appendTo('#goodsname'+no);
-                //清空后面的下拉框数据
-                $('#goodsbrand'+no).html("<option value=''>选择商品品牌</option>");
-                $('#goodsfactory'+no).html("<option value=''>选择厂家</option>");
-            }
+                } else {
+                    var html = "<option value=''>选择商品品牌</option>";
+                    $('#goodsrand' + no).html('');
+                    $(html).appendTo('#goodsbrand' + no);
+                    //清空后面的下拉框数据
+                    $('#goodsfactory' + no).html("<option value=''>选择厂家</option>");
+                }
 
-        });
-    }else{
-        var html="<option value=''>选择商品名称</option>";
-        $('#goodsname'+no).html('');
-        $(html).appendTo('#goodsname'+no);
-        //清空后面的下拉框数据
-        $('#goodsbrand'+no).html("<option value=''>选择商品品牌</option>");
-        $('#goodsfactory'+no).html("<option value=''>选择厂家</option>");
+            });
+        } else {
+            var html = "<option value=''>选择商品品牌</option>";
+            $('#goodsbrand' + no).html('');
+            $(html).appendTo('#goodsbrand' + no);
+            //清空后面的下拉框数据
+            $('#goodsfactory' + no).html("<option value=''>选择厂家</option>");
+        }
     }
-
 }
+
+
+
 
 //商品名称改变时，获取对应商品的品牌
 function change2(no){

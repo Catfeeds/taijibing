@@ -287,6 +287,7 @@
                     $.showIndicator();
                     var url = "/index.php/water-shop/agent-list?lat=" + this.lat + "&lng=" + this.lng;
                     $.getJSON(url, function (data) {
+                        alert(data.data);
                         $.hideIndicator();
                         if (data.status != 0) {
                             $.toast(data.msg);
