@@ -12,7 +12,6 @@ function hideTips() {
     } else {
         setTimeout(hideTips(), 500);
     }
-
 }
 $.alert = function (title, callback,label) {
     if(label==undefined){
@@ -32,8 +31,6 @@ $.alert = function (title, callback,label) {
         callback();
     });
     $("body").append(tplObj);
-
-
 }
 $.tipsAlert = function (title, callback,height) {
     var tplObj = $('<div class="dialog_container">' +
@@ -50,14 +47,57 @@ $.tipsAlert = function (title, callback,height) {
         callback();
     });
     $("body").append(tplObj);
-
 }
-$.confirm = function (title, callback,label) {
+
+$.tipsAlertOne = function (title, callback,obj) {
+
+$("body").find(".dialog_container").remove();
+    var tplObj = $('<div class="dialog_container">' +
+    '<div class="tips_dialog_content"  style="'+obj.style+'" >'+
+    '<div style="margin-top:-10px">' + title +
+
+    '</div>' +
+    '<div class="tips_dialog_btn" style="color:#189fe9;">' +
+    '知道了' +
+    ' </div>' +
+    ' </div>' +
+    '</div>');
+    $(tplObj).find('.tips_dialog_btn').on('click', function () {
+        $("body").find(".dialog_container").remove();
+        callback();
+    });
+    $("body").append(tplObj);
+}
+
+$.tipsAlertTwo = function (title, callback,height,callback2) {
+    $("body").find(".dialog_container").remove();
+    var tplObj = $('<div class="dialog_container">' +
+    '<div class="tips_dialog_content" style="height:'+(height==undefined?130:height)+'px;top:0;width:100%;left:0;margin:0;border-radius:0;overflow:auto">' +
+    '<div class="tips_dialog_title" style="display:inherit;width:100%">' + title +
+    '</div>' +
+    '<div class="tips_dialog_btn" style="color:#189fe9;">' +
+    '知道了' +
+    ' </div>' +
+    ' </div>' +
+    '</div>');
+
+
+    $(tplObj).find('.tips_dialog_btn').on('click', function () {
+        $("body").find(".dialog_container").remove();
+        callback();
+    });
+
+
+    
+
+   
+    $("body").append(tplObj);
+}
+$.confirm = function (title, callback,label,removeBack) {
     if(label==undefined){
         label='确定';
     }
     var tplObj = $('<div class="dialog_container" ng-controller="ctr_dialog_confirm" ng-show="showConfirmDialog">' +
-
         '<div class="confirm_dialog_content">' +
         '<p class="confirm_dialog_title">' + title +
         '</p>' +
@@ -70,15 +110,48 @@ $.confirm = function (title, callback,label) {
         '</div>');
     $(tplObj).find(".confirm_dialog_btn_cancle").on("click", function () {
         $("body").find(".dialog_container").remove();
+        if(removeBack){
+            removeBack()  
+        }
     });
     $(tplObj).find(".confirm_dialog_btn_sure").on('click', function () {
         $("body").find(".dialog_container").remove();
         callback();
     });
     $("body").append(tplObj);
+}
+// $.confirmTwo = function (title, callback,label,removeBack,obj) {
+$.confirmTwo = function (title, obj,callback,removeBack) {
+    $("body").find(".dialog_container").remove();
+    
+    var tplObj = $('<div class="dialog_container"ng-controller="ctr_dialog_confirm" ng-show="showConfirmDialog">' +
+        '<div class="confirm_dialog_content"  style="'+(obj.style?obj.style:'')+'" >' +
+        '<div class="confirm_dialog_title">' + title +
+        '<p style="clear:both;"></p></div>' +
+        ' <div class="confirm_dialog_btn_c" style="height:115px;line-height: 40px;border:none;    line-height: 36px;">' +
+       '<div style="float:left;width:60%;height: 36px;float: inherit;margin: auto;border-radius: 50px;color: #fff;background-color: #FA6B38;  border: 1px solid #f3f3f3;" class="confirm_dialog_btn_sure">'+obj.label+'</div>' +
+        // '<div style="width:1px;height:40px;background:#f3f3f3;left:50%;position: absolute;margin-top:5px;"></div>' +
+          '<div style="float:left;width:60%;height: 36px;float: inherit;margin: auto;border-radius: 50px;border: 1px solid #f3f3f3; margin-top: 20px;" class="confirm_dialog_btn_cancle" >取消 </div>' +
+       
+        '</div>' +
+        '</div>' +
+        '</div>');
+    $(tplObj).find(".confirm_dialog_btn_cancle").on("click", function () {
+        $("body").find(".dialog_container").remove();
+        // if(removeBack){
+            removeBack()  
+        // }
+    });
+    $(tplObj).find(".confirm_dialog_btn_sure").on('click', function () {
+          $("body").find(".dialog_container").remove();
+          callback();
+    });
+    $("body").append(tplObj);
+
+
+
 
 }
-
 $.toast = function (content, time) {
     $("body").find(".tips_text").remove();
     if (!content) {
@@ -103,7 +176,7 @@ $.hideIndicator = function () {
 };
 $.showPreloader = function (title) {
     if ($(".modal-overlay")[0]) {
-        return;
+      return;
     }
     var titleStr = title ? title : "加载中...";
     $("body").append(' <div class="modal-overlay modal-overlay-visible">' +
@@ -114,19 +187,17 @@ $.showPreloader = function (title) {
         '<div class="preloader"></div></div></div' +
         '<div class="modal-buttons "></div></div>' +
         '</div>');
-
 }
 $.hidePreloader = function () {
     $(".modal-overlay").remove();
 };
 $.showActionSheet=function(arr,callback){
         if( !isArray(arr)||arr.length==0){
-              return;
+           return;
         }
     var tplObjStr='<div class="dialog_container">' +
         '<div class="list_dialog_content">' +
         '<ul>';
-
         if(arr.length==1){
             tplObjStr+='<li class="list_dialog_firstli list_dialog_bottomli" index="0">'+arr[0]+'</li>';
         }else{
@@ -146,7 +217,7 @@ $.showActionSheet=function(arr,callback){
         '</div>';
     var telObj=$(tplObjStr);
     $(telObj).find("li").on('click',function(){
-       $(".dialog_container").remove();
+        $(".dialog_container").remove();
         var index=$(this).attr("index");
         callback(index);
     });
@@ -154,9 +225,4 @@ $.showActionSheet=function(arr,callback){
         $(".dialog_container").remove();
     });
    $("body").append(telObj);
-
-
-
-}
-
-
+};

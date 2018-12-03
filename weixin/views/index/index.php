@@ -21,6 +21,7 @@
             width:100%;
             height:auto;
         }
+
     </style>
 </head>
 <body>
@@ -31,4 +32,4 @@
 <img src="http://oowgxt7h1.bkt.clouddn.com/tjb/5.jpg"/>
 <img src="http://oowgxt7h1.bkt.clouddn.com/tjb/6.jpg"/>
 </body>
-</html>
+</html> 

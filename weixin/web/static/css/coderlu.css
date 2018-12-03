@@ -13,10 +13,10 @@ li
 {
     list-style-type:none;
 }
-input{
+/*input{
     -webkit-appearance: none;
     outline:none;
-}
+}*/
 *{
     padding:0px;
     margin:0px;
@@ -206,7 +206,7 @@ input{
 .confirm_dialog_content{
     background: white none repeat scroll 0 0;
     border-radius: 7px;
-    height: 130px;
+    height: 270px;
     left: 50%;
     margin-left: -150px;
     opacity: 0.98;

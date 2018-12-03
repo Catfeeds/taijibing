@@ -27,9 +27,8 @@ class AgentApi extends BaseApi
     public function getTotalStat(){
         return $this->ajaxAgentPost('/agent/GetTotalStat',[]);
     }
-
     public function getWarning(){
-        $data["take"]=100;
+        $data["take"]=500;
         $data["skip"]=0;
         return $this->ajaxAgentPost('/agent/GetWarning',$data);
     }
@@ -41,10 +40,23 @@ class AgentApi extends BaseApi
         return $this->ajaxAgentPost('/Agent/GetAgents',[]);
     }
     public function getUsers(){
-        $data["take"]=100;
+        $data["take"]=500;
         $data["skip"]=0;
         return $this->ajaxAgentPost('/Agent/GetUsers',$data);
     }
-
-
+    public function getInvestor(){//投资设备详情
+        $data["take"]=500;
+        $data["skip"]=0;
+        return $this->ajaxAgentPost('/Agent/investors',$data);
+    }
+    public function getdevwarning(){//设备预警
+        $data["take"]=500;
+        $data["skip"]=0;
+        return $this->ajaxAgentPost('/agent/GetWarning',$data);
+    }
+    public function getdevlist(){//设备列表
+        $data["take"]=500;
+        $data["skip"]=0;
+        return $this->ajaxAgentPost('/agent/devices',$data);
+    }
 }

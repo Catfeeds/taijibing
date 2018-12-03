@@ -21,9 +21,8 @@ function getQueryString(name) {
 }
 //验证手机号
 function validateTel(tel){
-	var reg = /^0?1[3|4|5|8|7][0-9]\d{8}$/;
+	var reg = /^0?1[3|4|5|8|7|6|9][0-9]\d{8}$/;
 	if (!reg.test(tel)) {
-
 		return false;
 	}
 	return true;
@@ -257,15 +256,47 @@ var EboBridge={
 	}
 
 };
-        //window.onload=function(){
-        //    document.addEventListener("WeixinJSBridgeReady",function(){
-        //
-        //                WeixinJSBridge.call('hideToolbar');
-        //                WeixinJSBridge.call('hideOptionMenu');
-        //
-        //            }
-        //
-        //
-        //    );
-        //
-        //}
+
+
+// 去除所有空格
+  function removeAllSpace(str) {
+     return str.replace(/\s+/g, "");
+    }
+
+function Trim(str)
+ { 
+  return str.replace(/(^\s*)|(\s*$)/g, ""); 
+}
+
+/**
+ * 扩展Array方法, 去除数组中空白数据
+ */
+
+//去重
+function unique($data) {
+  var res = [];
+  var json = {};
+
+  for (var p = 0; p < $data.length; p++) {
+    if (!json[$data[p]]) {
+      res.push($data[p]);
+      json[$data[p]] = 1;
+    } else {}
+  }
+  return res;
+}
+
+
+function unique($data) {
+ var res = [];
+ var json = {};
+ for(var i = 0; i < this.length; i++){
+  if(!json[this[i]]){
+   res.push(this[i]);
+   json[this[i]] = 1;
+  }
+ }
+ return res;
+}
+
+

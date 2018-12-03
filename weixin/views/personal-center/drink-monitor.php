@@ -19,18 +19,19 @@
             width:320px;
             height:100%;
             background:white;
-            padding-left:10px;
-            padding-right:10px;
+            /*padding-left:10px;*/
+            /*padding-right:10px;*/
             margin:0 auto;
             margin-bottom:100px;
+                padding: 1px 10px 20px 10px;
         }
         .has_drink{
-            width:300px;
-            height:300px;
+            width:240px;
+            height:240px;
             background-image:url("/static/images/drink_warn.png");
             background-position: center;
             background-repeat: no-repeat;
-            background-size:300px 300px;
+            background-size:240px 240px;
             margin:0 auto;
             padding-top:100px;
             margin-top:40px;
@@ -62,6 +63,7 @@
         .drink_detail{
             position:relative;
         }
+
         .footer{
             position:fixed;
             width:100%;
@@ -81,11 +83,51 @@
                     width:300px;
                 }
             }
+         #header{
+            height: 65px;
+            width: 100%;
+            background-color: #f3f3f3;
+         }  
+         #header p{
+            font-size: 12px;
+            text-align: center;color:#666;
+            line-height: 24px;
+         } 
+         .pullLeft{
+            width:75px;padding: 5px;
+             text-align: center;
+             box-sizing: border-box;
+             float: left;    height: 100%;
+
+         }
+          .pullLeft img{
+            width:25px; margin-top:5px;
+          }
+
+        
+         a{-webkit-tap-highlight-color:rgba(0,0,0,0.3);}
     </style>
 </head>
 <body>
-<div class="container">
-        <div class="has_drink">
+    <div id="header" class="">
+          <a href="https://g.eqxiu.com/s/bEYsklAp">
+               <div class="pullLeft">
+                   <img src="/static/images/kaidian.png" alt="" >
+                   <p>我要开店</p>
+               </div>
+          </a>
+          <a href="https://c.eqxiu.com/s/h5erpgVL">
+               <div class="pullLeft" style='float: right'>
+
+                   <img src="/static/images/songli.png" alt="" >
+                   <p>免费赠机</p>
+               </div>
+          </a>
+
+
+
+    </div><!-- /header -->
+<div class="container">        <div class="has_drink">
             <p class="warn-color" style="font-size:14px;">今日已喝水</p>
             <p class="warn-color" style="font-size:40px;"><?=$today_info->total ?></p>
             <p style="color:#aecde8;">目标:<?=$user->waterplan?>毫升</p>
@@ -110,14 +152,11 @@
 <div class="footer">
     <div style=" position:relative; width:320px;margin:0 auto;height:100%;line-height:60px;">
         <a href="/index.php/personal-center/setting"><img src="/static/images/person.png" style="position:absolute;height:44px;left:0px;top:8px;"/></a>
-        <a href="/index.php/personal-center/drink-monitor"><img src="/static/images/drink.png" style="height:60px;position:absolute;left:130px;"/></a>
-        <a href="/index.php/personal-center/drink-chart"><img src="/static/images/chart.png" style="height:44px;position:absolute;right:0px;top:8px;"/></a>
-
+        <a href="/index.php/personal-center/drink-monitor"><img src="/static/images/drink.png" style="height:60px;position:absolute;left:85px;"/></a>
+        <a href="/index.php/personal-center/drink-chart"><img src="/static/images/chart.png" style="height:44px;position:absolute;right:80px;top:8px;"/></a>
+         <a href="/index.php/personal-center/my-water-ticket"><img src="/static/images/chart.png" style="height:44px;position:absolute;right:0px;top:8px;"/></a>
     </div>
-
 </div>
-
-
 <script type="text/javascript" src="/static/js/vue.min.js"></script>
 <script type="text/javascript" src="/static/js/zepto.min.js"></script>
 <script type="text/javascript" src="/static/js/coderlu.js"></script>

@@ -91,7 +91,7 @@
     <div class="divider_line"></div>
 
 </div>
-<div class="footer">
+<!-- <div class="footer">
     <div style=" position:relative; width:320px;margin:0 auto;height:100%;line-height:60px;">
         <a href="/index.php/personal-center/setting"><img src="/static/images/person.png" style="position:absolute;height:44px;left:0px;top:8px;"/></a>
             <a href="/index.php/personal-center/drink-chart"><img src="/static/images/chart.png" style="height:60px;position:absolute;left:130px;"/></a>
@@ -99,6 +99,17 @@
 
     </div>
 
+</div> -->
+
+<div class="footer">
+    <div style=" position:relative; width:320px;margin:0 auto;height:100%;line-height:60px;">
+         <a href="/index.php/personal-center/setting"><img src="/static/images/person.png" style="position:absolute;height:44px;left:0px;top:8px;"/></a>
+        <a href="/index.php/personal-center/drink-monitor"><img src="/static/images/drink.png" style="position:absolute;height:50px;left:85px;top:8px;"/></a>
+
+          <a href="/index.php/personal-center/drink-chart"><img src="/static/images/chart.png" style="height:60px;position:absolute;right:80px;top:0px;"/></a>
+       
+         <a href="/index.php/personal-center/my-water-ticket"><img src="/static/images/chart.png" style="height:44px;position:absolute;right:0px;top:8px;"/></a>
+    </div>
 </div>
 <script type="text/javascript" src="/static/js/zepto.min.js"></script>
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js?"></script>

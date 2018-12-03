@@ -14,10 +14,10 @@ li
 {
     list-style-type:none;
 }
-input{
+/*input{
     -webkit-appearance: none;
     outline:none;
-}
+}*/
 *{
     padding:0px;
     margin:0px;

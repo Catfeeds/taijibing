@@ -5,15 +5,13 @@
  * Date: 17/4/1
  * Time: 下午6:08
  */
-
 namespace app\api;
 use yii;
-
-
 class BaseApi
 {
     //接口公网地址
-    private  $serverUrl='http://api.taijibing.cn';
+    // private  $serverUrl='http://api.taijibing.cn';
+    private  $serverUrl='http://test.api.taijibing.cn';
     //请求路径
     private  $path='';
     public  function ajaxPost($path,$post){
@@ -87,7 +85,6 @@ class BaseApi
      * @return string
      */
      function getMd5Url($url,$postData,$token='',$privatekey=''){
-
         $jsonStr=json_encode($postData);
         $md5Str=$jsonStr.$privatekey;
         $sign=md5($md5Str);

@@ -53,6 +53,14 @@
             right:0px;
             top:11px;
         }
+            .footer{
+            position:fixed;
+            width:100%;
+            bottom:20px;
+            height:60px;
+            padding-left:10px;
+            padding-right:10px;
+        }
     </style>
 </head>
 <body>
@@ -76,7 +84,14 @@
         <i class="arrow-gray_right"></i>
     </div>
 </div>
-
+<div class="footer">
+    <div style=" position:relative; width:320px;margin:0 auto;height:100%;line-height:60px;">
+        <a href="/index.php/personal-center/setting"><img src="/static/images/person.png" style="height:60px;position:absolute;left:0;"/></a>
+        <a href="/index.php/personal-center/drink-monitor"><img src="/static/images/drink.png" style="position:absolute;height:50px;left:100px;top:8px;"/></a>
+        <a href="/index.php/personal-center/drink-chart"><img src="/static/images/chart.png" style="height:44px;position:absolute;right:80px;top:8px;"/></a>
+         <a href="/index.php/personal-center/my-water-ticket"><img src="/static/images/chart.png" style="height:44px;position:absolute;right:0px;top:8px;"/></a>
+    </div>
+</div>
 
 <script type="text/javascript" src="/static/js/vue.min.js"></script>
 <script type="text/javascript" src="/static/js/zepto.min.js"></script>

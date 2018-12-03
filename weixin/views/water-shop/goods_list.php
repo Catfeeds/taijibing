@@ -7,72 +7,68 @@
     <link rel="shortcut icon" href="/favicon.ico">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <link rel="stylesheet" href="http://oowgxt7h1.bkt.clouddn.com/wx/static/coderlu.css"/>
+    <link rel="stylesheet" href="http://image.ebopark.com/wx/static/coderlu.css"/>
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=FCBpETlN4Snp2SfEl92y89WF"></script>
     <script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script>
-    <style>
-        body{
-            background:white;
-        }
-        * {
-            margin: 0px;
-            padding: 0px;
-        }
-        .header{
-            width:100%;
-            height:144px;
-            background-image: url(/static/images/background.png);
-            background-position:center;
-            background-size: 100% 144px;
-
-        }
-        #content{
+</head>
+<style type="text/css">
+         #content{
             width:100%;
             height:100%;
             overflow: hidden;
             position:absolute;
         }
-        .header_content{
+
+
+     .header{
+            width:100%;
+            height:144px;
+            background-image: url(/static/images/background.png);
+            background-position:center;
+            background-size: 100% 144px;
+        }
+       
+      .header_content{
             height:144px;
             width:
         }
         .header_p_icon{
-            height:100px;width:auto;position:absolute;top:22px;
+            height:100px;width:100px;position:absolute;top:22px;
             border-radius: 72px;
             left:10px;
         }
         .container{
             width:100%;
-            height:100%;
+             height: calc(100% - 144px);
             position: relative;
         }
-        .container_left{
-            position: absolute;
-            top:0px;
-            left:0px;
-            width:105px;
-            bottom:0px;
-            background: #f8f8f8;
+         .agent_address{
+            color: #fff;line-height: inherit;font-size:13px;overflow: hidden;
+            margin-top:21px;
         }
-        .container_right{
-            position:absolute;
-            left:125px;
-            right:0px;
-            bottom:0px;
-            top:144px;
-            padding-right:10px;
-            padding-bottom:80px;
-            top:0px;
-            background:white;
-        }
-        .container_right_content{
-            width:100%;
-            height:100%;
-            background:white;
-            overflow: auto;
+        .header_right{
+            position: absolute;left:130px;top:18px;
         }
 
-        .tab_list li{
+        .Catalog{
+            border-top:5px solid #f3f3f3;
+
+        }
+        .list{
+       width: 33.3%;
+    float: left;
+    padding: 10px;
+    text-align: center;
+        }
+                .container_left{
+            position: absolute;
+            top:0px;
+             left:0px;
+                width:70px;
+                bottom:0px;
+            background: #f8f8f8;
+        }
+              .tab_list li{
             height:54px;
             position:relative;
             text-align: center;
@@ -87,51 +83,24 @@
         .tab_list .unselected{
             background:#f8f8f8;
         }
-        .water_hot {
-            display: inline-block;
-            width: 13px;
-            height: 14px;
-            background-image: url(/static/images/water_hot.png);
-            background-size: 13px 14px;
-            background-position: center;
-            line-height: 40px;
-            position: absolute;
-            top: 19px;
-
-        }
-        .water_icon {
-            display: inline-block;
-            width: 10px;
-            height: 15px;
-            background-image: url(/static/images/icon_water.png);
-            background-size: 10px 15px;
-            background-position: center;
-            line-height: 40px;
-            position: absolute;
-            top: 19px;
-
-        }
-        .water_tea {
-            display: inline-block;
-            width: 10px;
-            height: 15px;
-            background-image: url(/static/images/water_tea.png);
-            background-size: 10px 15px;
-            background-position: center;
-            line-height: 40px;
-            position: absolute;
-            top: 19px;
-
-        }
-
-        .goods_ul li{
-            height:110px;
-            border-bottom: 1px solid #e9e9e9;
-            padding-top:15px;
-            overflow: auto;
+                .container_right{
+            position:absolute;
+             left: 75px;
+            right:0px;
+            bottom:0px;
+            top:144px;
+            padding-right:10px;
+            padding-bottom:80px;
+            top:0px;
             background:white;
+            height: 100%;
         }
-
+                 .container_right_content{
+            width:100%;
+            height:100%;
+            background:white;
+            overflow: auto;
+        }
         .list_container{
             height:80px;
             width:100%;
@@ -141,302 +110,300 @@
             position:absolute;
             left:90px;
         }
-        .buy_bnt{
-            position:absolute;
-            right:0px;
-            width:66px;
-            height:30px;
-            display:inline-block;
-            background:#ff4e00;
-            color:white;
-            line-height: 30px;
-            text-align: center;
-            border-radius: 8px;
-            top:50px;
-            right:0px;
+                .buy_bnt{
+     position: absolute;
+    right: 0px;
+    width: 50px;
+    height: 25px;
+    font-size: 13px;
+    display: inline-block;
+    background: #ff4e00;
+    color: white;
+    line-height: 25px;
+    text-align: center;
+    border-radius: 8px;
+    top: 25px;
+    right: 0px;
         }
-        .agent_address{
-            color: #f2f0f0;line-height: inherit;font-size:13px;overflow: hidden;
-            margin-top:21px;
+    .goods_ul li{
+    height:110px;
+    border-bottom: 1px solid #e9e9e9;
+    padding-top:15px;
+    overflow: auto;
+    background:white;
+    }
+    .goods_title{
+    font-size:15px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    }
+    .tab_menu_item{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    }
+    .layui-m-layerbtn span[yes]{
+    font-size: 25px;
+    }
+      .agent_contact{
+      font-size: 12px;
+      color: #fff
+    }
+.list img{
+            width:70%;
         }
-        .header_right{
-            position: absolute;left:130px;top:18px;
-        }
-        .agent_contact{
-            color: #f2f0f0;font-size:13px;
-            margin-top:5px;
-        }
-        .goods_title{
-            font-size:15px;
-        }
-        .price_fz{
-            font-size:14px;
-        }
-        @media screen and (max-width: 320px) {
 
-            .goods_title{
-                font-size:14px;
-            }
-            .agent_address{
-                font-size:12px;
-            }
-            .container_left{
-                left:0px;
-                width:70px;
-                bottom:0px;
-            }
-
-            .container_right{
-                left: 75px;
-            }
-            .agent_contact{
-                font-size:12px;
-            }
-        }
-    </style>
-</head>
+</style>
 <body>
-<div id="content">
-    <div class="header">
-        <img src="/static/images/agent_shop_logo.jpeg" class="header_p_icon"/>
+ <div id="content">
+  <div class="header">
+        <img src="" class="header_p_icon"/>
         <div class="header_right">
-            <p style="color: #f2f0f0;font-size:18px;"><?=$agent_info[0]['Name']?></p>
+            <p style="color: #fff;font-size:18px;"><?=$agent_info[0]['shop_name']?></p>
             <p class="agent_address">地址：<?=$agent_info[0]['Address']?></p>
-            <p class="agent_contact">简介：我们只做优质水，让家人喝到安全放心的水</p>
+            <p class="agent_contact">简介：<?=$agent_info[0]['shop_detail']?></p>
+            <p class="agent_contact">营业时间：<?=$agent_info[0]['morning'] ?>-<?=$agent_info[0]['night']?></p></p>
         </div>
     </div>
-    <div class="container">
-        <div class="container_left">
-            <ul class="tab_list">
-                <li class="tab_menu_item selected" type="1">热销&nbsp;<icon class="water_hot"></icon></li>
-                <li class="tab_menu_item unselected" type="2">袋装水&nbsp;<icon class="water_icon"></icon></li>
-                <li class="tab_menu_item unselected" type="3">茶吧机&nbsp;<icon class="water_tea"></icon></li>
-            </ul>
-        </div>
-        <div class="container_right">
-            <p style="height:32px;line-height:32px;border-bottom:1px solid #e9e9e9;font-size:13px;" id="title"></p>
-               <div class="container_right_content">
-                   <ul class="goods_ul">
-                       <li>
-                           <div class="list_container">
-                               <img src="/static/images/background.png" style="height:80px;width:80px;position:absolute;left:0px;"/>
-                               <div class="list_c_right">
-                                   <p style="font-size:16px;">茶之宝+实木柜系列</p>
-                                   <p style="font-size:12px;"> 更为优质的矿泉水</p>
-                                   <p style="font-size:12px;">已售:123</p>
-                                   <p><span style="font-size:17px;color:red;">￥1288</span><span style="text-decoration: line-through;font-size:12px;">￥2288</span></p>
+    <div class="conter" style='    position: relative;height: 100%;width: 100%;'>
+           <div class="Catalog"  id="item_list">
+                <a href="javascript:void(0)"> <div class="list"  data="1">
+                      <img src="/static/images/Catalog-01.png" >
+                      <p>天然好水</p>
+                 </div>
+               </a>
 
-                               </div>
-                               <span class="buy_bnt">购买</span>
-                           </div>
-                       </li>
-
-                   </ul>
-                   <div class="empty_goods" style="display:none;">
-                       <div style="width:110px;margin:0 auto;margin-top:60px;">
-                           <p style="text-align:center;font-size:18px;color:#e8e8e8;margin-bottom:10px;">暂无商品</p>
-                           <img src="/static/images/empty_goods.png" style="width:110px;height:auto;"/>
-                       </div>
+              <a href="javascript:void(0)"><div class="list"  data="2">
+                    <img src="/static/images/Catalog-02.png" >
+                        <p>茶吧机</p></div>
                    </div>
-               </div>
+              </a>
 
-        </div>
+        <!--          
+                    <div class="list"  tyle="0">
+                            <img src="/static/images/Catalog-03.png">
+                          <p>茶叶</p>
+                     </div>  
+               
 
+                  <p  style="clear:both"></p>
+                   <div class="Catalog"><div>
+                  <div class="list" tyle="0">
+                        <img src="/static/images/Catalog-04.png" >
+                      <p>母婴</p>
+                 </div>
+                 <div class="list"  tyle="0">
+                        <img src="/static/images/Catalog-05.png" >
+                      <p>生活服务</p>
+                 </div>
+                 <div class="list"  tyle="0">
+                      <img src="/static/images/Catalog-06.png" >
+                      <p>蓉城生活</p>
+                 </div>
+                 
+-->
+
+                  <p  style="clear:both"></p>
+           </div>
     </div>
-
-
 </div>
-<script type="text/javascript" src="http://oowgxt7h1.bkt.clouddn.com/wx/static/labjs.min.js"></script>
-<script>
-
-
-
-
-
-    var hotsell=[
-        {
-            img_url:"/static/images/water14.jpg",
-            title:"千堆雪",
-            desc:"12年匠心制造的",
-            sells:125,
-            price:10,
-            oriprice:15
-        },
-        {
-            img_url:"/static/images/water13.jpg",
-            title:"中伦",
-            desc:"喝出自然味道的饮用水",
-            sells:50,
-            price:15,
-            oriprice:16
-        },
-        {
-            img_url:"/static/images/water12.jpg",
-            title:"燕京",
-            desc:"大品牌的天然矿泉水",
-            sells:20,
-            price:15,
-            oriprice:20
-        },
-        {
-            img_url:"/static/images/water11.jpg",
-            title:"纽湾",
-            desc:"新鲜健康时尚饮用水",
-            sells:10,
-            price:88,
-            oriprice:88
-        },
-        {
-            img_url:"/static/images/tea11.jpg",
-            title:"金康仕立式茶吧机（白色）",
-            desc:"",
-            sells:50,
-            price:300,
-            oriprice:800
-        },
-        {
-            img_url:"/static/images/tea13.jpg",
-            title:"金康仕桌面茶吧机",
-            desc:"",
-            sells:20,
-            price:300,
-            oriprice:500
-        }
-
-    ];
-    var waters=[
-        {
-            img_url:"/static/images/water14.jpg",
-            title:"千堆雪",
-            desc:"12年匠心制造的",
-            sells:125,
-            price:10,
-            oriprice:15
-        },
-        {
-            img_url:"/static/images/water12.jpg",
-            title:"燕京",
-            desc:"大品牌的天然矿泉水",
-            sells:20,
-            price:15,
-            oriprice:20
-        },
-        {
-            img_url:"/static/images/water13.jpg",
-            title:"中伦",
-            desc:"喝出自然味道的饮用水",
-            sells:50,
-            price:15,
-            oriprice:16
-        },
-        {
-            img_url:"/static/images/water10.jpg",
-            title:"龙剪云",
-            desc:"优质天然矿泉水",
-            sells:10,
-            price:48,
-            oriprice:48
-        },
-        {
-            img_url:"/static/images/water11.jpg",
-            title:"纽湾",
-            desc:"新鲜健康时尚饮用水",
-            sells:10,
-            price:88,
-            oriprice:88
-        },
-    ];
-    var elect_tea=[
-        {
-            img_url:"/static/images/tea11.jpg",
-            title:"金康仕立式茶吧机（白色）",
-            desc:"",
-            sells:50,
-            price:300,
-            oriprice:800
-        },
-        {
-            img_url:"/static/images/tea13.jpg",
-            title:"金康仕桌面茶吧机",
-            desc:"",
-            sells:20,
-            price:300,
-            oriprice:500
-        },
-        {
-            img_url:" /static/images/tea12.jpg",
-            title:"金康仕立式茶吧机（黑色)",
-            desc:"",
-            sells:10,
-            price:300,
-            oriprice:800,
-
-        }
-    ];
-</script>
-<script>
-    $LAB.script("http://oowgxt7h1.bkt.clouddn.com/wx/static/zepto.min.js").wait()
-        .script("http://oowgxt7h1.bkt.clouddn.com/wx/static/common.js")
-        .script("http://oowgxt7h1.bkt.clouddn.com/wx/static/fastClick.js")
-        .script("http://oowgxt7h1.bkt.clouddn.com/wx/static/coderlu.js")
-        .wait(function () {
-            FastClick.attach(document.body);
-
-            var app={
-                type:1,
-                init:function(){
-                    this.initListener();
-                    this.updatePage();
-                },
-                initListener:function(){
-                    $(".tab_menu_item").on("click",function(){
-                        $(".tab_menu_item").removeClass("selected").removeClass("unselected");
-                        $(".tab_menu_item").addClass("unselected");
-                        $(this).removeClass("unselected").addClass("selected");
-                        app.type=$(this).attr("type");
-                        app.updatePage();
-                    });
-                },
-                updatePage:function(){
-                    var datas=[];
-                    var title="";
-                    switch(Number(this.type)){
-                        case 1:datas=hotsell;title="热销";break;
-                        case 2:datas=waters;title="袋装水";break;
-                        case 3:datas=elect_tea;title="茶吧机";break;
-                    }
-                    $("#title").text(title);
-                    $(".goods_ul").empty();
-                    if(datas.length==0){
-                        $(".empty_goods").show();
-                        return;
-                    }
-                    $(".empty_goods").hide();
-                    for(var index=0;index<datas.length;index++){
-                        var item=datas[index];
-                        $(".goods_ul").append('<li>'+
-                            '<div class="list_container">'+
-                            '<img src="'+item.img_url+'" style="height:80px;width:80px;position:absolute;left:0px;"/>'+
-                        '<div class="list_c_right">'+
-                        '<p class="goods_title">'+item.title+'</p>'+
-                            '<p style="font-size:12px;">' +item.desc+'</p>'+
-                        '<p style="font-size:12px;">已售:'+item.sells+'</p>'+
-                        '<p><span class="price_fz" style="color:red;">￥'+item.price+'</span><span style="text-decoration: line-through;font-size:12px;">￥'+item.oriprice+'</span></p>'+
-                        '</div>'+
-                        '<a href="tel:0285593786"><span class="buy_bnt">购买</span></a>'+
-                        '</div>'+
-                        '</li>');
-                    }
-                    $(".goods_ul").append('<li style="border:0px;"></li>');
-                    $(".goods_ul").append('<li style="border:0px;"></li>');
-
-
-                }
-            }
-            app.init();
-
-        });
-
-</script>
 </body>
+
+
+<script src="/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+<script type="text/javascript">
+    $(function(){
+
+
+      var agent_info =    <?=json_encode($agent_info) ?>;
+      var datas_type1 =    JSON.parse( <?=json_encode($datas_type1) ?>);
+      var agent_id =     JSON.parse( <?=json_encode($agent_id) ?>);
+console.log(datas_type1)
+   var image=agent_info[0].image1;
+           if(agent_info[0].image1.indexOf("7xpcl7.com2.z0.glb.qiniucdn.com") != -1 ){
+             image = agent_info[0].image1.replace('7xpcl7.com2.z0.glb.qiniucdn.com', 'image1.ebopark.com');
+           }
+
+  console.log(agent_info[0].image1)
+      $(".header_p_icon").attr('src',image)
+    if(datas_type1.length){
+        var html='';
+    $("#item_list").empty()
+     for(var i=0;i<datas_type1.length;i++){
+          for(var z in datas_type1[i]){
+                  if(datas_type1[i][z]==null){
+                    datas_type1[i][z]='其它'
+              } 
+          }
+          html += '<a href="javascript:void(0)"> <div class="list" data ='+datas_type1[i].Id+' >'
+          html+='<img src="/static/images/Catalog-0'+(i+1)+'.png" width="100%">'        
+          html+='<p>'+datas_type1[i].FirstMenu+'</p>'
+          html+='</div></a>';
+          if((i+1)%3==0){
+               html+='      <p  style="clear:both"></p><div>  <div class="Catalog">';
+          }
+        // $(html)appendTo('#item_list')
+     }
+       $("#item_list").append(html)
+  }else{
+    var html = '<div id="conter" style="padding-bottom: 50px;width: 100%;position: relative;">'  ;
+        html+='<div class="empty_goods">'  ;
+        html+='<div style="width:110px;margin:0 auto;margin-top:60px;">'  ;
+        html+=' <p style="text-align:center;font-size:25px;color:#000;margin-bottom:10px;">暂无商品</p>'  ;
+        html+=  '<img src="/static/images/empty_goods.png" style="width:110px;height:auto;"/>'  ;
+        html+='</div>'  ;
+        html+=' </div>'  ;
+        html+='<div  id="imgUrl" style="margin-top:0px">'  ;
+        html+='</div>'  ;
+        html+='</div>'  ;
+
+$("#item_list").html(html)
+}
+$(".list").click(function(){
+ // $(this).css({'background-color':'rgba(0,0,0,.3)',"border-radius":'5px;'})
+         var _src =   $("img",this).attr('src');
+        // console.log(_src)
+        var _srcName = _src.split(".")[0].split("-")[0];
+        var _srcName1 = _src.split(".")[0].split("-")[1];
+        // console.log(_srcName)
+        // console.log(_srcName1.length)
+        if(_srcName1.length==2){
+           var src = _srcName+'-0'+_srcName1+'.png';
+         }else{
+           var src = _srcName+'-'+_srcName1+'.png';
+         }
+       // $("img",this).attr('src',src);
+       var _data = $(this).attr('data');
+          if(Number(_data)*1){
+             location.href='second-menu?id='+agent_id+'&category1_id='+_data;
+          }else{
+            conter();
+          }
+          // $(this).css({'background-color':'none',"border-radius":'5px'})
+      });
+function conter(){
+        var html = '<div id="conter" style="padding-bottom: 50px;width: 100%;position: relative;">'  ;
+        html+='<div class="empty_goods">'  ;
+        html+='<div style="width:110px;margin:0 auto;margin-top:60px;">'  ;
+        html+=' <p style="text-align:center;font-size:25px;color:#000;margin-bottom:10px;width: 200px;margin-left: -35px;line-height: 35px;">敬请期待！</p>'  ;
+        html+=  '<img src="/static/images/empty_goods.png" style="width:110px;height:auto;"/>'  ;
+        html+='</div>'  ;
+        html+=' </div>'  ;
+        html+='<div  id="imgUrl" style="margin-top:0px">'  ;
+        html+='</div>'  ;
+        html+='</div>'  ;
+// console.log()
+// $(".conter").html(html)
+
+ //信息框
+  layer.open({
+    content: html
+    ,btn: '确定'
+  });
+}
+
+
+    goDownload();   
+    // 去下载 
+    function goDownload() {   
+
+
+    var u = navigator.userAgent, app = navigator.appVersion;
+
+    console.log(u)
+
+    var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1;  
+      var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+
+    // 是PC端    
+       if (IsPC()) {   
+        
+        } 
+
+    // 是安卓浏览器     
+    if (isAndroid) { 
+   
+    //   window.location.href = 'http://xxxxxxx.cn/release/xxxx-release.apk'; // 跳安卓端下载地址   
+       }      
+    // //   // 是iOS浏览器  
+    var num = 1    
+    if (isIOS) {
+// location.replace(document.referrer);
+        
+    // 跳AppStore下载地址    
+    }
+    // // 是微信内部webView   
+    if (is_weixn()) {    
+        // location.reload() 
+    } 
+    // // 是PC端  
+    // if (IsPC()) {   
+    //  window.location.href = 'http://www.xxxxxxx.cn/index.html'; 
+    //  // 公司主页     
+    //  }    
+    // }     
+    }
+
+     // 是PC端  
+    function IsPC() {
+      var userAgentInfo = navigator.userAgent;   
+      var Agents = ["Android", "iPhone",        "SymbianOS", "Windows Phone",        "iPad", "iPod"];    
+      var flag = true;   
+      for (var v = 0; v < Agents.length; v++) {   
+        if (userAgentInfo.indexOf(Agents[v]) > 0) {  
+          flag = false;         
+          break;    
+        }     
+      }      
+      return flag;  
+
+     } 
+
+
+
+  // 是微信浏览器   
+    function is_weixn(){  
+      var ua = navigator.userAgent.toLowerCase();  
+        if(ua.match(/MicroMessenger/i)=="micromessenger") {  
+          return true;   
+         }
+        else {     
+        return false;   
+        }  
+    }   
+
+
+  function IsPC() {   
+    var userAgentInfo = navigator.userAgent;  
+    var Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone","iPad", "iPod"];     
+    var flag = true;     
+    for (var v = 0; v < Agents.length; v++) {    
+      if (userAgentInfo.indexOf(Agents[v]) > 0) {
+        flag = false;     
+        break;   
+      }    
+    }    
+
+  return flag;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+    })
+
+</script>
 </html>

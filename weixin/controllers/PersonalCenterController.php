@@ -53,6 +53,16 @@ class PersonalCenterController extends WxController
             $this->toError();
         }
         $user= yii::$app->session->get("user");
+        if($user && property_exists($user,'mobile')){
+            //下载并保存微信头像
+            $data=yii\db\ActiveRecord::findBySql("select HeadPortrait from user_info where Tel='$user->mobile'")->asArray()->one();
+            if(!$data['HeadPortrait']){
+                $image_url=$this->GetInfo();
+                if($image_url){
+                    Yii::$app->db->createCommand("update user_info set HeadPortrait='$image_url' where Tel='$user->mobile'")->execute();
+                }
+            }
+        }
         return $this->renderPartial("drink-monitor",["today_info"=>$todayInfo->result,"user"=>$user]);
     }
 
@@ -86,6 +96,14 @@ class PersonalCenterController extends WxController
         $res=(new UserApi())->post($mobile,$vcode);
         if($res->state==0){
             $this->saveCustomerInfo($res->result);
+            //下载并保存微信头像
+            $user=yii\db\ActiveRecord::findBySql("select HeadPortrait from user_info where Tel='$mobile'")->asArray()->one();
+            if(!$user['HeadPortrait']){
+                $image_url=$this->GetInfo();
+                if($image_url){
+                    Yii::$app->db->createCommand("update user_info set HeadPortrait='$image_url' where Tel='$mobile'")->execute();
+                }
+            }
         }
         return $this->jsonReturn($res);
     }
@@ -125,5 +143,433 @@ class PersonalCenterController extends WxController
         exit();
     }
 
+    //我的水票
+    public function actionMyWaterTicket(){
+        if(!$this->checkCustomerLogin()){
+            yii::$app->session->set("last_url","/personal-center/drink-chart");
+            return $this->redirect(["/personal-center/login-page"]);
+        }
+        $user=Yii::$app->session->get('user');
+        if(!$user||!property_exists($user,'key')){
+            return $this->renderPartial("error",['msg'=>'没有获取到用户信息']);
+        }
+        $UserId=$user->key;
+        //先不考虑一个用户多个电子账户
+        //1、水票余额
+        $account_info=yii\db\ActiveRecord::findBySql("select CustomerType,AgentId,RestMoney from user_restmoney where UserId='$UserId'")->asArray()->one();
+        if(!$account_info){
+            return $this->renderPartial("error",['msg'=>'没有电子账户']);
+        }
+        $rest_money=$account_info['RestMoney'];
+        //表格数据（充值记录、送水记录）
+        //充值记录
+        $recharge_log=yii\db\ActiveRecord::findBySql("select RowTime,RestMoney,PayType,PayMoney from user_recharge_log
+where UserId='$UserId' and CustomerType={$account_info['CustomerType']} and AgentId={$account_info['AgentId']} and PayMoney > 0")->asArray()->all();
+        //送水记录
+        $send_log=yii\db\ActiveRecord::findBySql("select send_water_log.Id,send_water_log.RowTime,
+send_water_log.FinishTime,send_water_log.RestMoney,brands.BrandName,goods.name as GoodsName,
+send_water_log.Volume,send_water_log.Amount,send_water_log.Price,send_water_log.State,
+send_water_log.From
+from send_water_log
+LEFT JOIN brands on brands.BrandNo=send_water_log.WaterBrandNo
+LEFT JOIN goods on goods.id=send_water_log.WaterGoodsId
+where send_water_log.UserId='$UserId' and send_water_log.CustomerType={$account_info['CustomerType']} and send_water_log.AgentId={$account_info['AgentId']}")->asArray()->all();
+//        var_dump($recharge_log);exit;
+        $datas=array_merge($recharge_log,$send_log);
+
+        if ($datas && count($datas) > 1) {//默认降序排序
+            //排序
+
+            $sort = array(
+                'direction' => 'SORT_DESC', //排序顺序标志 SORT_DESC 降序；SORT_ASC 升序
+                'field' => 'RowTime',       //RowTime
+            );
+            $arrSort = array();
+            foreach ($datas AS $uniqid => $row) {
+                foreach ($row AS $key => $value) {
+                    $arrSort[$key][$uniqid] = $value;
+                }
+            }
+            if ($sort['direction']) {
+                array_multisort($arrSort[$sort['field']], constant($sort['direction']), $datas);
+            }
+        }
+
+        return $this->renderPartial("my-water-ticket",
+            ["rest_money"=>$rest_money,
+            "datas"=>json_encode($datas),
+            'UserId'=>$UserId,
+            'CustomerType'=>$account_info['CustomerType'],
+            'AgentId'=>$account_info['AgentId']]);
+    }
+
+    //我的水票 ajax 根据条件获取对应表格数据
+    public function actionMyWaterTicketByWhere(){
+        $state=Yii::$app->request->get('state');//状态：1待确认，2已完成
+        $type=Yii::$app->request->get('type');//分类：1充值，2送水
+        $UserId=Yii::$app->request->get('UserId');
+        $CustomerType=Yii::$app->request->get('CustomerType');
+        $AgentId=Yii::$app->request->get('AgentId');
+        if(!$UserId||!$CustomerType||!$AgentId){
+            return json_encode(['state'=>-1,'msg'=>'参数错误']);
+        }
+        $datas='';
+        if(!$state&&!$type){
+           return json_encode(['state'=>0,'datas'=>'']);
+        }
+        if($state==1&&$type==1){//没有待确认的充值记录
+            return json_encode(['state'=>0,'datas'=>'']);
+        }
+        if(($state==1&&!$type)||($state==1&&$type==2)){//待确认
+          //只有待确认的送水记录
+          //送水记录
+            $datas=yii\db\ActiveRecord::findBySql("select send_water_log.Id,send_water_log.RowTime,
+send_water_log.FinishTime,send_water_log.RestMoney,brands.BrandName,goods.name as GoodsName,
+send_water_log.Volume,send_water_log.Amount,send_water_log.Price,send_water_log.State,
+send_water_log.From
+from send_water_log
+LEFT JOIN brands on brands.BrandNo=send_water_log.WaterBrandNo
+LEFT JOIN goods on goods.id=send_water_log.WaterGoodsId
+where send_water_log.UserId='$UserId' and send_water_log.CustomerType=$CustomerType
+and send_water_log.AgentId=$AgentId and send_water_log.State=1")->asArray()->all();
+
+        }
+
+        if($state==2||!$state){//已完成
+            if($type==1){//充值记录
+                //充值记录
+                $datas=yii\db\ActiveRecord::findBySql("select RowTime,RestMoney,PayType,PayMoney from user_recharge_log
+where UserId='$UserId' and CustomerType=$CustomerType and AgentId=$AgentId and PayMoney > 0")->asArray()->all();
+
+            }elseif($type==2){//送水记录
+                //送水记录
+                $datas=yii\db\ActiveRecord::findBySql("select send_water_log.Id,send_water_log.RowTime,
+send_water_log.FinishTime,send_water_log.RestMoney,brands.BrandName,goods.name as GoodsName,
+send_water_log.Volume,send_water_log.Amount,send_water_log.Price,send_water_log.State,
+send_water_log.From
+from send_water_log
+LEFT JOIN brands on brands.BrandNo=send_water_log.WaterBrandNo
+LEFT JOIN goods on goods.id=send_water_log.WaterGoodsId
+where send_water_log.UserId='$UserId' and send_water_log.CustomerType=$CustomerType
+and send_water_log.AgentId=$AgentId and send_water_log.State=2")->asArray()->all();
+
+            }else{
+                //充值记录
+                $recharge_log=yii\db\ActiveRecord::findBySql("select RowTime,RestMoney,PayType,PayMoney from user_recharge_log
+where UserId='$UserId' and CustomerType=$CustomerType and AgentId=$AgentId and PayMoney > 0")->asArray()->all();
+                //送水记录
+                $send_log=yii\db\ActiveRecord::findBySql("select send_water_log.Id,send_water_log.RowTime,
+send_water_log.FinishTime,send_water_log.RestMoney,brands.BrandName,goods.name as GoodsName,
+send_water_log.Volume,send_water_log.Amount,send_water_log.Price,send_water_log.State,
+send_water_log.From
+from send_water_log
+LEFT JOIN brands on brands.BrandNo=send_water_log.WaterBrandNo
+LEFT JOIN goods on goods.id=send_water_log.WaterGoodsId
+where send_water_log.UserId='$UserId' and send_water_log.CustomerType=$CustomerType
+and send_water_log.AgentId=$AgentId and send_water_log.State=2")->asArray()->all();
+                //合并
+                $datas=array_merge($recharge_log,$send_log);
+
+            }
+
+        }
+
+        if ($datas && count($datas) > 1) {//默认降序排序
+            //排序
+
+            $sort = array(
+                'direction' => 'SORT_DESC', //排序顺序标志 SORT_DESC 降序；SORT_ASC 升序
+                'field' => 'RowTime',       //RowTime
+            );
+            $arrSort = array();
+            foreach ($datas AS $uniqid => $row) {
+                foreach ($row AS $key => $value) {
+                    $arrSort[$key][$uniqid] = $value;
+                }
+            }
+            if ($sort['direction']) {
+                array_multisort($arrSort[$sort['field']], constant($sort['direction']), $datas);
+            }
+        }
+        return json_encode(['state'=>0,'datas'=>$datas]);
+
+    }
+
+    //ajax将待确认的送水记录，改为已完成
+    public function actionEditState(){
+        $ids=Yii::$app->request->get('ids');
+        if(!$ids){
+            return json_encode(['state'=>-1,'msg'=>'参数错误']);
+        }
+        $transaction=Yii::$app->db->beginTransaction();
+        $now=date('Y-m-d H:i:s');
+        try{
+            $sql="update send_water_log set State=2,FinishTime='$now' where State=1 and Id in($ids)";
+            $re=Yii::$app->db->createCommand($sql)->execute();
+            if(!$re){
+                throw new yii\base\Exception('配送状态修改失败');
+            }
+            //获取查询账户的 三条件
+            $data=yii\db\ActiveRecord::findBySql("select UserId,AgentId,CustomerType
+                from send_water_log where Id in ($ids)")->asArray()->one();
+
+            if($data){
+                //修改账户状态
+                $state=1;//默认需送水
+                //状态修改成功后，判断是否还有待确认的记录
+                $data2=yii\db\ActiveRecord::findBySql("select Id
+            from send_water_log where State=1 and UserId='{$data['UserId']}' and Id not in ($ids)
+            and AgentId={$data['AgentId']} and CustomerType={$data['CustomerType']}")->asArray()->one();
+
+                if(!$data2){//没有待确认的状态
+
+                    //获取账户信息
+                    $account=yii\db\ActiveRecord::findBySql("select Id,SendWaterTime from user_restmoney
+                where UserId='{$data['UserId']}' and AgentId={$data['AgentId']} and CustomerType={$data['CustomerType']}")->asArray()->one();
+                    if($account){
+                        //判断预计送水时间是否大于 往后推3天的日期
+                        $after_3_day=date("Y-m-d",strtotime("+3 day"));//往后推3天的日期
+                        if($account['SendWaterTime']=='近期还没有用水'||$account['SendWaterTime']>$after_3_day){
+                            $state=3;//已完成
+                        }
+                        //修改状态
+                        $sql="update user_restmoney set State=$state where Id={$account['Id']}";
+                        $re=Yii::$app->db->createCommand($sql)->execute();
+                        if(!$re){
+                            throw new yii\base\Exception('账户状态修改失败');
+                        }
+                    }
+                }
+
+            }
+
+            $transaction->commit();
+            return json_encode(['state'=>0]);
+        }catch (yii\base\Exception $e){
+            $transaction->rollBack();
+            return json_encode(['state'=>-1,'msg'=>$e->getMessage()]);
+        }
+
+    }
+
+
+    //挥度测试，获取新功能地址、是否渲染
+    public function actionGetNewAddress(){
+        if(!$this->checkCustomerLogin()){
+            return json_encode(['state'=>-1,'msg'=>'请先登陆']);
+        }
+        $user= yii::$app->session->get("user");
+        $array=['IsUse'=>'','content_address'=>''];
+        if($user && property_exists($user,'mobile')) {
+
+            $data = yii\db\ActiveRecord::findBySql("select IsUse from user_info where Tel='$user->mobile'")->asArray()->one();
+            $array['IsUse'] = $data['IsUse'];//是否可以体验新功能
+            //获取新功能地址
+            $array['content_address'] = yii\db\ActiveRecord::findBySql("select `content_address` from user_content_test where state=1")->asArray()->all();
+        }
+        return json_encode(['state'=>0,'data'=>$array]);
+    }
+
+    //------------用户推荐--------------------
+
+    //ajax 获取赏金余额
+    public function actionGetMoney(){
+        $result=$this->GetMoney();
+        return json_encode($result);
+    }
+    public function GetMoney(){
+        $user=Yii::$app->session->get('user');
+        if(!$user||!property_exists($user,'key')){
+            return ['state'=>-1,'msg'=>'没有登陆'];
+        }
+        $UserId=$user->key;
+        $Money=yii\db\ActiveRecord::findBySql("select Money from user_info where Id='$UserId'")->asArray()->one();
+        return ['state'=>0,'money'=>$Money['Money']];
+    }
+
+    //进入推荐有奖页面
+    public function actionRecommendPrizes(){
+        return $this->renderPartial('recommend-prizes');
+    }
+
+    //进入立即推荐页面
+    public function actionRecommend(){
+        return $this->renderPartial('recommend');
+    }
+
+    //保存推荐用户的信息
+    public function actionSaveRecommend(){
+        $UserName=trim(addslashes(Yii::$app->request->get('UserName')));//姓名
+        $Tel=trim(addslashes(Yii::$app->request->get('Tel')));//电话
+        $Address=trim(addslashes(Yii::$app->request->get('Address')));//地址（选填）
+        if(!$UserName||!$Tel){
+            return json_encode(['state'=>-1,'msg'=>'参数错误']);
+        }
+        //判断该电话的用户是否已经存在
+        $data=yii\db\ActiveRecord::findBySql("select Id from user_info where Tel='$Tel'")->asArray()->one();
+        if($data){
+            return json_encode(['state'=>-1,'msg'=>'该电话已经存在']);
+        }
+        $user=Yii::$app->session->get('user');
+        if(!$user||!property_exists($user,'mobile')){
+            return json_encode(['state'=>-1,'msg'=>'没有登陆']);
+        }
+        $login_tel=$user->mobile;
+        $str1='';
+        $str2='';
+        if($Address){
+            $str1="`Address`,";
+            $str2="'$Address',";
+        }
+        $UserId=$this->CreateGuid();
+        $now=date('Y-m-d H:i:s');
+        //保存推荐的用户
+        $sql1="insert into user_info (`Id`,`Name`,`Tel`,".$str1."`RecommendUserTel`,`RowTime`) values ('$UserId','$UserName','$Tel',".$str2."'$login_tel','$now')";
+
+        //生成推荐用户记录 即 要获得的赏金
+        //该用户参加的是哪一种推荐活动
+        $activity_info=yii\db\ActiveRecord::findBySql("
+        select activity.Id,activity.FirstMoney,activity.DrinkMoney from user_info
+        left join activity on activity.Id=user_info.ActivityId
+        where user_info.Tel='$login_tel' and activity.StartTime > '$now'
+        and '$now' < activity EndTime
+        ")->asArray()->one();
+        if(!$activity_info){//没有参加指定活动 或 参加的活动已过期
+            //默认活动
+            $activity_info=yii\db\ActiveRecord::findBySql("
+            select Id,activity.FirstMoney,activity.DrinkMoney
+            from activity
+            where activity.StartTime > '$now' and '$now' < activity EndTime
+            and activity.State=1
+            ")->asArray()->one();
+        }
+
+        if(!$activity_info){//默认活动已过期 或 没有
+            return json_encode(['state'=>-1,'msg'=>'没有可参加的活动']);
+        }
+        //保存推荐用户即将获得的奖金记录
+        $sql2="insert into user_recommend_log (`UserId`,`ActivityId`,`State`,`FirstMoney`,`DrinkMoney`,`Amount`,`RowTime`)
+        values ('$UserId',{$activity_info['Id']},0,{$activity_info['FirstMoney']},{$activity_info['DrinkMoney']},1,'$now')";
+        $transaction=Yii::$app->db->beginTransaction();
+        try{
+            //保存推荐的用户
+            $re=Yii::$app->db->createCommand($sql1)->execute();
+            if(!$re){
+                throw new yii\base\Exception('保存推荐的用户失败');
+            }
+            //保存推荐用户即将获得的奖金记录
+            $re=Yii::$app->db->createCommand($sql2)->execute();
+            if(!$re){
+                throw new yii\base\Exception('保存即将获得的奖金失败');
+            }
+
+            $transaction->commit();
+            return json_encode(['state'=>0]);
+        }catch(yii\base\Exception $e){
+            $transaction->rollBack();
+            return json_encode(['state'=>-1,'msg'=>$e->getMessage()]);
+        }
+    }
+
+    //生成唯一id
+    public function CreateGuid(){
+        $charid = strtolower(md5(uniqid(mt_rand(), true)));
+        $hyphen = chr(45);// "-"
+        $uuid = substr($charid, 6, 2).substr($charid, 4, 2).
+            substr($charid, 2, 2).substr($charid, 0, 2).
+            substr($charid, 10, 2).substr($charid, 8, 2).
+            substr($charid,14, 2).substr($charid,12, 2).
+            substr($charid,16, 4).
+            substr($charid,20,12);
+        return $uuid;
+    }
+
+    //进入我的赏金页面
+    public function actionMyMoney(){
+        $csrfToken=Yii::$app->request->csrfToken;
+        return $this->renderPartial('my-money',['csrfToken'=>$csrfToken]);
+    }
+
+    //ajax获取我的赏金记录、提现记录数据
+    public function actionGetMyMoneyLog(){
+        $user=Yii::$app->session->get('user');
+        if(!$user||!property_exists($user,'key')){
+            return json_encode(['state'=>-1,'msg'=>'没有登陆']);
+        }
+        $UserId=$user->key;
+        $data=yii\db\ActiveRecord::findBySql("
+        select * from (
+        select user_info.Name,user_info.Tel,user_recommend_log.RowTime,null as Money,
+        user_recommend_log.State,user_recommend_log.FirstMoney,user_recommend_log.DrinkMoney,
+        user_recommend_log.Amount
+        from user_recommend_log
+        left join user_info on user_info.Id=user_recommend_log.UserId
+        where user_recommend_log.UserId='$UserId'
+        union
+        select user_info.Name,user_info.Tel,user_cash_withdrawal_log.RowTime,user_cash_withdrawal_log.Money,
+        user_cash_withdrawal_log.State,null as FirstMoney,null as DrinkMoney,null as Amount
+        from user_cash_withdrawal_log
+        left join user_info on user_info.Id=user_cash_withdrawal_log.UserId
+        where user_cash_withdrawal_log.UserId='$UserId')as temp order by RowTime desc
+        ")->asArray()->all();
+        $Money=yii\db\ActiveRecord::findBySql("select Money from user_info where Id='$UserId'")->asArray()->one();
+        $datas=['data'=>$data,'money'=>$Money];
+        return json_encode(['state'=>0,'data'=>$datas]);
+
+    }
+
+    //进入提现页面
+    public function actionCashWithdrawal(){
+        return $this->renderPartial('cash-withdrawal');
+    }
+
+    //ajax 保存提交的提现数据、修改账户余额
+    public function actionSaveCashWithdrawal(){
+        $BankName=trim(addslashes(Yii::$app->request->get('BankName')));//银行名称
+        $BankCardNumber=trim(addslashes(Yii::$app->request->get('BankCardNumber')));//银行卡号
+        $UserName=trim(addslashes(Yii::$app->request->get('UserName')));//账号姓名
+        $Money=trim(addslashes(Yii::$app->request->get('Money')));//提现金额
+        if(!$BankName||!$BankCardNumber||!$UserName||!$Money||!is_numeric($Money)){
+            return json_encode(['state'=>-1,'msg'=>'参数错误']);
+        }
+        $result=$this->GetMoney();
+        if($result['state']==-1){
+            return json_encode($result);
+        }
+        $rest_money=$result['money'];//余额
+        if($rest_money < $Money){
+            return json_encode(['state'=>-1,'msg'=>'提现金额大于余额']);
+        }
+        $user=Yii::$app->session->get('user');
+        if(!$user||!property_exists($user,'key')){
+            return json_encode(['state'=>-1,'msg'=>'没有登陆']);
+        }
+        $UserId=$user->key;
+        $now=date('Y-m-d H:i:s');
+        $sql1="insert into user_cash_withdrawal_log (`UserId`,`BankName`,`BankCardNumber`,`UserName`,`Money`,`State`,`RowTime`)
+        values('$UserId','$BankName','$BankCardNumber','$UserName',$Money,3,'$now')";
+
+        //修改账户赏金余额
+        $sql2="update user_info set Money=Money-$Money where Id='$UserId'";
+
+        $transaction=Yii::$app->db->beginTransaction();
+        try{
+            $re=Yii::$app->db->createCommand($sql1)->execute();
+            if(!$re){
+                throw new yii\base\Exception('保存提现记录失败');
+            }
+            $re=Yii::$app->db->createCommand($sql2)->execute();
+            if(!$re){
+                throw new yii\base\Exception('修改赏金余额失败');
+            }
+
+            $transaction->commit();
+            return json_encode(['state'=>0]);
+        }catch (yii\base\Exception $e){
+            $transaction->rollBack();
+            return json_encode(['state'=>-1,'msg'=>$e->getMessage()]);
+        }
+
+    }
 
 }

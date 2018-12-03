@@ -10,298 +10,358 @@
     <meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
     <meta HTTP-EQUIV="expires" CONTENT="0">
     <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="/static/js/layer.mobile-v2.0/layer_mobile/need/layer.css">
     <link rel="stylesheet" href="/static/css/common.css" />
     <link rel="stylesheet" href="/css/weui.css" />
     <link rel="stylesheet" href="/css/weui2.css" />
     <link rel="stylesheet" href="/static/css/coderlu.css"/>
+    <link rel="stylesheet" href="/static/css/agent/register.css?v=1.1"/>
     <title>登记</title>
-    <style>
-        .wrap_line{
-            height:46px;
-            width:100%;
-            border-bottom:1px solid #f3f3f3;
-            position:relative;
-        }
-        input{
-            border:0px;
-            font-size:13px;
-        }
-        .wrap_line label{
-            display:inline-block;
-            width:80px;
-            height:46px;
-            line-height:46px;
-            padding-left:10px;
-            font-size:14px;
-        }
-        .wrap_line .normal_input{
-            display:inline-block;
-            height:44px;
-            position:absolute;
-            left:90px;
-            right:0px;
-        }
-        .wrap_line .vcode_input{
-            display:inline-block;
-            height:44px;
-            position:absolute;
-            left:90px;
-            right:0px;
-        }
-         #devfactory{
-            display:inline-block;
-            position:absolute;
-            left:90px;
-            right:10px;
-            margin-top:10px;
-        }
-        .btn{
-
-            background:#34a0f8;border-radius: 4px;color:white;
-        }
+    <style type="text/css">
+      #DeterminePOne, #DeterminePTwo {
+		    width: 100%;
+		    height: 40px;
+		    background: #ddd;
+		    margin-top: 40px;
+		    text-align: center;
+		    line-height: 40px;
+		    font-size: 20px;
+		    font-weight: bold;
+		    color: #fff;
+	  }
+    #getCodeBtn{
+     /*width:100px;height:30px; background: url(/static/images/brnW.png) 0% 0% / 100% 100% no-repeat;color:#fff;float: right;*/
+     width:100px;height:30px;color:#fff;float: right;
+     background:#ddd;
+    }
+    select, input{
+      font-size: 13px;
+    }
     </style>
 </head>
 <body>
-<div class="form">
-    <div class="wrap_line">
-        <label for="username">姓名</label><input class="normal_input" type="text" id="username" placeholder="请输入用户名"/>
-    </div>
-    <div class="wrap_line">
-        <label for="tel">联系电话</label><input class="normal_input" type="text" id="tel" placeholder="请输入手机号"/>
-    </div>
-    <div class="wrap_line">
-        <label for="vcode">验证码</label><input class="vcode_input" type="text" id="vcode" placeholder="请输入验证码"  style="right:160px;"/>
-        <input type="button" class="btn" style="position:absolute;top:8px;right:20px;width:80px;height:30px;" value="获取验证码" id="getCodeBtn"/>
-    </div>
-    <div class="wrap_line">
-        <label for="address">地址</label><input class="normal_input" type="text" id="address" placeholder="请输入地址"/>
-    </div>
-    <div class="wrap_line">
-        <label for="devicetel">设备手机号</label><input class="normal_input" type="text" id="devicetel" placeholder="请输入设备手机号"/>
-    </div>
-    <div class="wrap_line">
-        <label for="name">入网属性</label>
-        <select  id="usertype">
-           <option value="1">自购</option>
-            <option value="2">押金</option>
-            <option value="3">买水送机</option>
-            <option value="4">买机送水</option>
-            <option value="5">免费</option>
-            <option value="99">其他</option>
-        </select>
-    </div>
-    <div class="wrap_line">
-        <label for="name">客户类型</label>
-        <select  id="customertype">
-            <option value="1">家庭</option>
-            <option value="2">办公</option>
-            <option value="3">集团</option>
-            <option value="99">其他</option>
-        </select>
-    </div>
-    <div class="wrap_line">
-        <label for="name">所在地区</label>
-        <select id="province">
-            <option value="" selected>请选择</option>
-        </select>
-        <select id="city">
-            <option value="">请选择</option>
-        </select>
-        <select id="area">
-            <option value="">请选择</option>
-        </select>
-    </div>
-    <div class="wrap_line">
-        <label for="name">成都设备厂</label>
-        <select  id="devfactory">
-            <?php
-            foreach($data as $key=>$val){
-                echo " <option value='".$key."'>".$val->name."</option>";
-            }
-            ?>
-        </select>
-    </div>
-    <p>
-        <input type="button" class="btn submit" style="font-size:16px;margin-top:40px;display:inline-block;width:80%;margin-left:10%;height:45px;line-height:45px;text-align:center;" value="下一步"/>
-    </p>
-
+<div class="register">
+   <div class="nav">
+       <p> 
+            <span class='regNav ativer'>
+                1.填写基本信息
+                <img src="/static/images/you5.png" alt="">
+            </span>
+            <span class='regNav'>
+               2.输入设备信息
+                 <img src="/static/images/you5.png" alt="">
+            </span>
+            <span class='regNav'>
+               3.完成登记
+            </span>
+        </p>
+   </div>
+   <div class="conter">
+        <div id="view" style="width: 100%;">
+         <ul id="viewUl" style="width:300%;margin-left:0%;">
+             <li>
+                <select id="usertype" class="view-list" name='usertype'>
+                     <option value="">请选择购水套餐</option>
+                </select>
+                <select id="customertype" class="view-list" name='customertype'>
+                     <option value="4">酒店</option>
+                </select>
+                <input type="text" name="" value=""  class="view-list" id="username" placeholder="请输入用户姓名"> 
+                <input class="normal_input view-list" type="number" id="tel" placeholder="请输入手机号" style=" width: -webkit-calc(100% - 110px);width: -moz-calc(100% - 110px);width: calc(100% - 110px);">
+                <input type="button" class="btn" style="" value="获取验证码" id="getCodeBtn"/>
+                <input class="vcode_input view-list" type="number" id="vcode" placeholder="请输入验证码"/>
+                <p style="clear:both;" id='DeterminePOne' style="background:#f3f3f3">下一步</p>
+             </li>
+           
+              <p style="clear:both;"></p>
+         </ul>
+      <!-- <p style="clear:both;" id='DetermineP' style="background:#f3f3f3">下一步</p> -->
+   </div>
+   </div>
+<input type="hidden" id="_csrf" value="<?php echo Yii::$app->request->csrfToken; ?>" name="_csrf" >
 </div>
-<script type="text/javascript" src="/static/js/zepto.min.js"></script>
+<!-- <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=riGCh76icYkT3OXnxPnNEvB54F3ADvzB"></script> -->
+<!-- <script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script> -->
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/layer.mobile-v2.0/layer_mobile/layer.js"></script>
 <script type="text/javascript" src="/static/js/coderlu.js"></script>
 <script type="text/javascript" src="/static/js/common.js" ></script>
 <script>
-    var maxtime=0;
-    var  data=<?=json_encode($data) ?>;
-    var  adata=<?=json_encode($adata)?>;
+   var  datas=  <?=json_encode($datas)?>;
+   // var  datas='';
+   console.log(datas)
     $(function(){
-        initGetVcodeBtn();
-        $(".submit").on("click",function(){
-            submit();
-        });
-        initProvince();
-        initListener();
-        initAddress();
-    });
-    function initAddress(){
-        $("#province").val(province);
-        initCityOnProvinceChange();
-        $("#city").val(city);
-        initThree();
-        $("#area").val(area);
-    }
-    function getAddressIdByName(_name){
-        _name= $.trim(_name);
-        if(_name==""){
-            return 0;
-        }
-        for(var index=0;index<adata.length;index++){
-            var item=adata[index];
-            var name= $.trim(item.name);
-            if(name!=""&&name==_name){
-                return item.id;
-            }
-        }
-        return 0;
-    }
-    function initListener(){
-        $("#province").on("change",function(){
-            initCityOnProvinceChange();
-        });
-        $("#city").on("change",function(){
-            initThree();
-        });
-    }
-    function initCityOnProvinceChange(){
-        var pid=getAddressIdByName($("#province").val());
-        $("#city").empty();
-        $("#city").append("<option value='' selected>请选择</option>");
-        if(pid==0){
-            return;
-        }
-        for(var index=0;index<adata.length;index++){
-            var item=adata[index];
-            if(item.pid!=0&&item.pid==pid){
-                $("#city").append("<option value='"+item.name+"'>"+item.name+"</option>");
-                initThree()
-            }
-        }
-    }
-    function initThree(){
-        var pid=getAddressIdByName($("#city").val());
-        $("#area").empty();
-        $("#area").append("<option value='' selected>请选择</option>");
-        if(pid==0){
-            return;
-        }
-        for(var index=0;index<adata.length;index++){
-            var item=adata[index];
-            if(item.pid!=0&&item.pid==pid){
-                $("#area").append("<option value='"+item.name+"'>"+item.name+"</option>");
-            }
-        }
-    }
-    function initProvince(){
-        for(var index=0;index<adata.length;index++){
-            var item=adata[index];
-            if(item.pid==0){
-                $("#province").append("<option value='"+item.name+"'>"+item.name+"</option>");
-            }
-        }
-    }
-    function submit(){
-        var username=$("#username").val();
-        var tel=$("#tel").val();
-        var vcode=$("#vcode").val();
-        var address=$("#address").val();
-        var devicetel=$("#devicetel").val();
-        var Province=$("#province").val();
-        var City=$("#city").val();
-        var area=$("#area").val();
-        var UseType=$("#usertype").val();
-        var customertype=$("#customertype").val();
-        if(!validateTel(tel)){
-            $.alert("用户手机号填写错误");
-            return;
-        }
-        if($.trim(devicetel)==""){
-            $.alert("设备手机号不能为空");
-            return;
-        }
+      // 验证码,手机号码验证
+    initGetVcodeBtn();
+     initAddress()
+    })
 
-        if($.trim(username)==""){
-            $.alert("用户名不能为空!");
-            return;
-        }
-        if($.trim(vcode)==""){
-            $.alert("验证码不能为空!");
-            return;
-        }
-        if($.trim(address)==""){
-            $.alert("地址不能为空!");
-            return;
-        }
-        var devfactoryIndex=$("#devfactory").val();
-        var devfactory=data[Number(devfactoryIndex)].name;
-        var Fid=data[Number(devfactoryIndex)].id;
-        var params={
-            "Name":username,
-            "Vcode":vcode,
-            "Tel":tel,
-            "Address":address,
-            "DevBindMobile":devicetel,
-            "DevFactory":devfactory,
-            "Fid":Fid,
-            "Province":Province,
-            "City":City,
-            "area":area,
-            "UseType":UseType,
-            "customertype":customertype
-        }
-        $.showIndicator();
-        $.getJSON("/index.php/agent/user-register?"+ $.param(params),function(data){
-            $.hideIndicator();
-            if(data.state!=0){
-                $.alert(data.msg);
-                return;
-            }
-            window.location.href="/index.php/agent/activate?code="+data.result.devNo;
+
+var info =  JSON.parse( sessionStorage.getItem("info"));
+     if(info.Level==8){
+      $("#customertype").val(4)
+     }else{
+       $("#customertype option").eq(4).remove()
+     }
+
+function initAddress(){
+    var data1 =  JSON.parse( sessionStorage.getItem("data1"));
+    // console.log(data1)
+    for(var i=0 in data1){
+      // console.log(i)
+      $("#"+i).val(data1[i])
+     }
+     $("#tel").val('')
+     $("#vcode").val('')
+}
+    // 判断邓丽后的状态
+     if(datas.state==-1){
+      layer.open({
+          content: datas.mag
+          ,skin: 'msg'
+          ,time: 2 //2秒后自动关闭
         });
+   var select =   JSON.parse(datas.info.select);
+
+   // console.log(select.use_type)
+       var ii = layer.open({type: 2});
+      if(select.use_type){
+        layer.close(ii)
+        $("#usertype").empty();
+        $("#usertype").append(' <option value="">请选择购水套餐</option>')
+         for(var i=0;i<select.use_type.length;i++){
+          var item =select.use_type[i];
+          // console.log(item.code)
+          if(item.code==1){
+           var html =  '<option selected="selected" value="'+item.code+'">'+item.use_type+'</option>'
+          }else{
+            var html =  '<option value="'+item.code+'">'+item.use_type+'</option>'
+          }
+          $("#usertype").append(html)
+         }
+      }
+     }else{
+        // 购水套餐选择
+      var ii = layer.open({type: 2});
+      if(datas.use_type){
+        layer.close(ii)
+        $("#usertype").empty();
+        $("#usertype").append(' <option value="">请选择购水套餐</option>')
+        for(var i=0;i<datas.use_type.length;i++){
+          var item = datas.use_type[i];
+           // var html =  '<option value="'+item.code+'">'+item.use_type+'</option>'
+        if(item.code==1){
+           var html =  '<option selected="selected" value="'+item.code+'">'+item.use_type+'</option>'
+          }else{
+            var html =  '<option value="'+item.code+'">'+item.use_type+'</option>'
+          }
+
+
+          $("#usertype").append(html)
+        }
+      }else{
+           layer.close(ii)
+      }
+
+}
+
+$("#tel").bind('input porpertychange',function(){
+    var _this = $(this).val().length;
+    if(_this==11){
+        $("#getCodeBtn").css("background",' url(/static/images/brnW.png) 0% 0% / 100% 100% no-repeat')
+    }else{
+      $("#getCodeBtn").css("background",'#ddd')
     }
+});
+
+// 验证码,手机号码验证
     function initGetVcodeBtn(){
         $("#getCodeBtn").on("click",function(){
             var tel=$("#tel").val();
+            // alert(tel)
             if(!validateTel(tel)){
                 $.alert("请输入格式正确的手机号码");
                 return;
             }
-            $.getJSON('/index.php/agent/get-vcode?tel='+tel,function(data){
-                if(data.state!=0){
-                    $.alert(data.msg);
-                    return;
-                }
-                $("#getCodeBtn").unbind();
-                $.toast("操作成功,验证码即将发送到您的手机!");
-                wait();
-            });
-        });
+           if(info.Level!=8){
+                    $.get('/index.php/agent/check-tel?tel='+tel, function(data) {
+                    /*optional stuff to do after success */
+                     var data=  jQuery.parseJSON(data);
+                         console.log(data)
+                         if(data.state<0){
+                           $.toast(data.msg);
+                            return;
+                           }
+                      $.getJSON('/index.php/agent/get-vcode?tel='+tel,function(data){
+                          if(data.state!=0){
+                              $.alert(data.msg);
+                              //console.log(data);
+                              return;
+                          }
+                          $("#getCodeBtn").unbind();
+                          $.toast("操作成功,验证码即将发送到您的手机!");
+                          wait();
 
+                      });
+                   });
+               }else{
+                     $.getJSON('/index.php/agent/get-vcode?tel='+tel,function(data){  
+                          if(data.state!=0){
+                              $.alert(data.msg);
+                              //console.log(data);
+                            return;
+                          }
+                          $("#getCodeBtn").unbind();
+                          $.toast("操作成功,验证码即将发送到您的手机!");
+                          wait();
+
+                      });
+               }
+        });
     }
-    function wait(){
-        maxtime=20;
+
+    
+   function wait(){
+        maxtime=60;
         $("#getCodeBtn").val(maxtime+"s");
         delTime();
+       
     }
+
+
     function delTime(){
         maxtime--;
-        if(maxtime<0){
+        if(maxtime<=0){
             $("#getCodeBtn").val("获取验证码");
+            $("#getCodeBtn").css("background",' url(/static/images/brnW.png) 0% 0% / 100% 100% no-repeat')
             initGetVcodeBtn();
             return;
         }
+        $("#getCodeBtn").css("background",'#ddd')
+        
         $("#getCodeBtn").val(maxtime+"s");
-        setTimeout(delTime,1000);
+          setTimeout(delTime,1000);
     }
 
+
+// 首次下一步验证
+function Verification1(){
+      var    usertype=$("#usertype").val()||"";
+      var    customertype=$("#customertype").val()||"";
+      var    username=$("#username").val()||"";
+      var    tel=$("#tel").val()||"";
+      var    vcode=$("#vcode").val()||"";
+   if(!usertype){
+          layer.open({
+          content: '请选择购水套餐'
+          ,skin: 'msg'
+          ,time: 2 //2秒后自动关闭
+        });
+      return;
+   }
+  if(!customertype){
+          layer.open({
+          content: '请选择客户类型'
+          ,skin: 'msg'
+          ,time: 2 //2秒后自动关闭
+        });
+
+      return;
+   } 
+if(!username){
+          layer.open({
+          content: '请输入用户姓名'
+          ,skin: 'msg'
+          ,time: 2 //2秒后自动关闭
+        });
+
+      return;
+   }
+    if(!validateTel(tel)){
+
+              
+          layer.open({
+          content: '请输入格式正确的手机号码'
+          ,skin: 'msg'
+          ,time: 2 //2秒后自动关闭
+        });
+
+      return;
+   }
+     if(!vcode){
+          layer.open({
+          content: '请输入验证码'
+          ,skin: 'msg'
+          ,time: 2 //2秒后自动关闭
+        });
+
+      return;
+   }
+  var obj = {
+      usertype:$("#usertype").val()||"",
+      customertype:$("#customertype").val()||"",
+      username:$("#username").val()||"",
+      tel:$("#tel").val()||"",
+      vcode:$("#vcode").val()||""
+    }
+      return obj;
+}
+  $('input,select').bind('input porpertychange',function(){
+       var index = $("#viewUl li:nth-child(1) .view-list").length;
+         for(var i=0;i<index;i++){
+            if( !$("#viewUl li:nth-child(1) .view-list").eq(i).val()){
+               $("#DeterminePOne").css("background",'#ddd');
+               return;
+            }
+          $("#DeterminePOne").css({"background":" url(/static/images/brnW.png) no-repeat",'background-size':' 100% 100%'});
+        }
+  });
+$("#DeterminePOne").click(function(){
+   var obj =   Verification1(); 
+    console.log(obj)
+    var tel=$("#tel").val();
+    var check_tel=0;
+     if(info.Level!=8){
+            $.ajax({
+                 cache: false,
+                 async: false,
+                 type: 'get',
+                 data: { tel: tel},
+                 url:'/index.php/agent/check-tel',
+                 success: function (data) {
+                  var data=  jQuery.parseJSON(data);
+                  console.log(data)
+                    if(data.state<0){
+                     $.toast(data.msg);
+                      return false;
+                      }else{
+                        check_tel=1;
+                      }
+                  }
+             });
+             console.log(check_tel)
+      }else{
+          check_tel=1;
+      }
+    if(obj&&check_tel){
+// http://test.wx.taijibing.cn/index.php/agent/check-vcode?usertype=38&customertype=3&username=2222&tel=13693440306&vcode=7700       
+     $.get('check-vcode?tel='+obj.tel+'&vcode='+obj.vcode, function(data) {
+          var data = jQuery.parseJSON(data)
+             console.log(data)
+          var objData = JSON.stringify(obj)
+           console.log(objData)
+           if(data.state==-1){
+            // console.log()
+                   $.toast("验证码错误");
+                   $("#DeterminePOne").css("background",'#ddd');
+                   return;
+           }
+            sessionStorage.setItem("data1", objData);
+           location.href='register-dev-info?user_base=52';       
+    });      
+  }
+})
 </script>
+<!-- <script type="text/javascript" src="/static/js/agent/register.js" ></script> -->
 </body>
 </html>

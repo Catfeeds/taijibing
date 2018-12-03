@@ -1,0 +1,73 @@
+ *{
+        padding: 0;margin:0;
+    }
+    body{
+     background: #f3f3f3
+    }
+    li{
+        list-style-type:none
+    }
+    .nav{
+    width: 100%;
+    font-size: 15px;
+    line-height: 30px;
+    background: #fff;
+
+    }
+  .regNav{
+    display: inline-block;
+    width: 30%;  
+    height:30px;  
+    text-align: center;  
+    font-weight: bold;
+    position: relative;    
+    font-size:10px;
+    font-size: 0.8rem;
+    }
+    .regNav > img{
+       width: 5px;
+    float: right;
+    margin-top: 10px;
+    }
+    .nav .ativer{
+        color:#FF662E;
+    }
+
+    .conter{
+        padding:0 20px;
+    }
+    .conter li{
+        width: 33.3%;
+        float: left;
+    }
+    select,input{
+           height: 30px;
+    width: 100%;
+    margin-top: 15px;
+    border: none;
+    border-radius: 4px;
+    text-indent: 5px;
+    }
+    #DeterminePOne,#DeterminePTwo{
+    width: 100%;
+    height: 40px;
+    background:#ddd ;
+ 
+    margin-top: 40px;
+    text-align: center;
+    line-height: 40px;
+    font-size: 20px;
+    font-weight: bold;
+    color:#fff;
+    }
+#view{
+width: 100%;
+    height: 100%; 
+    position: :relative;
+       overflow: hidden;
+ } 
+ .address select{
+    width: 31.3%;
+    margin: 0;
+    padding: 0;
+ }  

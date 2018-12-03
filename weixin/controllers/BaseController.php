@@ -7,12 +7,9 @@
  */
 
 namespace app\controllers;
-
-
 use app\api\AgentApi;
 use app\api\UserApi;
 use yii;
-
 class BaseController extends yii\web\Controller
 {
     protected function jsonReturn($res)
@@ -22,7 +19,6 @@ class BaseController extends yii\web\Controller
         }
         Yii::$app->response->content = json_encode($res);
     }
-
     protected function getMsgByErrorCode($code)
     {
         $desc = '';
@@ -54,29 +50,28 @@ class BaseController extends yii\web\Controller
             case -1102001:
                 $desc = '用户会话异常';
                 break;
+            case -1102005:
+                $desc = '验证码错误';
+                break;
         }
         return $desc;
     }
-
     protected function saveUser($user)
     {
         yii::$app->session->set("user", $user);
         yii::$app->session->set("token", $user->token);
         yii::$app->session->set("key", $user->key);
     }
-
     protected function saveAgentUser($user)
     {
         yii::$app->session->set("agent_user", $user);
         yii::$app->session->set("agent_token", $user->token);
         yii::$app->session->set("agent_key", $user->key);
     }
-
     protected function saveCustomerInfo($info)
     {
         $this->saveUser($info);
     }
-
     /**
      * 判断浏览器是否在微信环境
      * @return bool
@@ -89,16 +84,14 @@ class BaseController extends yii\web\Controller
             $isWeixin = true;
         }
         return $isWeixin;
-
     }
-
     /**
      * 检验终端用户.是否登录
      * @return bool
      */
     protected function checkCustomerLogin()
-    {
-        $info = yii::$app->session->get("user");
+      {
+         $info = yii::$app->session->get("user");
         if (!$this->is_weixin()) {
             if (empty($info)) {
                 return false;
@@ -116,27 +109,27 @@ class BaseController extends yii\web\Controller
         $this->saveCustomerInfo($res->result);
         return true;
     }
-
     protected function checkAgentLogin()
     {
-//        $info=yii::$app->session->get("agent_user");
-//        if (empty($info)) {
-//            if (!$this->is_weixin()) {
-//                return false;
-//            }
-//            $openid = yii::$app->session->get("openid");
-//            if (empty($openid)) {
-//                return false;
-//            }
-//            $res = (new AgentApi())->getUserInfoByOpenId($openid);
-//            if ($res->state != 0) {
-//                return false;
-//            }
-//            $this->saveAgentUser($res->result);
-//            return true;
-//        }
-//        return true;
-
+    return true;
+//       $info=yii::$app->session->get("agent_user");
+//           if (empty($info)) {
+//               if (!$this->is_weixin()) {
+//                   return false;
+//               }
+//               $openid = yii::$app->session->get("openid");
+//
+//               if (empty($openid)) {
+//                   return false;
+//               }
+//               $res = (new AgentApi())->getUserInfoByOpenId($openid);
+//               if ($res->state != 0) {
+//                   return false;
+//               }
+//               $this->saveAgentUser($res->result);
+//               return true;
+//           }
+//           return true;
             if (!$this->is_weixin()) {
                 return false;
             }
@@ -148,10 +141,9 @@ class BaseController extends yii\web\Controller
             if ($res->state != 0) {
                 return false;
             }
-            $this->saveAgentUser($res->result);
+            $this->saveCustomerInfo($res->result);
             return true;
     }
-
     /**
      * @param string $name
      * @return array|mixed
@@ -162,6 +154,18 @@ class BaseController extends yii\web\Controller
             return Yii::$app->request->post($name);
         }
         return Yii::$app->request->get($name);
+    }
+
+    //获取登陆者信息
+    public function getUserInfoByKey($key){
+        $UserInfo=[];
+        if($key){
+            $user=yii\db\ActiveRecord::findBySql("select `Level`,`Name` from agent_info where Id=$key")->asArray()->one();
+            if($user){
+                $UserInfo=['Level'=>$user['Level'],'Name'=>$user['Name']];
+            }
+        }
+        return $UserInfo;
     }
 
 
