@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="http://oowgxt7h1.bkt.clouddn.com/wx/static/coderlu.css"/>
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=FCBpETlN4Snp2SfEl92y89WF"></script>
     <script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script>
+    <link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
     <style>
         * {
             margin: 0px;
@@ -287,7 +288,7 @@
                     $.showIndicator();
                     var url = "/index.php/water-shop/agent-list?lat=" + this.lat + "&lng=" + this.lng;
                     $.getJSON(url, function (data) {
-                        alert(data.data);
+
                         $.hideIndicator();
                         if (data.status != 0) {
                             $.toast(data.msg);

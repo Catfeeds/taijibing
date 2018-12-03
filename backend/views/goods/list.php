@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./static/js/datepicker/dateRange.css"/>
     <link rel="stylesheet" href="./static/js/jedate/skin/jedate.css"/>
     <link rel="stylesheet" href="./static/js/page/jquery.pagination.css"/>
+     <link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
     <style>
         .operateBtn{
             font-size:12px;
@@ -45,6 +46,18 @@
             margin:1px 8px;
             text-decoration: none;
         }
+
+        .table-striped > tbody > tr:nth-child(odd) > td {
+        	    background-color: #1a1a2b;
+        }
+        .table > thead > tr > th {
+            vertical-align: bottom;
+            background-color: #2d2d35;
+            border-bottom: 1px solid #ddd;
+        }
+
+
+
     </style>
 </head>
 <body>
@@ -79,7 +92,8 @@
             <td><input type="button" class="btn  select_btn" value="清空" onclick="cleardata()"/> </td>
         </tr>
         <tr>
-            <td colspan="6" style="text-align: left"><input type="button" class="btn  select_btn" value="+添加商品" onclick="window.location='/index.php?r=goods/addgood'"/></td>
+            <td colspan="6" style="text-align: left"><input type="button" style='background: #1d1f23;
+    line-height: 15px;' class="btn  select_btn" value="+添加商品" onclick="window.location='/index.php?r=goods/addgood'"/></td>
         </tr>
     </table>
     <div class="rect" style="display: none;position: absolute;left: 0px;top: 0px">
@@ -90,7 +104,7 @@
     </div>
     <table class="table table-striped table-bordered table-hover dataTable" id="sample_2" aria-describedby="sample_2_info">
         <thead>
-        <tr role="row">
+        <tr role="row" s>
             <th style="text-align:center;min-width:100px;">序号</th>
             <th style="text-align:center;min-width:140px;">商品名称</th>
             <th style="text-align:center;min-width:120px;">商品频道</th>
@@ -129,6 +143,7 @@
     var category=<?=json_encode($category)?>;
     var merchant=<?=json_encode($merchant)?>;
     var addr='<?=$preview?>';
+    // alert(4)
 </script>
 <script type="text/javascript">
     var starttime="";
@@ -290,6 +305,7 @@
             query();
         });
     }
+
     function waittingsale(){
         if(!window.confirm("确认将该商品下架至待售吗？")){
             return;
@@ -342,7 +358,7 @@
                         layer.alert(data.msg);
                         return;
                     }
-                    console.log(data.data);
+                    // console.log(data.data);
                     goods_sell_data=data.goods_sell_data;
                     $("#tbody").html("");
                     $.each(data.data, function (index, item) {
@@ -461,7 +477,7 @@
                         $("#tbody").append(copyStr);
                         if(nowSjcTime > endSjcTime){
                             var thisId = $(this)[0].id;
-                            console.log(thisId + "+++++++++++");
+                            // console.log(thisId + "+++++++++++");
                             $("[dataid="+thisId+"]").css("color","red")
                         }
                         if(highLight){
@@ -498,6 +514,7 @@
         }
         $(obj).html(html);
     }
+     // alert(4)
 </script>
 </body>
 </html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+<!-- 	    <link href="../../web/assets/c023f57d/css/bootstrap.css" rel="stylesheet">
+	<link href="../../web/assets/3c6d6949/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+	<link href="../../web/assets/3c6d6949/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+	<link href="../../web/assets/3c6d6949/css/animate.min.css" rel="stylesheet">
+	<link href="../../web/assets/3c6d6949/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+	<link href="../../web/assets/3c6d6949/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+	<link href="../../web/assets/3c6d6949/js/plugins/layer/laydate/need/laydate.css" rel="stylesheet">
+	<link href="../../web/assets/3c6d6949/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+	<link href="../../web/assets/3c6d6949/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+	 <link rel="stylesheet" type="text/css" href="../../web/static/css/sales-api/sales-api.css">
+	 <link rel="stylesheet" type="text/css" href="../../web/static/css/dcalendar.css"> -->
+</head>
+<body style="background-color: #32323E">
+<table class="table" style="background-color: #292834;text-align: center;">
+   <thead>
+     <tr class="header" style="font-weight: bold">
+      <td class="name">销量概况  <i class="volumeHover glyphicon glyphicon-question-sign" style="color: #01B1D6">
+        <div class="volumeText" >
+          销量概况统计的是用户通过设备扫过条码的数量，表示销量，和实际销量有延迟，可能出现微小误差，一般在5%范围内。日期是表示近7天，最近30天，最近90天的时间
+        </div>
+
+      </i>
+    </td>
+      <td> 今日 </td>
+      <td>作日</td>
+      <td>一周</td>
+      <td>一月</td>
+      <td>一季度</td>
+    </tr>
+   </thead>
+   <tbody>
+    <tr class="consumer">
+      <td class="name ">用户销量（袋）</td>
+      <td>0</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr  class="relatively" >
+      <td class="name ">同期  <i class="compareHover glyphicon glyphicon-question-sign" style="color: #01B1D6" >
+        <div class="compareText">
+          同期表示：该销量和上一日、7天、30天、90天的百分比的对比显示
+        </div>
+      </td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr class="equally">
+      <td class="name ">客户均销量 <i class="AverageHover glyphicon glyphicon-question-sign" style="color: #01B1D6" >
+        <div class="AverageText">
+          平均销量：为所有用户的销量除以用户总数量的结果数据，数据实时动态变化
+        </div>
+      </i></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+   </tbody>
+</table>
+
+
+
+<div style="padding:0 20px">
+    <div class="container-fluid"  >
+        <div class="row" style="margin-left: -50px; margin-right: -50px;">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" >
+                <div style="background-color: #292834; color: #fff">
+                       <div class="title">
+                            <div >
+                                <label >
+                                   销量情况 
+                                </label>
+                                <select  >
+                                   <option value="1">全部商品</option>
+                                </select>
+
+                                <select>  
+                                  <option value ="1">7天的销量</option>  
+                                  <option value ="2">一个月的销量</option>  
+                                  <option value="3">一个季度的销量</option>
+                                </select>  
+                            </div>
+                       </div>
+                     <div id="charts2"   style=" height:400px;"></div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" >
+                <div style="background-color: #292834; ">
+                 <div id="charts5"   style="width: 100%;height:400px;min-width: 500px"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<div style="clear:both;padding:20px 0 "></div>
+
+<div class="container-fluid" style="background-color: #292834;padding: 20px 0px; margin-left: 0px ">
+    <div class="row" style="">
+        <div class="col-lg-6 col-md-6col-sm-6 col-xs-12">
+            <div id="charts"  style="width: 100%;height:360px;" ></div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+              <div class="container-fluid">
+                <div class="row" style="text-align: content">
+                  <div class="col-sm-2 col-xs-2">四川</div>
+                  <div class="col-sm-6 col-xs-6">
+                        <div class="progress">
+                              <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 90%;">
+                              </div>
+                        </div>
+                  </div>
+                  <div class="col-sm-2 col-xs-2">90%</div>
+                 </div>
+               </div>
+            <div class="container-fluid">
+                <div class="row" style="text-align: content;margin-bottom: ">
+                  <div class="col-sm-2 col-xs-2">四川</div>
+                  <div class="col-sm-6 col-xs-6">
+                        <div class="progress">
+                              <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 80%;">
+                              </div>
+                            </div>
+                  </div>
+                  <div class="col-sm-2 col-xs-2">80%</div>
+                 </div>
+              </div>
+
+              <div class="container-fluid">
+                <div class="row" style="text-align: content">
+                  <div class="col-sm-2 col-xs-2">四川</div>
+                  <div class="col-sm-6 col-xs-6">
+                        <div class="progress">
+                              <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 70%;">
+                              </div>
+                            </div>
+                  </div>
+                  <div class="col-sm-2 col-xs-2">70%</div>
+                 </div>
+              </div>
+
+              <div class="container-fluid">
+                <div class="row" style="text-align: content">
+                  <div class="col-sm-2 col-xs-2">四川</div>
+                  <div class="col-sm-6 col-xs-6">
+                    <div class="progress">
+                      <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-2 col-xs-2">60%</div>
+                 </div>
+              </div>
+        </div>
+    </div>
+</div>
+
+<div style="width:100%;border-top: 1px solid #292834;margin-top: 20px">
+     <div class="timeData" style="padding:10px; color:#DEDDDF">
+         选择时间
+         <span><input id='mydatepicker2' type='text'  placeholder="2015-5-5"/>日期</span>
+         <span><input id='mydatepicker3' type='text' placeholder="2015-5-5"/>日期</span>
+         <span class="glyphicon glyphicon-zoom-out" style="margin-left:20px;color: #DEDDDF">
+            <input  type="text" id="search" ><span>搜索</span>
+     </div>
+     <div class="tableBox">
+         <table style ="width:100%;text-align: center;">
+             <caption>
+                <div  class="navdata">
+                    <p >角色选择</p>
+                    <ul >
+                        <li style="margin-left: -40px">用户</li>
+                        <li>服务中心</li>
+                        <li>运营中心</li>
+                        <li>水厂</li>
+                        <li>设备厂家</li>
+                        <li>设备投资商</li>
+                        <span>导出表格</span>
+                    </ul>
+                </div>
+            </caption>
+             <thead>
+                 <tr>
+                     <th>序号</th>
+                     <th>服务中心</th>
+                     <th>联系电话</th>
+                     <th>设备编号</th>
+                     <th>服务中心</th>
+                     <th>运营中心</th>
+                     <th>地区</th>
+                     <th>其他</th>
+                     <th>总销量</th>
+                 </tr>
+             </thead>
+             <tbody id="tableBoxData">
+               
+             </tbody>
+         </table>
+     </div>
+</div>
+
+
+</body>
+<!-- 	<script type="text/javascript" src="../../web/static/js/jquery.min.js"></script>
+    <script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>
+    <script src="http://echarts.baidu.com/build/dist/echarts.js"></script> -->
+<!--     <script type="text/javascript" src="../../web/static/js/sales-api/dcalendar.picker.js"></script>
+    <script type="text/javascript" src="../../web/static/js/sales-api/index.js"></script>
+    <script type="text/javascript" src="../../web/static/js/sales-api/brokenLineGraph.js"></script>
+    <script type="text/javascript" src="../../web/static/js/sales-api/pieChart.js"></script>
+
+
+    <script type="text/javascript" src="../../web/static/js/sales-api/map.js"></script>
+    <script type="text/javascript" src="../../web/static/js/sales-api/adminDdata.js"></script> -->
+    <script>
+
+    $('#mydatepicker5').dcalendarpicker({
+        format:'yyyy-mm-dd'
+    }); 
+   $('#mydatepicker2').dcalendarpicker({
+        format:'yyyy-mm-dd'
+    }); 
+    $('#mydatepicker3').dcalendarpicker({
+        format:'yyyy-mm-dd'
+    }); 
+    var myChart7 = echarts.init(document.getElementById('charts7')); 	
+     var   option7 = {
+    title : {
+        text: '用户设备入网属性',
+        textStyle:{
+        	color:"#fff"
+        }
+        // subtext: 'Chrome下测试数据'
+    },
+    tooltip : {
+        trigger: 'axis'
+    },
+    // legend: {
+    //     data:[
+    //         'ECharts1 - 2k数据','ECharts1 - 2w数据','ECharts1 - 20w数据','',
+    //         'ECharts2 - 2k数据','ECharts2 - 2w数据','ECharts2 - 20w数据'
+    //     ]
+    // },
+    toolbox: {
+        show : true,
+        feature : {
+            mark : {show: false},
+            dataView : {show: true, readOnly: false},
+            magicType : {show: false, type: ['line', 'bar']},
+            restore : {show: false},
+            saveAsImage : {show: false}
+        }
+    },
+    calculable : true,
+    grid: {y: 70, y2:30, x2:20},
+    xAxis : [
+        {
+            type : 'category',
+            data : ['押金','免费','买水送机','买机送水','其他'],
+                     axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#fff'
+                            }
+                    }
+        },
+        {
+            type : 'category',
+            axisLine: {show:false},
+            axisTick: {show:false},
+            axisLabel: {show:false},
+            splitArea: {show:false},
+            splitLine: {show:false},
+            data : ['押金','免费','买水送机','买机送水','其他']
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value',
+            axisLabel:{formatter:'{value} ms'},
+                     axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#fff'
+                            }
+                    }
+        }
+    ],
+    series : [
+        {
+            name:'家庭',
+            type:'bar',
+             barWidth : 20,
+            itemStyle: {normal: {color:'rgba(193,35,43,1)', label:{show:true}}},
+            data:[40,155,95,75, 0]
+        },
+        {
+            name:'集团',
+            type:'bar', barWidth : 20,
+            itemStyle: {normal: {color:'rgba(181,195,52,1)', label:{show:true,textStyle:{color:'#27727B'}}}},
+            data:[100,200,105,100,156]
+        },
+        {
+            name:'公司',
+            type:'bar', barWidth : 20,
+            itemStyle: {normal: {color:'rgba(252,206,16,0.5)', label:{show:true,textStyle:{color:'#E87C25'}}}},
+            data:[906,911,908,778,0]
+        },
+        {
+            name:'其他',
+            type:'bar', barWidth : 20,
+            xAxisIndex:1,
+            itemStyle: {normal: {color:'rgba(193,35,43,0.5)', label:{show:true,formatter:function(p){return p.value > 0 ? (p.value +'\n'):'';}}}},
+            data:[96,224,164,124,0]
+        }
+    ]
+};
+
+
+
+                   
+ myChart7.setOption(option7);
+    </script>
+</html>
+
+
+
+
+
+
+

@@ -1,0 +1,318 @@
+ol, ul {
+    list-style: none;
+}
+.page-head {
+    /*background-color: #2D3136;*/
+    padding: 10px 20px;
+    padding: 1rem 2rem;
+    padding-bottom: 0;
+    border-radius: 4px 4px 0 0;
+    -moz-box-shadow: 0px 0px 10px 1px #000;
+    -webkit-box-shadow: 0px 0px 10px 1px #000;
+    box-shadow: 0px 0px 10px 1px #000;
+
+    border-radius: 2px;
+}
+.selection {
+    height: 30px;
+    height: 3rem;
+    margin-top: 5px;
+    line-height: 30px;
+    line-height: 3rem;
+}
+.Title {
+    font-size: 14px;
+    font-weight: 700;
+    color: rgb(233,233,233);
+    font-family: PingFangSC-Medium;
+}
+.Title img {
+    border: 0;
+    margin-top: -5px;
+    vertical-align: middle;
+}
+.head-txt {
+    height: 50px;
+    height: 5rem;
+    line-height: 40px;
+    line-height: 4rem;
+    padding-bottom: 30px;
+}
+.selection-text {
+    font-size: 12px;
+    font-size: 1.2rem;
+}
+.dataUlLI {
+    display: -webkit-inline-box;
+    height: 35px;
+    line-height: 30px;
+    background-color: #393E45;
+    border-radius: 3px;
+}
+.dataUlLI li {
+    float: left;
+    padding: 3px 0;
+    
+    cursor: pointer;
+}
+.dataUlLI li p {
+    padding: 0px 15px;
+    height: 30px;
+    border-right: 1px #000 solid;
+}
+
+
+.dataUlLI .activer {
+    background-color: #E46045;
+
+}
+.dataUlLI .activer  p{
+      border:none;
+}
+.dataUlLI li:hover{
+    border-right:none;
+    background-color: #656060;
+}
+
+.dataUlLI .activer:hover{
+  background-color: #E46045;
+}
+.ta_btn_primary:hover{
+  background-color: #f9775c;
+  color:#fff;
+}
+select,input{
+    height: 30px;
+
+}
+select{
+    background-color: #393e45
+}
+.wrap_line{
+    border-radius: 2px;
+}
+.wrap_line,.chosen-container-active.chosen-with-drop .chosen-single,.chosen-container-single .chosen-single{
+        background-color: #393E45;
+}
+.role .chosen-container-active,.role  .chosen-container{
+  width: inherit  !important;
+  /*min-width: 150px*/
+}
+.submitBtn button {
+    background-color: #393E45;
+    border: none;
+    color: rgb(233,233,233) !important;
+    outline：none
+}
+.submitBtn button:hover{
+      background-color: #5e6369;
+}
+.submitBtn button:focus{
+  outline:none;
+  background-color: #5e6369;
+}
+.page-head {
+    padding: 10px 20px;
+    padding: 1rem 2rem;
+    border-radius: 2px;
+    margin-top: 25px;
+    background-color: #393E45;
+}
+.watertab {
+    width: 80%;
+    margin: auto;
+    height: 80px;
+    text-align: center;
+    margin-top: 20px;
+}
+.watertab thead{
+    background: inherit;
+}
+.watertab th{
+    text-indent: 2em;
+    text-align: center;
+}
+.Hovertitle {
+    display: -webkit-inline-box;
+}
+
+.volumeHover, .compareHover, .AverageHover, .pageHover {
+    width: 20px;
+    height: 18px;
+    background-color: #00f;
+    display: -webkit-inline-box;
+    background: url(/static/images3/volumeHover1.png) no-repeat;
+}
+.AverageHover-text, .compareHover-text, .pageHover-text, .volumeHover-text {
+    width: 200px;
+    position: absolute;
+    background: #393e45;
+    padding: 10px;
+    color: rgb(233,233,233);
+    text-align: left;
+    border: 1px solid #fff;
+    display: none;
+    font-size: 12px;
+    line-height: 20px;
+    border-radius: 5px;
+}
+
+
+.CityMap,.Provincial {
+    width:50%;
+    color:rgb(233,233,233);
+    text-align:center;
+    height:40px;
+    line-height:40px;
+    background-color:rgb(45,49,54);
+    cursor:hand;
+    cursor:pointer
+}
+.ProvincialActiove {
+    background-color:#1C1E22
+}
+.block {
+    text-align:center
+}
+.block:before {
+    content:'';
+    display:inline-block;
+    height:50%;
+    vertical-align:middle;
+    margin-right:-.25em
+}
+.centered {
+    display:inline-block;
+    vertical-align:middle;
+    width:50%
+}
+.progress .name {
+    position:absolute;
+    left:30px;
+    color:#fff;
+    font-size:15px;
+    font-weight:700;
+        margin-top: -5px;
+}
+.method {
+    width:130px;
+    height:50px;
+    line-height:50px
+}
+.tableBox,.tableBox tr {
+    width:100%;
+        height: 50px;
+    color:#fff;
+    text-align:center;
+    background-color:#393E45
+}
+.tableBox thead tr {
+
+
+    border-bottom:1px #5A5F62 solid
+}
+.tableBox td,.tableBox th {
+    text-align:center;
+    padding:2px 10px
+}
+
+#tableBox{
+    font-size:9px;
+}
+.baifenbiA {
+    position: absolute;
+    right: 15px;
+    bottom: -50px;
+    color: #B2B4B7;
+}
+.baifenbiA li {
+    border-bottom: 1px solid #4C5156;
+    font-size: 15px;
+    float: left;
+    margin-right: 41px;
+    position: relative;
+}
+.baifenbiA .hor {
+    width: 10px;
+    height: 10px;
+    border-radius: 50px;
+    position: absolute;
+    top: 50%;
+    left: -20px;
+}
+.data-view, .data-refresh {
+    display: -webkit-inline-box;
+    background-color: #1D1E22;
+    padding: 3px 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    height: 30px;
+    display: inline;
+    line-height: 30px;
+}
+#dataView{
+            width:280px;
+            position: absolute;
+            z-index:100;
+            right:0;
+            display:none;
+    }
+    #dataView {
+        border-radius: 5px 5px 0 0 ;
+    }
+    #dataView  thead tr th,#dataView  thead tr{
+        background-color:#E46045;
+        padding: 5px 30px;
+        border-radius: 5px 5px 0 0 ;
+        font-size:12px;
+            text-align: center;
+    }
+    #dataView  tbody tr td{
+            text-align: center;
+          background-color:#fff;
+         color:#000;
+    
+         padding:5px;
+    }
+    #dataView  tbody tr td:first-child{
+        border-right:1px solid #DDDDDD;
+    }
+    #dataView .table{
+        border-radius: 5px;
+
+    }
+
+    #dataView  #Refresh{
+        background-color:#4ADCDD;
+        color:#fff;
+    }
+    #dataView  #Close{
+        background-color:#E46045;
+        color:#fff;
+    }
+.Title {
+    font-size: 14px;
+    font-weight: 700;
+    color: rgb(233,233,233);
+    font-family: PingFangSC-Medium;
+}
+ 
+
+#method a{
+        color: #fff;
+    display: block;
+    height: 30px;
+    margin-top: 10px;
+    line-height: 30px;
+    padding: 0 5px;
+      text-decoration: none;
+
+
+}
+
+#method a:hover{
+    background-color: #292834;
+    text-decoration:none;
+
+
+};

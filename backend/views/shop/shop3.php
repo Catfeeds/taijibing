@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="./static/css/sm.min.css">
     <link rel="stylesheet" href="./static/css/sm-extend.min.css">
     <link rel="stylesheet" href="./static/css/index.css">
+    <link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
 <style>
 
     #address{

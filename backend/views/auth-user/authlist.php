@@ -21,8 +21,17 @@ $assignment = function($url, $model){
 
 $this->title = "Admin";
 ?>
+<link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
 <div class="row">
     <div class="col-sm-12">
+        <form action="./?r=auth-user/authlist" method="post">
+            搜索内容：<input id="search" placeholder="请输入账号、类型" value="<?=$content?>" type="text" name="content">
+
+
+            <input type="submit" value="搜索" >
+        </form>
+
+
         <div class="ibox">
 
             <div class="ibox-content">

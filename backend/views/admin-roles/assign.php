@@ -13,10 +13,11 @@ JstreeAsset::register($this);
 
 $this->title = "Assign Permission";
 ?>
+<link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
 <style>.hide{display: none}</style>
 <div class="col-sm-12">
     <div class="ibox">
-        <?= $this->render('/widgets/_ibox-title') ?>
+        <div style="text-align: right;margin-bottom: 10px"> <?= \yii\bootstrap\Html::a('返回',['admin-roles/index'],['class'=>'btn btn-primary'])?></div>
         <div class="ibox-content">
             <div class="row text-center"><span style="font-weight: bold;"><?=$role_name?></span></div>
             <div id="permission-tree"></div>
@@ -28,15 +29,17 @@ $this->title = "Assign Permission";
     </div>
 </div>
 <?php JsBlock::begin() ?>
+
+<script type="text/javascript" src="./static/js/jquery.min.js"></script>
     <script>
         $(function() {
+
             $('#permission-tree').jstree({
                 'core' : {
                     'data' : <?=$treeJson?>
                 },
                 "plugins" : ["checkbox"]
             });
-
             $("form").on('submit', function (e) {
                 e.preventDefault();
                 var idArr = $('#permission-tree').jstree().get_checked();
@@ -50,6 +53,5 @@ $this->title = "Assign Permission";
                     location.reload();
                 });
             });
-        });
+        });     
     </script>
-<?php JsBlock::end() ?>

@@ -1,0 +1,192 @@
+	.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
+	    border:none;
+		 color:#C2C2C5;
+		 font-size: 16px;
+		 padding: 20px;
+		  
+	}
+	tr{
+		 border:1px solid #3A3A4C;	
+
+	}
+	.name{
+		background-color: #32323E;
+		 font-size: 20px;
+		  color: #fff;
+		  font-weight: bold;
+		  border-bottom:1px solid #2A2A36
+	}
+thead{
+	background-color: #292834
+}
+.volumeHover,.compareHover,.AverageHover{
+	 position: relative;
+}
+.volumeText,.compareText,.AverageText{
+	position: absolute;
+    background-color: #363643;
+    padding: 20px;
+    border-radius: 5px;
+    z-index: 100;
+    display: none;
+}
+.title{
+    position: absolute;top:20px;
+ width:100%;
+        padding: 0 40px;
+        z-index: 1000
+}
+
+.title select{
+    right:0;
+    float: right;
+    background-color: #363643;
+    border:1px solid #363643;
+    margin-right: 15px;
+}
+ .navdata {
+        background: #292834;
+    height: 50px;
+    padding-top: 8px;
+ }
+    .navdata li{
+          list-style: none;
+    float: left;
+    height: 40px;
+    line-height: 40px;
+    margin-left: 15px;
+    padding: 0px 20px;
+    cursor:pointer;
+    border-right: 1px solid #292834;
+    }
+
+      .navdata ul{
+            height: 40px;
+      color: #DEDDDF;
+     
+    background-color: #363643;
+    overflow: hidden;
+    }
+   .navdata p {
+    float: left;
+    padding: 11px;
+    color: #DEDDDF;
+    background-color: #292834;
+    }
+     .navdata span{
+           float: right;
+    height: 40px;
+    padding: -10px;
+    margin-top: -5px;
+    line-height: 40px;
+    background-color: #2F2E3B;
+    padding: 0 15px;
+     }
+     .tableBox td,.tableBox th{
+        text-align: center;
+            padding: 10px;
+              color: #DEDDDF;
+     }
+     .active{
+        background-color: #DF5B19;
+     }
+
+    .timeData  input{
+        background: #2F2E3B;
+       border: 1px solid #32313E;
+       text-align: center;
+     }
+.timeData  span{
+        padding: 5px 10px;
+    border: 1px solid #32313E;
+}
+
+
+
+.name div{
+  width: 200px;
+  font-size: 12px;color: #DEDDDF;
+  text-align: left;
+}
+.cars,.cars option{
+}
+#method{
+    position: absolute;
+    display: block;
+    width: 80px;
+    height: 38px;
+    line-height: 40px;
+    text-align: center;
+    background: #292834;
+    right: 0px;
+    top: -38px;
+    cursor:pointer;
+    color: #DEDDDF;
+    font-size: 15px;
+}
+   
+ select {
+   border: none; outline: none;
+  text-align: center;
+ }
+select option:hover{
+  border:none;
+   text-align: center;
+}
+
+    #sconter,button{
+
+    outline:none;  
+
+    outline: none;
+    -webkit-appearance: none;
+    border-radius: 0;
+    border: 1px solid #292834;
+    width: 50px;
+    text-align: center;
+    }
+    input[type='number'] {
+    -moz-appearance:textfield;
+    }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    }
+    button,input{
+    background:#292834;  
+    }
+
+    .tfData,.tfData span{
+    font-size: 12px;
+    display: -webkit-inline-box;
+    }
+    .pagination > li > a, .pagination > li > span{
+    border:none;
+    }
+    .pagination > li > a:hover, .pagination > li > span:hover{
+    background-color: #292834
+    }
+    .tfbody li   {
+    display: inline;
+   cursor:pointer;
+    
+    border: none;
+    font-size: 12px;
+    background-color: #363643;
+    color: inherit;
+    float: left;
+    line-height: 2.1;
+    margin-left: -1px;
+    padding: 0px 10px;
+    }
+
+
+.goodpic .item {
+	    line-height: 40px;
+}
+.search span {
+    width: 33%;
+    display: inline-flex;
+
+}

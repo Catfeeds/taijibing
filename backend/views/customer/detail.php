@@ -11,7 +11,15 @@ function getActType($type){
     }
     return $desc;
 }
+
 ?>
+    <link rel="stylesheet" href="./static/css/chosen.css"/>
+    <link rel="stylesheet" href="./static/css/Common.css?v=1.1"/>
+<style type="text/css" media="screen">
+	.btn-primary{
+		line-height:20px
+	}
+</style>
 <div class="wrapper wrapper-content">
 <!--        <div class="form-group" >-->
 <!---->
@@ -31,8 +39,14 @@ function getActType($type){
 <!--                <button style="padding-left:10px;" class="btn-primary btn form-label" type="button" style="padding:0px;line-height:26px;height:26px;width:60px;" id="query">查询</button>-->
 <!--            </div>-->
 <!--        </div>-->
-    <div style="text-align: right;margin-bottom: 10px"> <?= \yii\bootstrap\Html::a('返回',['customer/list'],['class'=>'btn btn-primary'])?></div>
-    <table class="table table-hover" style="background:white;">
+    <!-- <div style="text-align: right;margin-bottom: 20px ;"> <?= \yii\bootstrap\Html::a('返回',['customer/list'],['class'=>'btn btn-primary'])?></div> -->
+
+
+    <div style="text-align: right;margin-bottom: 20px ;">
+     <a class="btn btn-primary" href="/index.php?r=customer/list<?=$url?>">返回</a>
+     <!-- <a class="btn btn-primary" href="/index.php?r=customer%2Flist">返回</a> -->
+ </div>
+    <table class="table table-hover" style=" ">
         <thead>
         <th>序号</th>
         <th>设备编号</th>
@@ -42,7 +56,7 @@ function getActType($type){
         <th>剩余水量</th>
         <th>TDS</th>
         <th>水温</th>
-        <th>操作间</th>
+        <th><a id="sort" href="">操作时间</a></th>
         <th>上传时间</th>
 <!--        <th>所属地区</th>-->
 <!--        <th>位置信息</th>-->
@@ -78,13 +92,46 @@ function getActType($type){
 
 
 </div>
-<!--<script type="text/javascript" src="./static/js/jquery.min.js"></script>-->
-<!--<script type="text/javascript" src="./static/js/layer/layer.js"></script>-->
-<!--<script>-->
-<!--    var areas=--><?//=json_encode($areas)?>
-<!--</script>-->
+<script type="text/javascript" src="./static/js/jquery.min.js"></script>
+<script type="text/javascript" src="./static/js/layer/layer.js"></script>
+    <script type="text/javascript" src="/static/js/chosen.jquery.min.js"></script>
 <script>
-//    $(function(){
+    var sort=<?=$sort?>;
+    var id='<?=$id?>';
+    var url='<?=$url?>';
+    var DevNo=<?=$DevNo?>;
+
+
+    console.log(url)
+</script>
+<script>
+
+    // alert(4)
+//console.log(sort)
+//console.log(id)
+//console.log(DevNo)
+    //排序
+    $('#sort').click(function(){
+        sort++;
+        $(this).attr('href','./?r=customer/detail&sort='+sort+'&id='+id+'&DevNo='+DevNo);
+//            alert($(this).attr('href'));
+
+    });
+
+    $(function(){
+        $('.pagination a').click(function(){
+
+            var href=$(this).attr('href');
+            var page_size=$('#page_size option:selected').val();
+
+            $(this).attr('href',href+'&sort='+sort+'&id='+id+'&DevNo='+DevNo+'&per-page='+page_size);
+//                var href2=$(this).attr('href');
+//                alert(href2)
+        });
+    });
+
+
+    //    $(function(){
 //      $("#query").on("click",function(){
 //          var tel=$("#tel").val();
 //          var devno=$("#devno").val();
@@ -152,4 +199,35 @@ function getActType($type){
 //        return -1;
 //    }
 </script>
-<?= LinkPager::widget(['pagination' => $pages]); ?>
+<?php
+echo "";
+echo "<dev style='float:left;margin-top: 22px;margin-left: 50px; padding-bottom: 150px;'>每页显示：<select type='text' name='page_size' id='page_size' style='width:50px;'>
+<option value='10'>10</option>
+<option value='20'>20</option>
+<option value='50'>50</option>
+</select>条
+&nbsp;&nbsp;&nbsp;&nbsp;共：$pages->totalCount 条
+<span style='margin-left: 20px'>".LinkPager::widget(['pagination' => $pages, 'maxButtonCount' => 10 ])."</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style='margin-left: auto'>第：<input style='width: 50px' type='text' id='pages' name='pages' value='$page'>页
+&nbsp;&nbsp;&nbsp;&nbsp;<a href='./?r=customer/detail' id='butn'>确定</a></span>
+</dev>"
+
+?>
+<script>
+
+    $('#page_size').val(<?=$page_size?>);
+$('#page_size').chosen({no_results_text: "没有找到",disable_search_threshold: 10}); //初始化chosen
+    $('#butn').click(function () {
+
+        var page_size=$('#page_size option:selected').val();
+        var pages=$('#pages').val();
+//            alert(page_size);
+        var href=$(this).attr('href');
+        $(this).attr('href',href+'&page='+pages+'&per-page='+page_size+'&sort='+sort+'&id='+id+'&DevNo='+DevNo);
+        var href2=$(this).attr('href');
+//            alert(href2);
+
+    });
+
+</script>
+ 

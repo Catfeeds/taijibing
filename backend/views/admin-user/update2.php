@@ -11,8 +11,6 @@ use feehi\widgets\ActiveForm;
 $this->title = "Admin";
 ?>
 
-
-
 <!DOCTYPE html>
 <html style="overflow-x:hidden;overflow-y:hidden">
 <head lang="en">
@@ -22,35 +20,64 @@ $this->title = "Admin";
     <link rel="stylesheet" href="./static/js/zui/css/zui.css"/>
     <link rel="stylesheet" href="./static/js/zui/css/style.css"/>
     <link rel="stylesheet" href="./static/css/addgood.css"/>
+    <link rel="stylesheet" href="./static/css/updategood.css"/>
     <link rel="stylesheet" href="./static/js/jedate/skin/jedate.css"/>
-
     <link rel="stylesheet" href="./static/js/datepicker/dateRange.css"/>
-
     <link rel="stylesheet" href="./static/js/page/jquery.pagination.css"/>
+    <link rel="stylesheet" href="./static/css/chosen.css"/>
+    <link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
     <style>
-        body{
-            height:100%;
-            width:100%;
-            overflow:auto;
-        }
+	body{
+
+
+	background: #363643;
+	color: #fff;
+	}
+
+
+	.form-control {
+	background-color: #1d1f23;
+	color: #fff;
+	}
+	select,option{
+	color: #fff;
+	}
+
+	.form-control {
+	background-color: #363643;
+	color: #fff;
+	}
+	.col-sm-2{
+		text-align:right;
+	}
+	.btn-white{
+		display:none;
+	}
+	.required:after{
+		display:none;
+	}
     </style>
 </head>
 <body>
-
 
 <div class="row">
     <div class="col-sm-12">
         <div class="ibox">
 
-            <div style="text-align: right;margin-bottom: 10px"> <?= \yii\bootstrap\Html::a('返回',['admin-user/index'],['class'=>'btn btn-primary'])?></div>
+            <div style="text-align: right;margin-bottom: 10px">
+             <!-- <?= \yii\bootstrap\Html::a('返回',['admin-user/index'],['class'=>'btn btn-primary'])?> -->
+
+                   <a class="btn btn-primary" href="/index.php?r=admin-user/index<?=$url?>">返回</a>
+                 
+             </div>
             <div class="ibox-content">
                 <?php $form = ActiveForm::begin(['options'=>['enctype'=>'multipart/form-data','class'=>'form-horizontal']]); ?>
                 <?= $form->field($model['model'], 'Name')->textInput(['maxlength' => 64])->label('账户名称') ?>
                 <?= $form->field($model['model'], 'ContractUser')->textInput(['maxlength' => 64])->label('联系人') ?>
-                <?= $form->field($model['model'], 'ContractTel')->textInput(['maxlength' => 64])->label('联系电话') ?>
+                <?= $form->field($model['model'], 'ContractTel')->textInput(['maxlength' => 12])->label('联系电话') ?>
 
                 <div class="hr-line-dashed"></div>
-                <?= $form->field($model['model'], 'LoginName')->textInput(['maxlength' => 64])->label('登陆账号') ?>
+                <?= $form->field($model['model'], 'LoginName')->textInput(['maxlength' => 11])->label('登陆账号') ?>
                 <?= $form->field($model['admin_user'], 'email')->textInput(['maxlength' => 64]) ?>
                 <div class="hr-line-dashed"></div>
 
@@ -82,7 +109,7 @@ $this->title = "Admin";
                         <!--                        </div>-->
 
 
-                        <input type="button"  class="btn select_btn" style="height: 26px;margin-bottom: 5px;line-height: 15px;margin-left: 0px" value="+标记位置" onclick="get_lat_lng()"/>
+                        <input type="button"  class="btn select_btn" style="background: #1d1f23;height: 26px;margin-bottom: 5px;line-height: 15px;margin-left: 0px" value="+标记位置" onclick="openMark()"/>
                         <span>经度：</span>
                         <!--                        <div class="baseinput col-md-2 field-lng">-->
                         <!---->
@@ -92,7 +119,7 @@ $this->title = "Admin";
                         <!--                        </div>-->
 
 
-                        <input id="lng" value="<?=$model['model']['BaiDuLng']?>" name="<?=$name?>[BaiDuLng]" type="text" class="baseinput" style="width: 80px"/>
+                        <input id="lng" value="<?=$model['model']['BaiDuLng']?>"  readonly unselectable="on"  name="<?=$name?>[BaiDuLng]" type="text" class="baseinput" style="width: 80px"/>
 
                         <span>纬度：</span>
                         <!--                        <div class="baseinput col-md-2 field-lat">-->
@@ -102,11 +129,11 @@ $this->title = "Admin";
                         <!---->
                         <!--                        </div>-->
 
-                        <input id="lat" value="<?=$model['model']['BaiDuLat']?>" name="<?=$name?>[BaiDuLat]" type="text" class="baseinput" style="width: 80px"/>
+                        <input id="lat" value="<?=$model['model']['BaiDuLat']?>"  readonly unselectable="on"  name="<?=$name?>[BaiDuLat]" type="text" class="baseinput" style="width: 80px"/>
                         <span class="mark">（用于部分商品前端显示距离）</span>
                     </div>
                 </div>
-
+                <div style='clear:both'> </div>
                 <!--账户类型-->
                 <div class="form-group field-adminroleuser-role_id required" style="margin-bottom: 100px;">
                     <label class="col-sm-2 control-label" for="adminroleuser-role_id">账户类型</label>
@@ -114,10 +141,13 @@ $this->title = "Admin";
                         <select class="control-label" name="User[type]" id="type" style="width:150px;margin-right: 20px">
                             <option  value="">请选择</option>
                             <option value="管理员">管理员</option>
-                            <option value="水厂">水厂</option>
+                            <option value="供应商">供应商</option>
                             <option value="设备厂家">设备厂家</option>
                             <option value="运营中心">运营中心</option>
                             <option value="服务中心">服务中心</option>
+                            <option value="设备投资商">设备投资商</option>
+                            <option value="片区中心">片区中心</option>
+                            <option value="酒店中心">酒店中心</option>
                         </select>
                     </div>
                     <div id="parent" style="display: none">
@@ -129,21 +159,39 @@ $this->title = "Admin";
                             </select>
                         </div>
                     </div>
+                    <div id="belong"  style="display: none" >
+                        <div style="display: block">
+                            <label class="col-sm-2 control-label" for="adminroleuser-role_id">所属片区中心</label>
+                            <div class="col-sm-2">
+                               <select  name="User[area_center]"  style="width: 150px;" id="dept" class="dept_select">
+                                    <option value="">无</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                    </div>
                 </div>
 
-
+                  
                 <?= $form->defaultButtons() ?>
                 <?php ActiveForm::end(); ?>
+
+           
             </div>
         </div>
     </div>
 </div>
 
 
+<div id="qrcode">
+
+</div>
 
 <script type="text/javascript" src="./static/js/jquery.min.js"></script>
-<script type="text/javascript" src="./static/js/zui/js/zui.js"></script>
-<!--<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.4"></script>-->
+<script type="text/javascript" src="/static/js/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/Common2.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.4"></script>
 <script type="text/javascript" src="./static/js/qiniu/moxie.js"></script>
 <script type="text/javascript" src="./static/js/qiniu/Plupload.js"></script>
 <script type="text/javascript" src="./static/js/qiniu/qiniu.min.js"></script>
@@ -151,52 +199,41 @@ $this->title = "Admin";
 <script type="text/javascript" src="./static/js/layer/layer.js"></script>
 <script type="text/javascript" src="./static/js/pinyin.js"></script>
 <script type="text/javascript" src="./static/js/lib.js"></script>
-<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=FCBpETlN4Snp2SfEl92y89WF"></script>
-<script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script>
-
-<!--<script type="text/javascript" src="./static/js/good/addgood.js"></script>-->
-
-
+<script type="text/javascript" src="./static/js/qrcode.js"></script>
+<script type="text/javascript" src="./static/js/good/updategood.js"></script>
+<script type="text/javascript" src="./static/js/zui/js/zui.js"></script>
 <script type="text/javascript">
-    //    var category=<?//=json_encode($category)?>//;
-    //    var merchant=<?//=json_encode($merchant)?>//;
     var category='';
     var merchant='';
-
+    var baseGood='';
+    var sms='';
+    var data=<?=$model["data"]?>;
+    var province='<?=$model["model"]["Province"]?>';
+    var city='<?=$model["model"]["City"]?>';
+    var area='<?=$model["model"]["Area"]?>';
+    var area_center_id='<?=$model["admin_user"]["logic_type"]==4?$model["model"]["ParentId"]:0?>';
+// console.log(area_center_id)
+    var area_center=<?=$area_center?>;
+// console.log(area_center)
+// 地址渲染 
+addressResolve(data,province,city,area);
 </script>
 <script type="text/javascript">
-
+    $("#initamount").onlyNum();
 </script>
-
-
-
-
 <script>
-        var data=<?=$model["data"]?>;
-        var province='<?=$model["model"]["Province"]?>';
-        var city='<?=$model["model"]["City"]?>';
-        var area='<?=$model["model"]["Area"]?>';
-
-
-    //    var geoc;
-    //    var cur;
-    //    var map;
-    //    var address='<?//=empty($model["model"]["Address"])?"":$model["model"]["Address"]?>//';
-    //    var baiDuLat='<?//=empty($model["model"]["Address"])?"":$model["model"]["BaiDuLat"]?>//';
-    //    var baiDuLng='<?//=empty($model["model"]["Address"])?"":$model["model"]["BaiDuLng"]?>//';
-</script>
-
-<script type="text/javascript" src="./static/js/jquery.min.js"></script>
-<script>
-
-
-
-
-
-
+// alert(4)
+    //修改时不能更改账户类型
+    $('#type').attr("disabled","disabled");
+    // $('#type').css("background-color"," #e6e6e6");
+    $('#agent').attr("disabled","disabled");
+    // $('#agent').css("background-color"," #e6e6e6");
+    $('.btn-primary').click(function () {
+        $('#type').attr("disabled",false);
+        $('#agent').attr("disabled",false);
+    });
     //账户类型改变时
     $('#type').change(function(){
-
 //        if(data=='服务中心'){
         //获取地址
         var province=$('#province option:selected').attr('value');
@@ -209,11 +246,9 @@ $this->title = "Admin";
         }else{
 
             var data=$('#type option:selected').attr('value');
-
             if(data=='服务中心'){
                 //获取符合该地址的所有运营中心
                 $.get('./?r=admin-user/get-agent',{'province':province,'city':city,'area':area},function(data){
-
                     if(data!=''){
                         $("#agent").html('');
                         var html="<option value=''>请选择</option>";
@@ -225,6 +260,7 @@ $this->title = "Admin";
                         $(html).appendTo("#agent");
                         $('#parent').show();
                     }
+
                     if(data==''){
                         $("#agent").html('');
                         html="<option value='太极兵运营中心'>太极兵运营中心</option>";
@@ -248,21 +284,25 @@ $this->title = "Admin";
 
     $(function(){
 
+
 //        $("#type").attr("disabled","disabled").css("background-color","#e6e6e6;");
 
 
 
-            var type= "<?=$model['admin_user']['type']?>";
+        var type= "<?=$model['admin_user']['type']?>";
         var agent= "<?=$model['admin_user']['agent']?>";
         var role_id= "<?=$model['role_id']?>";
+
+
+        // console.log(agent)
 //        var agent= "<?//=$model['agent']?>//";
 
 //alert(role_id);
         if(role_id!=3){
             //选择地址改变时
             $('#check_address select').change(function(){
-                $('#type').val('');
-                $('#parent').hide();
+                //$('#type').val('');
+                //$('#parent').hide();
 
             });
         }
@@ -272,16 +312,36 @@ $this->title = "Admin";
 
 
 //        alert(agent);
-//        alert(agent);
+       // alert(type);
         if(type){
             $('#type').val(type);
-            if(type=='服务中心'){
+
+       
+            if(type=='服务中心'||type=='酒店中心'||type=='片区中心'){
+
+            $('#belong').show();
+            if(area_center.length){
 
 
+                // console.log(area_center)
+
+                // console.log(area_center_id)
+
+
+                $("#dept").empty()
+                for(var i=0;i<area_center.length;i++){
+                    if(area_center[i].Id == area_center_id){
+                    $("#dept").append(' <option value="'+area_center[i].Name+'">'+area_center[i].Name+'</option>')
+                    }
+                }
+
+
+
+            }
+            
 
                 //运营中心登陆，选中不能修改
                 if(role_id==3){
-
                     var sex=document.getElementById("type");
                     sex.onclick = function() {
                         var index = this.selectedIndex;
@@ -289,9 +349,6 @@ $this->title = "Admin";
                             this.selectedIndex = index;
                         };
                     };
-
-                    $('#type').css({'background':'#e6e6e6'});
-                    $('#agent').css({'background':'#e6e6e6'});
                     $("#agent").html('');
                     $("#type").html('');
                     var html="<option value="+ agent+">"+ agent+"</option>";
@@ -299,32 +356,40 @@ $this->title = "Admin";
                     $(html).appendTo("#agent");
                     $(html2).appendTo("#type");
                     $('#parent').show();
+
                 }else{
                     //获取地址
                     var province=$('#province option:selected').attr('value');
                     var city=$('#city option:selected').attr('value');
                     var area=$('#area option:selected').attr('value');
 
+
                     //获取符合该地址的所有运营中心
                     $.get('./?r=admin-user/get-agent',{'province':province,'city':city,'area':area},function(data){
-                        console.log(data);
+                       // console.log(data);
                         if(data!=''){
                             $("#agent").html('');
                             var html="<option value=''>请选择</option>";
                             $(data).each(function(i,v){
                                 html+="<option value="+ v.Name+">"+ v.Name+"</option>";
                             });
-
-
                             $(html).appendTo("#agent");
                             $('#agent').val(agent);
+
+                              // console.log(agent);
+
 //                        alert(agent);
+
+
 
                             $('#parent').show();
                         }
                         if(data==''){
                             $("#agent").html('');
-                            html="<option value='太极兵运营中心'>太极兵运营中心</option>";
+                              html="";
+                                for(var i =0;i<data.length;i++){
+                                     html+="<option value='"+data[i].Name+"'>"+data[i].Name+"</option>"
+                                }
                             $(html).appendTo("#agent");
                             $('#parent').show();
                         }
@@ -333,74 +398,21 @@ $this->title = "Admin";
                     });
                 }
 
-
-
-
+               if(type=='片区中心'){
+                   $('#parent').show();
+                        $('#belong').hide();
+               }
 
             }
         }
 
-        initProvince();
-        initListener();
-        initAddress();
+        // initProvince();
+        // initListener();
+        // initAddress();
 //        initMap();
     });
 
-    //    function openMark(){
-    //        if ($("#address").val() != "") {
-    //            geoc.getPoint($("#address").val(), function (point) {
-    //                if (point) {
-    //                    map.centerAndZoom(point, 13);
-    //                    map.addOverlay(new BMap.Marker(point));
-    //                    cur = point;
-    //                } else {
-    //                    alert("您选择地址没有解析到结果!");
-    //
-    //                }
-    //            }, "成都市");
-    //        }
-    //        //监听点击地图事件
-    //        map.addEventListener("click", function (e) {
-    //            cur= e.point;
-    //            getCircle(cur);
-    //        });
-    //
-    //
-    //        //创建标注点函数
-    //        function getCircle(point) {
-    //            map.clearOverlays();
-    //            marker = new BMap.Marker(point);
-    //            map.addOverlay(marker);
-    //        }
-    //
-    //        $("#mapContainer").show();
-    //    }
-    function hideMark(){
-        $("#mapContainer").hide();
-    }
-    function  sureLocation(){
-        if(cur==null){
-            alert("请先标注点！");
-            return;
-        }
-        $("#lat").val(cur.lat);
-        $("#lng").val(cur.lng);
-        hideMark();
-    }
-    function initMap(){
-        $("#address").val(address);
-        $("#lat").val(baiDuLat);
-        $("#lng").val(baiDuLng);
 
-
-        map = new BMap.Map("map");
-        geoc = new BMap.Geocoder();
-        map.enableScrollWheelZoom(); //可滑动
-        map.addControl(new BMap.NavigationControl()); //导航条
-        var point = new BMap.Point(104.067923, 30.679943); //成都市(116.404, 39.915);
-        map.centerAndZoom(point, 13);
-        $("#map").css({"height":"100%"});
-    }
     function initAddress(){
         $("#province").val(province);
         initCityOnProvinceChange();
@@ -433,6 +445,8 @@ $this->title = "Admin";
     function initCityOnProvinceChange(){
         var pid=getAddressIdByName($("#province").val());
         $("#city").empty();
+        $("#area").empty();
+        $("#area").append("<option value=''>请选择</option>");
         $("#city").append("<option value=''>请选择</option>");
         if(pid==0){
             return;
@@ -498,9 +512,8 @@ $this->title = "Admin";
 
 
 
-
-
 </script>
 
 </body>
 </html>
+

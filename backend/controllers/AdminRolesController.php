@@ -24,7 +24,7 @@ class AdminRolesController extends BaseController
             'query' => $query,
             'sort' => [
                 'defaultOrder' => [
-                    'created_at' => SORT_ASC,
+                    'updated_at' => SORT_DESC,
                 ]
             ]
         ]);
@@ -45,6 +45,7 @@ class AdminRolesController extends BaseController
 
     public function actionAssign($id = '')
     {
+        $urlobj = $this->getParam("Url");//返回参数记录
         if(yii::$app->getRequest()->getIsPost()){
             $data = explode(',', yii::$app->getRequest()->post('ids', ''));
             $model = new AdminRolePermission();
@@ -58,6 +59,7 @@ class AdminRolesController extends BaseController
             'model' => $model,
             'treeJson' => $treeJson,
             'role_name' => AdminRoles::findOne(['id'=>$id])['role_name'],
+            'url'=>$urlobj
         ]);
     }
 }

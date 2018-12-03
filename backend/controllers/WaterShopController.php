@@ -27,7 +27,8 @@ class WaterShopController extends Controller
 
         //获取商品数据(根据分类读取袋装水、茶吧机 )
         //获取该商家添加的所有商品（袋装水、茶吧机）category_id=1 袋装水、2茶吧机
-        $goods=ActiveRecord::findBySql("select agent_goods.*,goods.category_id,goods.name,goods.goods_image1 from agent_goods join goods on agent_goods.goods_id=goods.id where agent_goods.goods_endtime > now() and agent_goods.goods_starttime < now() and agent_id=$agent_id")->asArray()->all();
+//        $goods=ActiveRecord::findBySql("select agent_goods.*,goods.category_id,goods.name,goods.goods_image1 from agent_goods join goods on agent_goods.goods_id=goods.id where agent_goods.goods_endtime > now() and agent_goods.goods_starttime < now() and agent_id=$agent_id")->asArray()->all();
+        $goods=ActiveRecord::findBySql("select agent_goods.*,goods.category_id,goods.name,goods.goods_image1 from agent_goods join goods on agent_goods.goods_id=goods.id where agent_id=$agent_id")->asArray()->all();
         $waters=[];
         $teas=[];
         //（name:商品名称、realprice:卖价、originalprice:原价、goods_image1:商品图片）已售和商品描述没有
@@ -43,14 +44,15 @@ class WaterShopController extends Controller
 
         //获取门店信息(shop_name:门店名称、shop_detail:门店简介、image1:门店图片、Address:地址)
         $agent_info=ActiveRecord::findBySql("select agent_shop.*,agent_info.Address from agent_shop JOIN agent_info on agent_shop.agent_id=agent_info.id where agent_shop.agent_id=$agent_id")->asArray()->all();
-
-
+        $tel=[$agent_info[0]['shop_tel1'],$agent_info[0]['shop_tel2']];
+//var_dump($tel);exit;
 //        $waters=ActiveRecord::findBySql('select b.*,i.url from goods_info_base b JOIN goods_info_img i on b.id=i.goodsid and i.type=1 where b.EndTime > now() and b.startTime <= now()')->asArray()->all();
         //获取该商家信息
 //        $agent_info=ActiveRecord::findBySql("select * from agent_info where id='$agent_id'")->asArray()->all();
 
-        return $this->renderPartial("goods_list",['waters'=>json_encode($waters),'teas'=>json_encode($teas),'agent_info'=>$agent_info]);
+        return $this->renderPartial("goods_list",['waters'=>json_encode($waters),'teas'=>json_encode($teas),'agent_info'=>$agent_info,'tel'=>$tel]);
     }
+
     public function actionAgentList(){
     try{
         $lat=\Yii::$app->request->get('lat');

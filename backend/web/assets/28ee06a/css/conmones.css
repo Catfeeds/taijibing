@@ -1,0 +1,95 @@
+// input{
+//     width: 300px;
+//     margin-left: 10px;
+//     background-color: #2C2B37;
+//     border: #2C2B37;
+//     padding: 5px;
+// }
+table,thead,tbody,input,select,option{
+	background-color:#363643;
+	color: #BABABF
+}
+input,select,option{
+	border:1px solid #292834;
+	color: #BABABF
+}
+thead,thead tr input{
+	background-color:#363643;
+	color: #BABABF
+}
+tr{
+	border:none;
+		color: #BABABF
+}
+td{
+	background-color:#363643;
+	color: #BABABF
+}
+th{
+	background-color:#292834;
+	color: #BABABF
+}
+
+table tbody tr:hover{
+	// background-color:#DD5C1A;
+	// border:0px solid #000;
+
+
+}
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{
+	background-color: #363643;
+	color: #BABABF
+}
+.pagination>li:first-child>a, .pagination>li:first-child>span,.pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover{
+	    background: #363643;
+	    color: #BABABF
+}
+.table>caption+thead>tr:first-child>td, .table>caption+thead>tr:first-child>th, .table>colgroup+thead>tr:first-child>td, .table>colgroup+thead>tr:first-child>th, .table>thead:first-child>tr:first-child>td, .table>thead:first-child>tr:first-child>th{
+	    background: #292834;
+	    color: #BABABF
+}
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{
+	background-color:#363643;
+	color: #BABABF
+}
+.btn-primary,.btn{
+	background: #292834;
+	    color: #BABABF;
+	    border:none;
+}
+.btn-primary:hover,.btn:hover{
+	background: #292834;
+	    color: #BABABF;
+}
+button, html input[type="button"], input[type="reset"], input[type="submit"]{
+	background: #292834;border:1px solid #BABABF; color: #BABABF;
+}
+button:hover, html input[type="button"]:hover, input[type="reset"]:hover, input[type="submit"]:hover{
+	background: #363643;border:1px solid #BABABF; color: #BABABF;
+}
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{
+	background-color:#363643;
+	color: #BABABF
+}
+#formContainer,textarea,.goodpic,.form-control{
+background-color:#363643;
+	color: #BABABF
+}
+
+.table-striped > tbody > tr:nth-child(odd) > td, .table-striped > tbody > tr:nth-child(odd) > th,.mark,.has-success .form-control{
+	background-color:#363643
+}
+.has-success .form-control{
+	background-color:#363643;
+	color: #BABABF;
+	    border:none;
+
+}
+.ibox{
+background-color:#363643;	color: #BABABF;
+
+}
+body{background-color:#363643;	color: #BABABF;}
+.pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover{
+	background-color:#363643;	color: #BABABF;
+}

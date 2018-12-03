@@ -22,7 +22,6 @@
     map.addControl(new BMap.NavigationControl()); //导航条
     var point = new BMap.Point(104.067923, 30.679943); //成都市(116.404, 39.915);
     map.centerAndZoom(point, 13);
-
     if ($("#address").val() != "") {
         geoc.getPoint($("#address").val(), function (point) {
             if (point) {
@@ -31,11 +30,9 @@
                 cur = point;
             } else {
                 alert("您选择地址没有解析到结果!");
-
             }
         }, "成都市");
     }
-
 
     //监听点击地图事件
     map.addEventListener("click", function (e) {
@@ -52,6 +49,7 @@
     }
 
     function ok(){
+
         if(cur==null){
             alert("请先标注点！");
             return;

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="./static/js/jedate/skin/jedate.css"/>
     <link rel="stylesheet" href="./static/js/datepicker/dateRange.css"/>
     <link rel="stylesheet" href="./static/js/page/jquery.pagination.css"/>
+     <link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
     <style>
         body{
             width:100%;
@@ -53,7 +54,7 @@
 </div>
 <div class="content_middle" >
     <div class="separator">
-        1、基本信息
+        1、基本信息sdbv 
     </div>
     <div class="detail1">
         <div class="item">

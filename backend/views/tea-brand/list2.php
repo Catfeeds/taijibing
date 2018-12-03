@@ -2,7 +2,7 @@
 use yii\widgets\LinkPager;
 use feehi\widgets\Bar;
 ?>
-
+   <link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
 <div class="wrapper wrapper-content">
     <?= Bar::widget([
         'template' => '{create}'
@@ -38,6 +38,7 @@ use feehi\widgets\Bar;
     <script type="text/javascript" src="./static/js/layer/layer.js"></script>
 <script>
     function deleteTeaBrand(brandno){
+ 
         var ii=layer.msg("操作中……");
         $.getJSON("/index.php?r=tea-brand/delete&brandno="+brandno,function(data){
             layer.close(ii);

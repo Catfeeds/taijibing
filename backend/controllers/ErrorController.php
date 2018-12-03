@@ -42,7 +42,8 @@ class ErrorController extends BaseController
         if (Yii::$app->getRequest()->getIsAjax()) {
             return "$name: $message";
         } else {
-            return $this->render('index', [
+//            return $this->render('index', [
+            return $this->render('error2', [
                 'code' => $statusCode,
                 'name' => $name,
                 'message' => $message,

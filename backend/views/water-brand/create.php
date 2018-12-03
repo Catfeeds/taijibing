@@ -35,6 +35,7 @@ $this->title = '商品';
                 <link rel="stylesheet" href="./static/js/datepicker/dateRange.css"/>
 
                 <link rel="stylesheet" href="./static/js/page/jquery.pagination.css"/>
+                   <link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
                 <style>
                     body{
                         height:100%;
@@ -46,7 +47,8 @@ $this->title = '商品';
             <body>
             <div class="col-sm-12">
                 <div class="ibox">
-                    <?= $this->render('/widgets/_ibox-title') ?>
+
+                    <div style="text-align: right;margin-bottom: 10px"> <?= \yii\bootstrap\Html::a('返回',['water-brand/list'],['class'=>'btn btn-info'])?></div>
                     <div class="ibox-content">
 
                         <?php $form = ActiveForm::begin(['options'=>['enctype'=>'multipart/form-data','class'=>'form-horizontal']]); ?>
@@ -56,8 +58,15 @@ $this->title = '商品';
                         <?= $form->field($goods, 'brand_id',['options'=>['class'=>'col-md-7']])->dropDownList(\yii\helpers\ArrayHelper::map($waterbrand,'BrandNo','BrandName'),['prompt' => '请选择']) ?>
 <!--                        <input type="button" value="添加品牌" style="margin-top: 45px">-->
                         <div style="padding-top: 45px"><a href="./?r=water-brand/add">添加品牌</a></div>
-                        <?= $form->field($goods, 'factory_id',['options'=>['class'=>'col-md-7']])->dropDownList(\yii\helpers\ArrayHelper::map($factory,'Id','Name'),['prompt' => '请选择']) ?>
+        
+                        <div style="margin-top: 20px;margin-left: 35px;float: left;">
+                            <span style="font-size: 13px;font-weight:bold">商品容量</span>
+                            <label style="margin-left: 50px"><input type="radio" name="Goods[volume]" <?= $volume==7.5? 'checked':''?> value="7.5" />7.5L</label>
+                            <label style="margin-left: 50px"><input type="radio" name="Goods[volume]" <?= $volume==10? 'checked':''?> value="10" />10L</label>
+                            <label style="margin-left: 50px"><input type="radio" name="Goods[volume]" <?= $volume==15? 'checked':''?> value="15" />15L</label>
+                            <label style="margin-left: 50px"><input type="radio" name="Goods[volume]" <?= $volume!=7.5&&$volume!=10&&$volume!=15&&$volume!=''? "checked value=$volume":''?> id="other"  />其他</label><input style="width: 40px;margin-left: 10px;" type="text" <?= $volume!=7.5&&$volume!=10&&$volume!=15&&$volume!=''? "value=$volume":''?> id="volume"><span style="margin-left:10px">L</span>
 
+                        </div>
 
             <div class="content_middle" style="margin-bottom: 80px">
                 <div class="detail1">
@@ -199,7 +208,7 @@ $this->title = '商品';
                     </div>
                 </div>
 
-                <div class="split" style="margin-top: 160px" ></div>
+                <div class="split" style="margin-top: 260px" ></div>
                 <div>
                     选择销售地区：
                     <select style="width: 100px">
@@ -216,7 +225,11 @@ $this->title = '商品';
 
             </div>
 
-
+<style>
+    .btn-white{
+        display: none;
+    }
+</style>
 
 
                         <?= $form->defaultButtons() ?>
@@ -224,6 +237,36 @@ $this->title = '商品';
                     </div>
                 </div>
             </div>
+
+<div id="fade" class="black_overlay">  </div>  
+
+ <div id="MyDiv" class="white_content">  
+  <div style="text-align: right; cursor: default; height: 40px;    position: fixed;
+    background: #2d2d35;
+    padding: 5px 15px;
+    right: 11%;">  
+   <span style="font-size: 16px;" onclick="CloseDiv('MyDiv','fade')">关闭</span>  
+  </div>  
+  <img src="" alt="" width=100%>
+ </div> 
+
+ <script type="text/javascript">  
+//弹出隐藏层  
+function ShowDiv(show_div,bg_div){  
+ document.getElementById(show_div).style.display='block';  
+ document.getElementById(bg_div).style.display='block' ;  
+ var bgdiv = document.getElementById(bg_div);  
+ bgdiv.style.width = document.body.scrollWidth;   
+ // bgdiv.style.height = $(document).height();  
+ $("#"+bg_div).height($(document).height());  
+};  
+//关闭弹出层  
+function CloseDiv(show_div,bg_div)  
+{  
+ document.getElementById(show_div).style.display='none';  
+ document.getElementById(bg_div).style.display='none';  
+};  
+</script> 
 
             <script type="text/javascript" src="./static/js/jquery.min.js"></script>
             <script type="text/javascript" src="./static/js/zui/js/zui.js"></script>
@@ -236,6 +279,65 @@ $this->title = '商品';
             <script type="text/javascript" src="./static/js/pinyin.js"></script>
             <script type="text/javascript" src="./static/js/lib.js"></script>
             <script type="text/javascript" src="./static/js/good/addgood3.js"></script>
+
+            <script>
+
+                $('.btn-primary').click(function(){
+                    var image1=$('#image1').val();
+
+                    if(!image1){
+                        alert('第一张图片必须添加');
+                        return false;
+                    }
+                });
+
+
+
+
+                $('#volume').blur(function(){
+                    var volume= $.trim($(this).val());
+                    if(volume!=''){
+                        if(isNaN(volume)){
+                            alert('容量只能是整数或小数');
+                            $('#volume').val('');
+                            $('#other').attr('checked',false);
+                            return false;
+                        }
+
+                        if(volume<=0){
+                            alert('容量必须大于0');
+                            $('#volume').val('');
+                            $('#other').attr('checked',false);
+                            return false;
+                        }
+
+                        if(volume>=100){
+                            alert('容量不能大于100');
+                            $('#volume').val('');
+                            $('#other').attr('checked',false);
+                            return false;
+                        }
+                        if(volume<100 && !Number.isInteger(volume)){
+                            var volume2=parseInt(volume*10)/10;//保留一位小数
+
+                            $('#other').attr('value',volume2);
+                            $('#volume').val(volume2);
+                            $('#other').attr('checked',true);
+
+                        }else{
+                            $('#other').attr('value',volume);
+                            alert(volume);
+                            $('#other').attr('checked',true);
+                        }
+
+                    }else{
+                        $('#other').attr('checked',false);
+
+                    }
+//                    alert(volume);
+                })
+
+            </script>
 
             </body>
             </html>

@@ -60,6 +60,7 @@ switch($action){
         break;
 }
 ?>
+<link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
 <div class="ibox-title">
     <h5><?=$prefixTitle.yii::t('app', $this->title)?></h5>
     <div class="ibox-tools">

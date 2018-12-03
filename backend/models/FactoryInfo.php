@@ -40,7 +40,7 @@ class FactoryInfo extends  ActiveRecord
     }
     //创建时用的
     public  function insertBaseInfo($Admin_User_Id,$loginName='',$Name,$Address,$ContractTel,
-                                    $ContractUser,$Province,$City,$Area,$BaiDuLng,$BaiDuLat,$pwd=''){
+                                    $ContractUser,$Province,$City,$Area,$BaiDuLng,$BaiDuLat,$pwd='',$precode,$number){
         $this->setAttribute("Admin_User_Id",$Admin_User_Id);
         $this->setAttribute("LoginName",$loginName);
         $this->setAttribute("Address",$Address);
@@ -55,12 +55,14 @@ class FactoryInfo extends  ActiveRecord
         $this->setAttribute("RowTime",date("Y-m-d H:i:s"));
         $this->setAttribute("Level",1);
         $this->setAttribute("PreCode",$this->getMaxprecode());
+        $this->setAttribute("Code",$precode);
         $this->setAttribute("Name",$Name);
+        $this->setAttribute("Number",$number);
         $this->setScenario("create");
         return $this->save(false);
     }
     public function getMaxprecode(){
-        $precodeRes=$this->findBySql("select max(factory_info.`PreCode`) as precode from `factory_info` ")->asArray()->one();
+        $precodeRes=$this->findBySql("select max(factory_info.`PreCode`) as precode from `factory_info`")->asArray()->one();
         $precode=intval($precodeRes["precode"])+1;
         $precode=str_pad($precode,3,"0",STR_PAD_LEFT);//用'0'填充左边到长度为3
         return $precode;
@@ -88,7 +90,7 @@ class FactoryInfo extends  ActiveRecord
     {
         return [
             'default' => ['Name', 'ContractTel','ContractUser','Address','PreCode','WaterBrandNo','Level','Province','City','Area','BaiDuLat','BaiDuLng'],
-            'create' => ['LoginName', 'LoginPwd','RowTime','WaterBrandNo','Level'],
+            'create' => ['LoginName', 'LoginPwd','RowTime','WaterBrandNo','Level','Number'],
             'update' => ['LoginName','Name', 'ContractTel','ContractUser','Address','Province','City','Area','RowTime','BaiDuLng','BaiDuLat'],
 
         ];
@@ -96,42 +98,53 @@ class FactoryInfo extends  ActiveRecord
     public static function findByName($name=""){
        return self::findBySql("select * from factory_info where LoginName='$name'")->asArray()->one();
     }
-    public static function findWithCondition($username,$mobile,$province,$city,$area){
+    public static function findWithCondition($water_brand,$water_name,$username,$mobile,$province,$city,$area,$sort){
             $where='';
             if(!empty($username)){
-                $where.=" Name like '%$username%'";
+                $where.=" factory_info.Name like '%$username%'";
             }
+        if(!empty($water_brand)){
+            if(!empty($where)){
+                $where.=" and ";
+            }
+            $where.=" brands.BrandName ='$water_brand'";
+        }
+        if(!empty($water_name)){
+            if(!empty($where)){
+                $where.=" and ";
+            }
+            $where.=" goods.name = '$water_name'";
+        }
             if(!empty($mobile)){
                 if(!empty($where)){
                     $where.=" and ";
                 }
-                $where.="ContractTel='$mobile' ";
+                $where.=" factory_info.ContractTel='$mobile' ";
             }
         if(!empty($province)){
             if(!empty($where)){
                 $where.=" and ";
             }
-            $where.="Province='$province' ";
+            $where.=" factory_info.Province='$province' ";
         }
         if(!empty($city)){
             if(!empty($where)){
                 $where.=" and ";
             }
-            $where.="City='$city' ";
+            $where.=" factory_info.City='$city' ";
         }
         if(!empty($area)){
             if(!empty($where)){
                 $where.=" and ";
             }
-            $where.="Area='$area' ";
+            $where.=" factory_info.Area='$area' ";
         }
 
-        //根据登陆者的信息，获取登陆者的角色
+        //根据登陆者的信息，获取登陆者的id
         $login_id=\Yii::$app->user->id;
+        $LoginName=ActiveRecord::findBySql("select username from admin_user where Id=$login_id")->asArray()->one()['username'];
         //获取角色id
         $role_id=AdminRoleUser::findOne(['uid'=>$login_id])->role_id;
-        //获取角色
-//        $role=AdminRoles::findOne(['id'=>$role_id])->role_name;
 
 
         //如果是水厂登陆，只显示对应的水厂
@@ -139,13 +152,24 @@ class FactoryInfo extends  ActiveRecord
             if(!empty($where)){
                 $where.=" and ";
             }
-            $where.="Admin_User_id= '$login_id' ";
+            $where.="LoginName= '$LoginName' ";
+        }
+
+        $order=" order by  RowTime desc ";
+        if($sort && $sort%2==1){// 升序
+            $order=" order by  RowTime asc ";
         }
 
 
-
-
-        return self::findBySql("select * from factory_info ".(empty($where)?"":" where ".$where));
+//        return self::findBySql("select * from factory_info ".(empty($where)?"":" where ".$where)."$order");
+        return self::findBySql("select factory_info.*,factory_wcode.LeftAmount,
+factory_wcode.Fid,factory_wcode.Volume,factory_wcode.WaterBrand,
+factory_wcode.GoodsId,brands.BrandName,goods.name as goodsname
+from factory_info
+left join factory_wcode on factory_wcode.Fid=factory_info.Id
+left join brands on factory_wcode.WaterBrand=brands.BrandNo
+left join goods on factory_wcode.GoodsId=goods.id
+".(empty($where)?"":" where ".$where)."$order");
 
 
     }

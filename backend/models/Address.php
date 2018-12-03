@@ -22,19 +22,23 @@ class Address extends ActiveRecord
     public function scenarios()
     {
         return [
-            'default' => ['PId', 'Name'],
+            'default' => ['PId', 'Name','Id'],
         ];
     }
-    public function add(){
+    public function add($CityNumber){
         $this->setAttribute("RowTime",date("Y-m-d h:m:s"));
+        if($CityNumber){
+            $this->setAttribute("CityNumber",$CityNumber);
+        }
         return $this->save();
     }
     public static function allQuery(){
-        return Address::findBySql("select * from address_tree");
+//        return Address::findBySql("select * from address_tree where IsUse=1");
+        return Address::findBySql("select * from address_tree ");
     }
-    public static function pageQuery($offset = 0, $limit = 0)
+    public static function pageQuery($offset = 0, $limit = 0,$order)
     {
-        return Address::findBySql("select * from address_tree limit $offset , $limit");
+        return Address::findBySql("select * from address_tree  where IsUse=1 $order limit $offset , $limit");
     }
 
 

@@ -6,6 +6,9 @@
  * Time: 12:51
  */
 ?>
+
 <?=$this->render('_form', [
+
     'model' => $model,
+
 ]);

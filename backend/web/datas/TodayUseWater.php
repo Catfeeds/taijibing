@@ -1,0 +1,1 @@
+<?php exit();?>{"TodayUseWater":"421.6"}

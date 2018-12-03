@@ -1,0 +1,209 @@
+  .btnbatch p{
+          padding: 0px 20px;
+    border-radius: 5px;
+    background-color: #424952;
+    border: none;    cursor: pointer;
+        display: -webkit-inline-box;
+        float: left;
+     }
+#Refresh:hover{
+  background-color: #2D3136;
+  border-radius: 4px;
+}
+
+ .table input{
+	display:none;
+}
+ .table .state + label{
+    background-color: #2d3136;
+    border-radius: 5px;
+    width:20px;
+    height:20px;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 20px;
+    border-radius:2px;
+    border:1px solid #E46045;
+}
+ .table .state:checked + label{
+    background-color: #e46045;
+    border-radius:2px;
+}
+ .table .state:checked + label:after{
+    content:"\2714";
+    font-weight:400;
+        margin-top: -2px;
+}
+ .table .boootn{
+   width:10px;
+   display: inline-block;
+   height:10px;
+   border-radius:50px;
+   background-color:#fff;
+}
+.table>tbody>tr>td:last-child a{
+    color:#CF4EE4;
+    font-weight:bold;
+}
+.promote:hover{
+	background-color: #2D3136;    cursor: pointer;
+}
+.opdate-details{
+    height: 100%;
+    overflow: hidden;
+    padding: 50px;
+    background-color: #393E45;
+  /*  border-top: 3px solid #E46045;*/
+}
+  .opdate-list{
+  	    width: 80%;
+    /*background: #00f;*/
+    margin: auto;
+    height: 200px;
+
+  }
+.opdate-list p{
+	margin-top:20px;
+}
+.layui-layer layui-anim,.layui-layer-page,.yourclass{
+	  background-color: #393E45;
+}
+.layui-layer-title,.layui-layer-setwin{
+	display: none
+}
+.layui-layer-btn{
+	width:50%;
+	margin:auto;
+	color: rgb(233,233,233)
+}
+
+.layui-layer-btn a {
+	  background-color: #4ADCDD;
+
+    border: none;
+    color: rgb(233,233,233);
+    border-radius: 5px;
+}
+.layui-layer-btn1{
+	
+  float: left;
+}
+.layui-layer-btn .layui-layer-btn0{
+	  
+		background-color: #E46045;
+}
+
+#file_name{
+  width: 200px;
+  height: 30px;
+  border-radius: 4px;
+}
+a.input {
+  width: 70px;
+    height: 30px;
+    line-height: 30px;
+    background: #E46045;
+    text-align: center;
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    top: 10px;
+    margin-left: 20px;
+    border-radius: 4px;
+}
+a.input:hover {
+  background:#31b0d5;
+  color: #ffffff;
+}
+a{
+  text-decoration:none;
+  color:#FFF;
+}
+
+#file {
+  opacity:0;/*设置此控件透明度为零，即完全透明*/
+  filter:alpha(opacity=0);/*设置此控件透明度为零，即完全透明针对IE*/
+  font-size:100px;
+  position:absolute;/*绝对定位，相对于 .input */
+  top:0;
+  right:0;
+}
+
+.laydate_body .laydate_ym {
+    border: 1px solid #292834;
+    background-color: #292834;
+}
+.laydate_body .laydate_top {
+    background-color:#292834;
+    border: 1px solid #292834;
+}
+.laydate_body .laydate_box,.laydate_body .laydate_table td,.laydate_body .laydate_bottom #laydate_hms,.laydate_body .laydate_bottom .laydate_sj,.laydate_btn{
+    background-color: #292834;
+    color: #fff;
+}
+.laydate_body .laydate_bottom .laydate_btn a{
+	background-color: #292834;
+	color: #fff;
+	border: none
+}
+.laydate_body .laydate_time{
+    background-color: #292834;
+}
+
+.container{
+	    border-top: 3px solid #E46045;
+	       color: rgb(233,233,233);
+}
+
+.container .btnob{
+        padding: 5px 50px;
+        height: 50px;
+    font-size: 18px;
+    color: #fff;
+    border-radius: 5px;
+    margin-left: 60px;
+    margin-top: 30px;
+    background-color: #4ADCDD;
+    border: none;
+}
+
+
+#file::hover{
+    background: #E46045;
+}
+.laydate_body .laydate_bottom {
+    border: 1px solid #ccc;
+}
+.opdate-list span{
+	    font-weight: bold;
+    color: #D74E33;
+}
+.wrapperpos button:hover{
+    background-color: #E46045;
+}
+.selection-text{
+	 line-height: 30px;
+
+}
+#date_demo3{
+	width: 200px;
+    height: 30px;
+   line-height: 30px;
+    display: inline-block;
+}
+.htLeft{
+	display: inline-block
+}
+
+#target_version{
+      border-color: #666;
+    border: none;
+    border-radius: 2px;
+
+    height: 30px;
+
+    line-height: 0;
+        background-color: #2D3136;
+    color: #f0f0f0;
+}

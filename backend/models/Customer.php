@@ -19,7 +19,7 @@ class Customer extends ActiveRecord{
     {
         return [
             [['Name','Tel','Province','City','Area','Address'],'required'],
-            [['Name','Address'], 'string'],
+            [['Name','Address','Remark'], 'string'],
             [['Tel'],'number'],
         ];
     }

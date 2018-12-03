@@ -6,6 +6,8 @@ use yii\db\ActiveRecord;
 
 class Goods extends ActiveRecord
 {
+    public $custom_volume;//自定义容量
+
     public static function tableName()
     {
         return 'goods';
@@ -18,6 +20,11 @@ class Goods extends ActiveRecord
             'brand_id' => '商品品牌',
             'factory_id' => '水厂名称',
             'cardfactory' => '卡片厂家',
+            'volume' => '商品规格',
+            'type' => '设备类型',
+            'category_id' => '商品一级分类',
+            'category2_id' => '商品二级分类',
+            'unit' => '单位',
 
         ];
     }
@@ -25,11 +32,11 @@ class Goods extends ActiveRecord
     public function scenarios()
     {
         return [
-            'default' => ['name','category_id','brand_id','stock','factory_id','originalprice',
+            'default' => ['name','category_id','brand_id','stock','originalprice',
                 'saleprice','addtime','state','goods_image1','goods_image2',
-                'goods_image3','goods_image4','goods_image5','goods_image6',],
-            'create' => ['cardfactory','name', 'brand_id','factory_id','addtime','goods_image1','goods_image2', 'goods_image3','goods_image4','goods_image5','goods_image6'],
-            'create2' => ['name', 'brand_id','factory_id','addtime','goods_image1','goods_image2', 'goods_image3','goods_image4','goods_image5','goods_image6'],
+                'goods_image3','goods_image4','goods_image5','goods_image6','morning','night','unit'],
+            'create' => ['type','cardfactory','name', 'brand_id','addtime','goods_image1','goods_image2', 'goods_image3','goods_image4','goods_image5','goods_image6','unit'],
+            'create2' => ['name', 'brand_id','volume','addtime','goods_image1','goods_image2', 'goods_image3','goods_image4','goods_image5','goods_image6','category_id','category2_id','type','cardfactory','unit'],
         ];
     }
 
@@ -37,9 +44,9 @@ class Goods extends ActiveRecord
     {
         return [
 
-            [['name','category_id','brand_id','factory_id','stock','originalprice', 'saleprice','addtime','state','cardfactory'],'required'],
+            [['model_id','name','category_id','category2_id','brand_id','stock','originalprice', 'saleprice','addtime','state'],'required'],
 //            [['name'],'unique'],
-            [['goods_image1','goods_image2', 'goods_image3','goods_image4','goods_image5','goods_image6',],'safe']
+            [['goods_image1','goods_image2', 'goods_image3','goods_image4','goods_image5','goods_image6','shop_tel1','shop_tel2','type','cardfactory','volume','unit'],'safe']
 //            [['brand_id'],'required'],
 //            [['factory_id'],'required'],
         ];

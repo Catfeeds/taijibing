@@ -1,0 +1,637 @@
+body,dd,dl,fieldset,form,h1,h2,h3,h4,h5,h6,input,legend,ol,p,select,td,textarea,th,ul {
+	margin:0;
+	padding:0
+}
+body {
+	font:12px;
+	font-family:PingFangSC-Regular;
+	background:#fff;
+	-webkit-text-size-adjust:100%
+}
+a {
+	color:#2d374b;
+	text-decoration:none
+}
+a:hover {
+	color:#cd0200;
+	text-decoration:underline
+}
+em {
+	font-style:normal
+}
+li {
+	list-style:none
+}
+img {
+	border:0;
+	margin-top: -5px;
+	vertical-align:middle
+}
+table {
+	border-collapse:collapse;
+	border-spacing:0
+}
+p {
+	word-wrap:break-word
+}
+input{
+	-web-kit-appearance:none;
+  -moz-appearance: none;
+}
+.font-size-xsss {
+	font-size:8px;
+	font-family:PingFangSC-Regular;
+	color:rgb(245,245,245,.47);
+	// letter-spacing:-.11px
+}
+.font-size-xss {
+	font-size:10px;
+	font-family:PingFangSC-Regular;
+	color:rgb(245,245,245,.47);
+	// letter-spacing:-.11px
+}
+.font-size-XS {
+	font-size:12px;
+	font-family:PingFangSC-Regular;
+	color:#B0B0BA;
+	// letter-spacing:-.13px
+}
+.font-size-mS {
+	font-family:PingFangSC-Regular;
+	font-size:13px;
+	color:#151515;
+	letter-spacing:.84px
+}
+.font-size-S {
+	font-size:14px;
+	font-weight:700;
+	color:rgb(233,233,233);
+	font-family:PingFangSC-Medium
+}
+.widTab {
+	width:100%;
+	margin-top:100px;
+	height:300px;
+	margin-bottom:0;
+	text-align:center
+}
+.bgcolor {
+	background-color:#5a5f62;
+	padding:15px;
+	height:500px
+}
+.reclear {
+	clear:both
+}
+.nav-title li {
+	margin-right:25px
+}
+.page,body {
+	width:100%;
+	background-color:#1D1F23
+}
+.inscreen {
+	width:100%;
+	font-family:PingFangSC-Utralight;
+	border-radius:5px 0 0 5px;
+	background-color:#2D3136;
+	color:rgb(233,233,233);
+	font-size:12px;
+	padding:20px;
+	position: relative;
+}
+.sidebar img {
+	width:12px;
+	height12px
+}
+.selection {
+	    padding: 10px 5px;
+	display:inline-flex
+}
+.selection-time,.wrap_line {
+	display:inline-block;
+	border-radius:2px;
+	height:30px;
+	background-color:#393E45
+}
+.selection-time li {
+	float:left;
+	padding:5px 0;
+	    background-color: #393E45;
+}
+.selection-time button{
+	background-color: #393E45;
+}
+.selection-time li:last-child button,.wrap_line select:last-child {
+	border-right:none
+}
+.inscreen>table>tbody>tr>td:first-child {
+	text-align:right
+}
+.wrap_line select {
+ 
+	padding:5px 0;
+	background-color:#393E45;
+	border:none;
+	border-right:1px #000 solid
+}
+.wrap_line select option {
+	border:none
+}
+.wrap_line select option:hover {
+	background-color:#fff
+}
+.screening-conditions table {
+	width:initial
+}
+ .selection-time .activer {
+	background-color:#E46045;
+	// border-radius:5px;
+}
+.screening-conditions .inscreen button {
+	background:none;
+	border:none;
+	padding:0px 21px;
+	border-right:1px #000 solid;
+	outline:0;
+
+}
+
+
+.screening-conditions option,.screening-conditions select {
+	outline:0;
+	cursor:pointer;
+	cursor:hand;
+	height: 20px;
+	padding:0 20px 0 5px;
+}
+.wrap_line {
+	padding:5px;
+	    height: 30px;
+	display:inline-block
+}
+.screening-conditions option {
+	padding:15px
+}
+.screening-conditions .referring button {
+	outline:0;
+	width:100%;
+	height:40px;
+	border-radius: 0px;
+	background:#E46045;
+	border:none;
+	color:rgb(233, 233, 233);
+	text-align:center;
+	letter-spacing:8.89px;
+	font-size:12px;
+	font-weight:700;
+	padding:10px;
+	cursor:hand;
+	cursor:pointer
+}
+
+.gray-bg {
+	background-color:#1D1F23
+}
+.calendar tr:first-child th,.daterangepicker,.daterangepicker .calendar-date {
+	background:#292834;
+	color:#B0B0BA
+}
+.input-group-addon:last-child {
+	border-left:0;
+	background:#292834
+}
+
+
+.daterangepicker .ranges .input-mini {
+	background:#363643;
+	color:#B0B0BA;
+	border-color:#B0B0BA
+}
+.daterangepicker .btn-default,.daterangepicker .daterangepicker select {
+	color:#B0B0BA;
+	background-color:#363643;
+	border-color:#B0B0BA
+}
+.daterangepicker .calendar {
+	border:none
+}
+.daterangepicker select,.daterangepicker select:hover {
+	background-color:#363643
+}
+.pagination-sm>li>span,.pagination-sm>li>span:hover {
+	border:none;
+	background:#292834
+}
+.daterangepicker.opensright:after {
+	border:none
+}
+.soue input {
+	margin-left:20px;
+	padding:0 15px
+}
+.navbar-top-links .dropdown-menu li a:hover {
+	background-color:red
+}
+.fa-arrow-right:before {
+	content:"\f061"
+}
+.fa-arrow-left:before {
+	content:"\f060"
+}
+.search {
+	position:relative;
+	margin-left: 100px;
+}
+.searchImg {
+	font-size:20px;
+	background:#393e45;
+	position:absolute;
+	width:30px;
+	height:30px;
+	right:1px;
+	top:2px
+}
+
+
+.selection-time li:hover {
+	background-color:#292834
+}
+
+
+
+.screening-conditions select option {
+	line-height:30px;
+	height:30px;
+	margin:5px auto
+}
+.referring {
+	width:100%;
+	height:100%
+}
+.referring-text {
+	background-color:#393E45;
+	width:100%;
+	height:100%
+}
+.referrin-header {
+	width:100%;
+	height:45%;
+	position:relative;
+ 	padding:55px 0;
+ 	line-height: 20px;
+	;    text-align: left;
+    text-indent: 25px;
+    color:#B0B0BA !important;
+    text-align:center;
+          font-size: 12px;
+}
+.referrin-header>.name {
+    display: -webkit-inline-box;
+position: relative;
+text-indent:25px;
+
+}
+.header {
+	padding:15px;
+	color:#fff;
+	position: absolute;
+}
+,.table-text {
+	width:100%;
+	text-align:center
+}
+.table-text table,.table-text thead tr th {
+	background-color:#393E45;
+	    color: #fff;
+	text-align:center
+}
+.AverageHover,.compareHover,.pageHover,.volumeHover {
+	    color: #e46045;
+	font-size:15px;
+	position:relative
+}
+.AverageHover-text,.compareHover-text,.pageHover-text,.volumeHover-text {
+	width:200px;
+	position:absolute;
+	background:#363643;
+	padding:10px;
+	color:#fff;
+	text-align:left;
+	border:1px solid #fff;
+	display:none
+}
+.CityMap,.Provincial {
+	width:50%;
+	color:rgb(233,233,233);
+	text-align:center;
+	height:40px;
+	line-height:40px;
+	background-color:rgb(45,49,54);
+	cursor:hand;
+	cursor:pointer
+}
+.ProvincialActiove {
+	background-color:#1C1E22
+}
+.block {
+	text-align:center
+}
+.block:before {
+	content:'';
+	display:inline-block;
+	height:50%;
+	vertical-align:middle;
+	margin-right:-.25em
+}
+.centered {
+	display:inline-block;
+	vertical-align:middle;
+	width:50%
+}
+.progress .name {
+	position:absolute;
+	left:30px;
+	color:#fff;
+	font-size:15px;
+	font-weight:700;
+	    margin-top: -5px;
+}
+.method {
+	width:130px;
+	height:50px;
+	line-height:50px
+}
+.tableBox,.tableBox tr {
+	width:100%;
+	    height: 50px;
+	color:#fff;
+	text-align:center;
+	background-color:#393E45
+}
+.tableBox thead tr {
+
+
+	border-bottom:1px #5A5F62 solid
+}
+.tableBox td,.tableBox th {
+	text-align:center;
+	padding:2px 10px
+}
+
+#tableBox{
+	font-size:9px;
+}
+* {
+	padding:0;
+	margin:0
+}
+.page_div {
+	margin-top:20px;
+	margin-bottom:20px;
+	font-size:15px;
+	font-family:"microsoft yahei";
+	color:rgb(233,233,233);
+	margin-right:10px;
+	padding-left:20px;
+	text-align:center;
+	box-sizing:border-box;
+
+}
+.page_div a {
+	min-width:30px;
+	height:28px;
+	border:0 solid #dce0e0!important;
+	text-align:center;
+	margin:0 4px;
+	cursor:pointer;
+	border-radius:5px;
+	line-height:28px;
+	color:#666;
+	font-size:13px;
+	display:inline-block
+}
+#firstPage,#lastPage {
+	width:50px;
+	color:#0073A9;
+	border:1px solid #0073A9!important
+}
+#nextPage,#prePage {
+    width: 28px;
+	color:#EE5030;
+	background-color:#393E45;
+	border:0 solid #393E45!important;
+	border-radius:0 10px 10px 0
+}
+#prePage {
+	border-radius:10px 0 0 10px
+}
+.page_div .current {
+	background-color:#EE5030;
+	border-color:#0073A9;
+	color:#FFF
+}
+.totalPages {
+	margin:0 10px
+}
+.totalPages span,.totalSize span {
+	color:#0073A9;
+	margin:0 5px;
+}
+#Jumpnump {
+	background:none;
+	border-radius:6px;
+	border:1px solid #393E45;
+	outline:0;
+	height: 30px;
+	color: #ee5030;
+}
+#JumpPagesbtn {
+	padding:3px 10px;
+	border-radius:5px;
+	background:#393E45;
+	border-color:#666;
+	color:#EE5030;
+	outline:0;
+		border: none;
+}
+#Jumpdisplay {
+	border-color: #666;
+    border-radius: 2px;
+    width: 60px;
+    height: 26px;
+    background: #393E45;
+    background: url(/static/images3/hhhh.png) no-repeat scroll right center transparent;
+    background-position: right 7px center;
+}
+#Jumpdisplay option {
+	border-color:#666;
+	background:#393e45;
+	outline:0
+}
+.shoPpage {
+	position:absolute;
+	color:rgb(233,233,233);
+	width: 150px;
+	bottom: 20px;
+}
+
+.selection-time .activer button {
+      border: none;
+}
+
+select {  
+  /*Chrome和Firefox里面的边框是不一样的，所以复写了一下*/  
+  padding:0 5px;
+  border: solid 1px #000;  
+  
+  /*很关键：将默认的select选择框样式清除*/  
+  appearance:none;  
+  -moz-appearance:none;  
+  -webkit-appearance:none;  
+  /*在选择框的最右侧中间显示小箭头图片*/  
+  background: url("/static/images3/hhhh.png") no-repeat scroll right center transparent;  
+  background-position: right   7px center;
+
+}  
+ 
+  
+/*清除ie的默认选择框样式清除，隐藏下拉箭头*/  
+select::-ms-expand { display: none; }  
+
+					.baifenbiA{
+						position: absolute;
+					    right: 15px;
+					    bottom: 0px;
+					    color: #B2B4B7
+
+					}
+					.baifenbiA li{
+						border-bottom: 1px solid #4C5156;
+						font-size: 15px;
+						position: relative;
+					}
+					.baifenbiA .hor{
+						width: 10px;
+	    				height: 10px;
+	 				    border-radius: 50px;
+					    position: absolute;
+	  				    top: 50%;
+	  				    left: -20px;
+					}
+				 .data-view,.data-refresh{
+					display: -webkit-inline-box;
+					background-color:#1D1E22;
+					padding:3px 5px;
+					border-radius:5px;
+					cursor: pointer;
+					}
+					.data-view:hover,.data-refresh:hover{
+						background-color:#2D3136;
+					}
+					#dataView{
+					    	width:280px;
+						    position: absolute;
+						    z-index:100;
+						    right:0;
+						    display:none;
+					}
+					#dataView {
+						border-radius: 5px 5px 0 0 ;
+					}
+					#dataView  thead tr th,#dataView  thead tr{
+						background-color:#E46045;
+				      	padding: 5px 30px;
+						border-radius: 5px 5px 0 0 ;
+						font-size:12px;
+						    text-align: center;
+					}
+					#dataView  tbody tr td{
+						    text-align: center;
+						  background-color:#fff;
+						 color:#000;
+					
+						 padding:5px;
+					}
+					#dataView  tbody tr td:first-child{
+						border-right:1px solid #DDDDDD;
+					}
+				    #dataView .table{
+						border-radius: 5px;
+				
+					}
+
+					#dataView  #Refresh{
+						background-color:#4ADCDD;
+						color:#fff;
+					}
+					#dataView  #Close{
+						background-color:#E46045;
+						color:#fff;
+					}
+      				 .triangle{
+      				 	 position: absolute;
+      				 	 right:0px\9;
+      				 	 -moz-right:-10px;
+      				 	 -o-right:-10px;
+      				 	 -webkit-right:-10px;
+      				 	 right:-10px;
+      				 	right:0px\0; 
+      				 	 top:-8px;
+      				 	    width:0px; 
+        height:0px; 
+        border-left:0px solid transparent;  
+        border-right:10px solid transparent; 
+        border-bottom:30px solid #E46045;  
+        font-size:0px; 
+        line-height:0px;
+        margin: 0 auto;
+ /* IE8+ - must be on one line, unfortunately */ 
+   -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.7071067811865474, M12=-0.7071067811865477, M21=0.7071067811865477, M22=0.7071067811865474, SizingMethod='auto expand')";
+   
+   /* IE6 and 7 */ 
+   filter: progid:DXImageTransform.Microsoft.Matrix(
+            M11=0.7071067811865474,
+            M12=-0.7071067811865477,
+            M21=0.7071067811865477,
+            M22=0.7071067811865474,
+            SizingMethod='auto expand');,FilterType=sType ,Dx=fDx ,Dy=fDy ,M11=fM11 ,M12=fM12
+　　,M21=fM21 ,M22=fM22)
+   -moz-transform: rotate(45deg);
+   -o-transform: rotate(45deg);
+   -webkit-transform: rotate(45deg);
+   transform: rotate(45deg);
+      				 }
+
+ .Hovertitle{
+		display: -webkit-inline-box;
+}
+.volumeHover,.compareHover,.AverageHover,.pageHover{
+	width:20px;
+	height:18px;
+	background-color:#00f;
+	display: -webkit-inline-box;
+	background:url(/static/images3/volumeHover1.png) no-repeat
+
+}
+
+
+
+#method a{
+	    color: #fff;
+    display: block;
+    height: 30px;
+    margin-top: 10px;
+    line-height: 30px;
+    padding: 0 5px;
+      text-decoration: none;
+
+
+}
+
+#method a:hover{
+	background-color: #292834;
+	text-decoration:none;
+
+
+};

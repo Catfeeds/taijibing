@@ -35,31 +35,33 @@ $this->title = '商品';
     <link rel="stylesheet" href="./static/js/datepicker/dateRange.css"/>
 
     <link rel="stylesheet" href="./static/js/page/jquery.pagination.css"/>
+       <link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
     <style>
         body{
             height:100%;
             width:100%;
             overflow:auto;
         }
+
     </style>
 </head>
 <body>
 <div class="col-sm-12">
     <div class="ibox">
-        <?= $this->render('/widgets/_ibox-title') ?>
+
+        <div style="text-align: right;margin-bottom: 10px"> <?= \yii\bootstrap\Html::a('返回',['tea-brand/list'],['class'=>'btn btn-primary'])?></div>
         <div class="ibox-content">
 
             <?php $form = ActiveForm::begin(['options'=>['enctype'=>'multipart/form-data','class'=>'form-horizontal']]); ?>
 
-            <?= $form->field($goods, 'name',['options'=>['class'=>'col-md-7']])->textInput(['maxlength' => 64]) ?>
+            <?= $form->field($goods, 'name',['options'=>['class'=>'col-md-7']])->textInput(['maxlength' => 64])->label('设备名称') ?>
 
-            <?= $form->field($goods, 'brand_id',['options'=>['class'=>'col-md-7']])->dropDownList(\yii\helpers\ArrayHelper::map($teabrand,'BrandNo','BrandName'),['prompt' => '请选择']) ?>
+            <?= $form->field($goods, 'brand_id',['options'=>['class'=>'col-md-7']])->dropDownList(\yii\helpers\ArrayHelper::map($teabrand,'BrandNo','BrandName'),['prompt' => '请选择'])->label('设备品牌') ?>
             <div style="padding-top: 45px"><a href="./?r=tea-brand/add">添加品牌</a></div>
-
-            <?= $form->field($goods, 'factory_id',['options'=>['class'=>'col-md-7']])->dropDownList(\yii\helpers\ArrayHelper::map($devfactory,'Id','Name'),['prompt' => '请选择'])->label('设备厂家') ?>
 
             <?= $form->field($goods, 'cardfactory',['options'=>['class'=>'col-md-7']])->dropDownList(['中国联通总公司'=>'中国联通总公司','中国移动总公司'=>'中国移动总公司'],['prompt' => '请选择'])->label('卡片厂家') ?>
 
+            <?= $form->field($goods, 'type',['options'=>['class'=>'col-md-7']])->textInput(['maxlength' => 5])->label('设备升级类型') ?>
 
             <div class="content_middle" style="margin-bottom: 80px">
                 <div class="detail1">
@@ -201,7 +203,7 @@ $this->title = '商品';
                     </div>
                 </div>
 
-                <div class="split" style="margin-top: 160px" ></div>
+                <div class="split" style="margin-top: 250px" ></div>
                 <div>
                     选择销售地区：
                     <select style="width: 100px">
@@ -219,6 +221,11 @@ $this->title = '商品';
             </div>
 
 
+<style>
+    .btn-white{
+        display: none;
+    }
+</style>
 
 
             <?= $form->defaultButtons() ?>
@@ -226,6 +233,37 @@ $this->title = '商品';
         </div>
     </div>
 </div>
+
+
+<div id="fade" class="black_overlay">  
+</div>  
+ <div id="MyDiv" class="white_content">  
+  <div style="text-align: right; cursor: default; height: 40px;   position: fixed;
+    background: #2d2d35;
+    padding: 5px 15px;
+    right: 11%;">  
+   <span style="font-size: 16px;" onclick="CloseDiv('MyDiv','fade')">关闭</span>  
+  </div>  
+  <img src="" alt="" width=100%>
+ </div> 
+ <script type="text/javascript">  
+//弹出隐藏层  
+function ShowDiv(show_div,bg_div){  
+ document.getElementById(show_div).style.display='block';  
+ document.getElementById(bg_div).style.display='block' ;  
+ var bgdiv = document.getElementById(bg_div);  
+ bgdiv.style.width = document.body.scrollWidth;   
+ // bgdiv.style.height = $(document).height();  
+ $("#"+bg_div).height($(document).height());  
+};  
+//关闭弹出层  
+function CloseDiv(show_div,bg_div)  
+{  
+ document.getElementById(show_div).style.display='none';  
+ document.getElementById(bg_div).style.display='none';  
+};  
+</script> 
+
 
 <script type="text/javascript" src="./static/js/jquery.min.js"></script>
 <script type="text/javascript" src="./static/js/zui/js/zui.js"></script>

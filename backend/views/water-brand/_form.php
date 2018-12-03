@@ -9,7 +9,10 @@ use feehi\widgets\ActiveForm;
 
 $this->title = '水品牌';
 ?>
+
 <div class="col-sm-12">
+
+    
     <div class="ibox">
         <?= $this->render('/widgets/_ibox-title') ?>
         <div class="ibox-content">

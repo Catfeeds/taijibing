@@ -39,6 +39,8 @@ class LogicUserInfo extends ActiveRecord
             case 3:
             case 4://代理服务商
                 $obj=AgentInfo::findByName($model->username);break;
+            case 5://设备投资商
+                $obj=AgentInfo::findByName($model->username);break;
 
         }
         return $obj;

@@ -34,16 +34,35 @@ class User extends ActiveRecord implements IdentityInterface
     public $repassword;
     public $old_password;
     public $url;
+    public $area_center;//片区中心
 
     public static function tableName()
     {
         return '{{%admin_user}}';
     }
 
+
+    public function scenarios()
+    {
+        return [
+//            'default' => ['username', 'email'],
+            'default' => ['username'],
+//            'create' => ['username', 'email', 'password', 'avatar','logic_type'],
+            'create' => ['username', 'email', 'password','repassword', 'type','name','contacts',
+                'tel','address','lng','lat','province','city','area','agent','area_center'],
+//            'update' => ['username', 'email', 'password', 'avatar'],
+            'update' => [[ 'email','type','agent']],
+
+//            'self-update' => ['username', 'email', 'password', 'avatar', 'old_password', 'repassword'],
+            'self-update' => ['username', 'email', 'password', 'old_password', 'repassword'],
+        ];
+    }
+
+
     public function rules()
     {
         return [
-            [['username','type','password','repassword','password_hash','avatar','name',
+            [['username','type','password','repassword','old_password','password_hash','avatar','name',
             'contacts','address','province','city','area'], 'required'],
             ['email', 'email'],
             ['email', 'unique'],
@@ -54,23 +73,14 @@ class User extends ActiveRecord implements IdentityInterface
                 'contacts','address','province','tel'], 'required'],
             [['username','email'], 'required', 'on'=>['update', 'self-update']],
             [['username'], 'unique'],
-            [['city','area','agent'],'safe'],
+//            [['username'],'match','pattern'=>'/^[0-9a-zA_Z]+$/','message'=>'请输入数字或字母'],
+        [['city','area','agent'],'safe'],
+            [['tel'],'match','pattern'=>'/^\d{12}|\d{11}|\d{10}$/','message'=>'请输入正确的电话号码'],
+//            [['tel'],'safe'],
         ];
     }
 
-    public function scenarios()
-    {
-        return [
-            'default' => ['username', 'email'],
-//            'create' => ['username', 'email', 'password', 'avatar','logic_type'],
-            'create' => ['username', 'email', 'password','repassword', 'type','name','contacts',
-                'tel','address','lng','lat','province','city','area','agent'],
-//            'update' => ['username', 'email', 'password', 'avatar'],
-            'update' => [[ 'email','type','agent']],
 
-            'self-update' => ['username', 'email', 'password', 'avatar', 'old_password', 'repassword'],
-        ];
-    }
 
     public function attributeLabels()
     {

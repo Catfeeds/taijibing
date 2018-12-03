@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="./static/js/datepicker/dateRange.css"/>
 
     <link rel="stylesheet" href="./static/js/page/jquery.pagination.css"/>
+     <link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
     <style>
         body{
             height:100%;

@@ -4,9 +4,10 @@ use yii\widgets\LinkPager;
 <link rel="stylesheet" href="/static/js/datepicker/dateRange.css"/>
 <script type="text/javascript" src="/static/js/jquery.min.js"></script>
     <script type="text/javascript" src="/static/js/datepicker/dateRange.js"></script>
+    <link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
 <div class="wrapper wrapper-content">
     <?= $this->render('/widgets/_ibox-title') ?>
-        <table class="table table-hover" style="background:white;">
+        <table class="table table-hover">
             <thead>
             <th>条码</th>
             <th>设备编码</th>
@@ -31,7 +32,7 @@ use yii\widgets\LinkPager;
             </tbody>
         </table>
         <table>
-            <th
+            <th>
         </table>
 
 </div>

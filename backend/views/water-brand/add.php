@@ -11,7 +11,8 @@ $this->title = '水品牌';
 ?>
 <div class="col-sm-12">
     <div class="ibox">
-        <?= $this->render('/widgets/_ibox-title') ?>
+
+        <div style="text-align: right;margin-bottom: 10px"> <?= \yii\bootstrap\Html::a('返回',['water-brand/create'],['class'=>'btn btn-primary'])?></div>
         <div class="ibox-content">
 
             <?php $form = ActiveForm::begin(['options'=>['enctype'=>'multipart/form-data','class'=>'form-horizontal']]); ?>

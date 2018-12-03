@@ -6,6 +6,8 @@
  * Time: 14:17
  */
 ?>
+   <link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
+
 <div class="row">
 
 

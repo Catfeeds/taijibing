@@ -10,16 +10,22 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use backend\models\AdminRoles;
 use feehi\widgets\Bar;
-
+<link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
 $assignment = function($url, $model){
     return Html::a('<i class="fa fa-tablet"></i> '.yii::t('app', 'Assign Roles'), Url::to(['assign','uid'=>$model['id']]), [
         'title' => 'assignment',
         'class' => 'btn btn-white btn-sm'
     ]);
 };
-
+sty
 $this->title = "Admin";
 ?>
+
+<style type="text/css" >
+    thead {
+    background: #00f;
+}
+</style>
 <div class="row">
     <div class="col-sm-12">
         <div class="ibox">

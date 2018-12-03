@@ -20,6 +20,13 @@ $assignment = function($url, $model){
     ]);
 };
 ?>
+<style>
+    .btn-white {
+    display: inline-block;
+}
+
+</style>
+
 <div class="row">
     <div class="col-sm-12">
         <div class="ibox">

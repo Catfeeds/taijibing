@@ -1,9 +1,14 @@
 <?php
 namespace backend\controllers;
 
+use backend\models\DevFactory;
+use backend\models\DevRegist;
 use Yii;
 use yii\web\Response;
 use yii\web\Controller;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+use yii\db\ActiveRecord;
 
 /**
  * Base controller is the whole backend controllers parent class, and supported basic operation(such as crud,sort...).
@@ -11,12 +16,28 @@ use yii\web\Controller;
 class BaseController extends Controller
 {
 
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
         return $this->render('index', $this->getIndexData());
     }
 
     public function actionCreate(){
+        $urlobj = $this->getParam("Url");//返回参数记录
         $model = $this->getModel();
         if( yii::$app->getRequest()->getIsPost() ) {
             if ( $model->load(yii::$app->getRequest()->post()) && $model->validate() && $model->save() ) {
@@ -32,7 +53,7 @@ class BaseController extends Controller
             }
         }
         $model->loadDefaultValues();
-        $array = array_merge(['model'=>$model], $this->getCreateData());
+        $array = array_merge(['model'=>$model,'url'=>$urlobj], $this->getCreateData());
         return $this->render('create',$array);
     }
 
@@ -78,6 +99,7 @@ class BaseController extends Controller
 
     public function actionUpdate($id)
     {
+        $urlobj = $this->getParam("Url");//返回参数记录
         if(!$id) return $this->render('/error/error', [
             'code' => '403',
             'name' => 'Params required',
@@ -105,6 +127,7 @@ class BaseController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'url'=>$urlobj
         ]);
     }
 
@@ -198,6 +221,108 @@ class BaseController extends Controller
         }
         $data["desc"]=$desc;
         return $data;
+    }
+
+
+
+//根据服务中心或运营中心 获取对应的入网属性
+    public function GetUseTypeByAgent($agenty_id='',$agentf_id=''){
+        $use_type='';
+        if($agenty_id && !$agentf_id){//只选了运营中心
+            //该运营中心下所有服务中心的入网属性（去重）
+            $use_type=ActiveRecord::findBySql("select DISTINCT use_type from agent_usetype_code
+where (EXISTS (select 1 from agent_info where ParentId=$agenty_id and Id=agent_usetype_code.agent_id )
+or agent_id=0) and state=0
+")->asArray()->all();
+        }elseif($agentf_id){
+            $use_type=ActiveRecord::findBySql("select DISTINCT use_type from agent_usetype_code
+where (agent_id=$agentf_id or agent_id=0) and state=0
+")->asArray()->all();
+        }elseif(!$agenty_id && !$agentf_id){
+            //入网属性（去重）
+            $use_type=ActiveRecord::findBySql("select DISTINCT use_type from agent_usetype_code  where state=0")->asArray()->all();
+
+        }
+        return $use_type;
+    }
+
+    //所有入网属性
+    public function GetAllUseType(){
+        $all_use_type=ActiveRecord::findBySql("select code,use_type from agent_usetype_code ")->asArray()->all();
+        return $all_use_type;
+    }
+
+    //入网属性（去重）
+    public function GetUseType(){
+        //所有入网属性
+        $use_type=ActiveRecord::findBySql("select DISTINCT use_type from agent_usetype_code where state=0")->asArray()->all();
+        return $use_type;
+    }
+
+    //根据设备编号获取上级（服务中心、片区中心、运营中心）
+    public function GetParentByDevNo($DevNo){
+        $parent=['agentFname'=>'','agentPname'=>'','agentYname'=>''];
+        $dev=(new DevRegist())->findOne(['DevNo'=>$DevNo]);
+        if($dev){
+          $agent_id=$dev->AgentId;
+        }else{
+            return $parent;
+        }
+        $data=ActiveRecord::findBySql("select Name,ParentId,Level from agent_info where Id=$agent_id")->asArray()->one();
+        if(!$data) return $parent;
+        if($data['Level']==4){//设备直接挂在运营中心下的
+            $parent['agentYname']=$data['Name'];
+        }
+        if($data['Level']==5||$data['Level']==8){//设备挂在服务中心下的
+            $parent['agentFname']=$data['Name'];
+            $data=ActiveRecord::findBySql("select Name,ParentId,Level from agent_info where Id={$data['ParentId']}")->asArray()->one();
+            if(!$data) return $parent;
+            if($data['Level']==4){//服务中心挂在运营中心下的
+                $parent['agentYname']=$data['Name'];
+            }
+            if($data['Level']==7){//服务中心挂在片区中心下的
+                $parent['agentPname']=$data['Name'];
+                $data=ActiveRecord::findBySql("select Name,ParentId,Level from agent_info where Id={$data['ParentId']}")->asArray()->one();
+                if(!$data) return $parent;
+                $parent['agentYname']=$data['Name'];
+            }
+        }
+        if($data['Level']==7){//设备挂在片区中心下的
+            $parent['agentPname']=$data['Name'];
+            $data=ActiveRecord::findBySql("select Name,ParentId,Level from agent_info where Id={$data['ParentId']}")->asArray()->one();
+            if(!$data) return $parent;
+            if($data['Level']==4){//片区中心挂在运营中心下的
+                $parent['agentYname']=$data['Name'];
+            }
+        }
+
+        return $parent;
+    }
+
+    //根据服务中id心获取上级（片区中心、运营中心）
+    public function GetParentByAgentF($agent_id){
+        $parent=['agentFname'=>'','agentPname'=>'','agentYname'=>''];
+
+        $data=ActiveRecord::findBySql("select Name,ParentId,Level from agent_info where Id=$agent_id")->asArray()->one();
+        if(!$data) return $parent;
+        $parent['agentFname']=$data['Name'];
+        $data=ActiveRecord::findBySql("select Name,ParentId,Level from agent_info where Id={$data['ParentId']}")->asArray()->one();
+
+        if(!$data) return $parent;
+        if($data['Level']==4){//服务中心直接挂在运营中心下的
+            $parent['agentYname']=$data['Name'];
+        }
+
+        if($data['Level']==7){//服务中心挂在片区中心下的
+            $parent['agentPname']=$data['Name'];
+            $data=ActiveRecord::findBySql("select Name,ParentId,Level from agent_info where Id={$data['ParentId']}")->asArray()->one();
+            if(!$data) return $parent;
+            if($data['Level']==4){//片区中心挂在运营中心下的
+                $parent['agentYname']=$data['Name'];
+            }
+        }
+
+        return $parent;
     }
 
 

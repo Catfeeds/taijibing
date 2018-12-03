@@ -20,6 +20,12 @@ $assignment = function($url, $model){
 
 $this->title = "Admin";
 ?>
+<link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
+<style type="text/css">
+    .btn-white{
+    display:none;
+    }   
+</style>
 <div class="row">
     <div class="col-sm-12">
         <div class="ibox">

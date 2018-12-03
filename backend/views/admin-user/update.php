@@ -6,6 +6,11 @@
  * Time: 17:07
  */
 ?>
+<style type="text/css" media="screen">
+	.ibox{
+		padding:20px;
+	}
+</style>
 <?php 
     if(yii::$app->controller->action->id == 'update'){
         echo $this->render('_form', [
@@ -19,3 +24,7 @@
         ]);
     }
 ?>
+  <script> 
+
+  </script>
+

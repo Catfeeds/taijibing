@@ -50,7 +50,7 @@ class AgentInfo extends  ActiveRecord
     }
 
     function insertBaseInfo($ParentId,$Admin_User_Id,$loginName='',$name,$ContractTel,$ContractUser,$Address,
-                            $Province,$City,$Area,$BaiDuLng,$BaiDuLat, $logic_type=3,$pwd=''){
+                            $Province,$City,$Area,$BaiDuLng,$BaiDuLat, $logic_type=3,$pwd='',$precode,$number){
         $this->setAttribute("ParentId",$ParentId);
         $this->setAttribute("Admin_User_Id",$Admin_User_Id);
         $this->setAttribute("LoginName",$loginName);
@@ -66,8 +66,18 @@ class AgentInfo extends  ActiveRecord
         $this->setAttribute("RowTime",date("Y-m-d H:i:s"));
         $this->setAttribute("RegTime",date("Y-m-d H:i:s"));
         $this->setAttribute("Name",$name);
-        $this->setAttribute("Level",$logic_type==3?4:5);
-        return $this->save(false);
+        $this->setAttribute("PreCode",$precode);
+        $this->setAttribute("Number",$number);
+//        $this->setAttribute("area_center_id",$area_center_id);
+//        $this->setAttribute("Level",$logic_type==3?4:5);
+//        $this->setAttribute("Level",$logic_type==3?4:($logic_type==4?5:6));
+        //Level 4:运营中心  5：服务中心  6：设备投资商 7：片区中心
+        $this->setAttribute("Level",$logic_type==3?4:($logic_type==4?5:($logic_type==5?6:($logic_type==6?7:8))));
+        if($this->save(false)){//保存成功
+            //返回id
+            return $this->Id;
+        }
+        return false;
     }
     public function updateForm(){
         $provinceid=$this["Province"];
@@ -117,6 +127,7 @@ class AgentInfo extends  ActiveRecord
     {
         return [
             [['LoginName','Name', 'ContractTel','ContractUser','Address','Province','City','Area','RowTime','BaiDuLng','BaiDuLat', 'PreCode','WaterBrandNo','Level'], 'required'],
+            [['ContractTel'],'match','pattern'=>'/^[0-9]{10}|[0-9]{12}|[0-9]{11}$/','message'=>'请输入正确的电话号码'],
         ];
     }
 
@@ -141,13 +152,13 @@ class AgentInfo extends  ActiveRecord
     public function pagequeryByLevel($level=4){
         return AgentInfo::findBySql("select * from agent_info where LEVEL =".$level);
     }
-    public static function pageQueryWithCondition($username,$mobile,$province,$city,$area,$level){
+    public static function pageQueryWithCondition($username,$mobile,$province,$city,$area,$level,$sort){
         $where=" a.Level =".$level;
         if(!empty($username)){
-            $where.=" and a.Name like '%$username%' or b.Name like '%$username%'";
+            $where.=" and (a.Name like '%$username%' or c.Name like '%$username%') ";
         }
         if(!empty($mobile)){
-            $where.=" and a.ContractTel='$mobile' ";
+            $where.=" and a.ContractTel like '%$mobile%' ";
         }
         if(!empty($province)){
             $where.=" and a.Province='$province' ";
@@ -175,21 +186,43 @@ class AgentInfo extends  ActiveRecord
             $parentid=-1;
         }
         if($role_id==3){//获取该运营中心下的所有服务中心
+            $where.=" and (a.ParentId = $parentid or a.ParentId in (select Id from agent_info where ParentId=$parentid and Level=7 )) ";
+        }
+        if($role_id==7){//获取该片区中心下的所有服务中心
             $where.=" and a.ParentId = $parentid ";
         }
+        $order=' order by RowTime desc ';
+        if($sort && $sort%2==0){//偶数 降序
+            $order=' order by RowTime asc ';
+        }
+        if($level==5){//服务中心
+//            return self::findBySql("select a.Id,a.LoginName,a.Name,a.Province,
+//a.City,a.Area,a.Address,a.ContractUser,a.ContractTel,a.RowTime
+//from agent_info as a
+//where ".$where." $order");
+            return self::findBySql("select a.Id,a.LoginName,a.Name,a.Province,
+a.City,a.Area,a.Address,a.ContractUser,a.ContractTel,a.RowTime,b.Name as AreaCenterName,c.Name as ParentName
+from agent_info as a
+left join agent_info as b on b.Id=a.ParentId and b.Level=7
+left join agent_info as c on (c.Id=b.ParentId OR c.Id=a.ParentId) and c.Level=4
+where ".$where." $order");
+        }
 
-//return $role_id;
-        return AgentInfo::findBySql("select a.*,b.Name as ParentName from agent_info as a JOIN agent_info as b on a.ParentId=b.Id where ".$where);
+        return self::findBySql("select agent_info.Id,agent_info.LoginName,
+agent_info.Name,agent_info.Province,agent_info.City,agent_info.Area,
+agent_info.Address,agent_info.ContractUser,agent_info.ContractTel,agent_info.RowTime
+from agent_info
+where ".$where." $order");
 
     }
 
-    public static function pageQueryWithCondition2($username,$mobile,$province,$city,$area,$level){
+    public static function pageQueryWithCondition2($username,$mobile,$province,$city,$area,$level,$sort){
         $where=" Level =".$level;
         if(!empty($username)){
             $where.=" and Name like '%$username%'";
         }
         if(!empty($mobile)){
-            $where.=" and ContractTel='$mobile' ";
+            $where.=" and ContractTel like '%$mobile%' ";
         }
         if(!empty($province)){
             $where.=" and Province='$province' ";
@@ -200,7 +233,11 @@ class AgentInfo extends  ActiveRecord
         if(!empty($area)){
             $where.=" and Area='$area' ";
         }
-        return AgentInfo::findBySql("select * from agent_info where ".$where);
+
+        if($sort && $sort%2==0){//偶数 升序
+            return self::findBySql("select * from agent_info where ".$where." order by RowTime asc");
+        }
+        return AgentInfo::findBySql("select * from agent_info where ".$where." order by RowTime desc");
 
     }
 

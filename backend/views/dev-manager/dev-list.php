@@ -1,7 +1,7 @@
 <?php
 use yii\widgets\LinkPager;
 ?>
-
+   <link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
 <div class="wrapper wrapper-content">
     <form action="/index.php?r=dev-manager/list" method="post">
         <div style="margin-bottom:10px;">

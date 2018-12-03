@@ -9,6 +9,12 @@ use feehi\widgets\ActiveForm;
 
 $this->title = '水品牌';
 ?>
+
+<style type="text/css">
+    .btn-white{
+    display:none;
+    }   
+</style>
 <div class="col-sm-12">
     <div class="ibox">
         <?= $this->render('/widgets/_ibox-title') ?>

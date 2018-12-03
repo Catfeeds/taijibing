@@ -1,4 +1,5 @@
 <html>
+ <link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
 <head>
     <style>
         body{

@@ -12,6 +12,8 @@ use backend\models\AdminRoles;
 use feehi\widgets\Bar;
 use backend\models\LogicUserInfo;
 
+
+
 $assignment = function($url, $model){
     return Html::a('<i class="fa fa-tablet"></i> '.yii::t('app', 'Assign Roles'), Url::to(['assign','uid'=>$model['id']]), [
         'title' => 'assignment',
@@ -21,9 +23,11 @@ $assignment = function($url, $model){
 
 $this->title = "Admin";
 ?>
+  <link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
 <div class="row">
     <div class="col-sm-12">
         <div class="ibox">
+        	
             <?= $this->render('/widgets/_ibox-title') ?>
             <div class="ibox-content">
                 <?= Bar::widget([

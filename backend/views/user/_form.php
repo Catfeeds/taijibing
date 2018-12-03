@@ -9,6 +9,7 @@ use feehi\widgets\ActiveForm;
 
 $this->title = 'User';
 ?>
+<link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
 <div class="col-sm-12">
     <div class="ibox">
         <?= $this->render('/widgets/_ibox-title') ?>

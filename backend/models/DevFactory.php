@@ -37,7 +37,7 @@ class DevFactory extends ActiveRecord
     }
 
     public  function insertBaseInfo($Admin_User_Id,$loginName='',$Name,$Address,$ContractTel,
-                                    $ContractUser,$Province,$City,$Area,$BaiDuLng,$BaiDuLat,$pwd=''){
+                                    $ContractUser,$Province,$City,$Area,$BaiDuLng,$BaiDuLat,$pwd='',$precode,$number){
         $this->setAttribute("Admin_User_Id",$Admin_User_Id);
         $this->setAttribute("LoginName",$loginName);
         $this->setAttribute("Address",$Address);
@@ -51,7 +51,15 @@ class DevFactory extends ActiveRecord
         $this->setAttribute("LoginPwd",md5($pwd));
         $this->setAttribute("Name",$Name);
         $this->setAttribute("RowTime",date("Y-m-d H:i:s"));
+        $this->setAttribute("Number",$number);
+        $this->setAttribute("PreCode",$precode);
         return $this->save(false);
+    }
+    public function getMaxprecode($City){
+        $precodeRes=$this->findBySql("select max(dev_factory.`PreCode`) as precode from `dev_factory` where City='$City' ")->asArray()->one();
+        $precode=intval($precodeRes["precode"])+1;
+        $precode=str_pad($precode,3,"0",STR_PAD_LEFT);//用'0'填充左边到长度为3
+        return $precode;
     }
     public function attributeLabels()
     {
@@ -73,7 +81,7 @@ class DevFactory extends ActiveRecord
             'update' => ['LoginName','Name', 'ContractTel','ContractUser','Address','Type','CardFactory','Province','City','Area','BaiDuLat','BaiDuLng'],
         ];
     }
-    public static function findWithCondition($username,$mobile,$province,$city,$area){
+    public static function findWithCondition($username,$mobile,$province,$city,$area,$sort){
         $where='';
         if(!empty($username)){
             $where.=" Name like '%$username%'";
@@ -82,7 +90,7 @@ class DevFactory extends ActiveRecord
             if(!empty($where)){
                 $where.=" and ";
             }
-            $where.="ContractTel='$mobile' ";
+            $where.="ContractTel like '%$mobile%' ";
         }
         if(!empty($province)){
             if(!empty($where)){
@@ -102,7 +110,12 @@ class DevFactory extends ActiveRecord
             }
             $where.="Area='$area' ";
         }
-        return self::findBySql("select * from dev_factory ".(empty($where)?"":" where ".$where));
+
+        if($sort && $sort%2==0){//偶数 降序
+            return self::findBySql("select * from dev_factory ".(empty($where)?"":" where ".$where)."order by RowTime asc");
+        }
+
+        return self::findBySql("select * from dev_factory ".(empty($where)?"":" where ".$where)."order by RowTime desc");
 
 
     }

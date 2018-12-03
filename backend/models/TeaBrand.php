@@ -33,11 +33,11 @@ class TeaBrand extends ActiveRecord{
 
     public static function allQuery()
     {
-        return TeaBrand::findBySql("select * from tea_brand");
+        return TeaBrand::findBySql("select * from brands where CategoryId=2");
     }
     public static function pageQuery($offset = 0, $limit = 0)
     {
-        return TeaBrand::findBySql("select * from tea_brand limit $offset , $limit");
+        return TeaBrand::findBySql("select * from brands where CategoryId=2 limit $offset , $limit");
     }
     public function createData(){
         $this->setAttribute("BrandNo",md5($this["BrandName"]));

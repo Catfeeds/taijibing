@@ -12,13 +12,28 @@
     <link rel="stylesheet" href="./static/js/datepicker/dateRange.css"/>
 
     <link rel="stylesheet" href="./static/js/page/jquery.pagination.css"/>
+        <link rel="stylesheet" href="./static/css/chosen.css"/>
+    <link rel="stylesheet" href="./static/css/Common.css?v=1.1"/>
+     <link rel="stylesheet" type="text/css" href="./static/css/conmones.css">
     <style>
         body{
             height:100%;
             width:100%;
             overflow:auto;
         }
-    </style>
+          select, .chosen-container {
+    width: 100px !important;
+    height: 30px;
+    min-width:  100px  !important;  
+    border:none;
+}
+
+.GoodsA  .chosen-container{
+  min-width:  150px  !important;  
+   
+}
+ </style>
+
 </head>
 <body>
 
@@ -34,25 +49,21 @@
     <div class="separator">
         1、基本信息
     </div>
-    <div class="detail1" style="">
+    <div class="detail1" style="height:">
 
 
-        <div class="item">
+        <div class="item GoodsA">
             <div class="ftitle"><span class="tip">*</span><span class="title">账户名称：</span></div>
 
             <div class="fcontent">
 
-                <select id="categoryid" class="baseinput">
+                <select id="categoryid" class="baseinput" style="display: none">
                 </select>
 
                 <select id="merchantid" class="baseinput">
                 </select>
-
             </div>
-
         </div>
-
-
         <div class="item">
             <div class="ftitle"><span class="tip">*</span><span class="title">商户店铺名称：</span></div>
             <div class="fcontent"><input placeholder="请输入店铺名称" id="name" type="text" class="baseinput"/></div>
@@ -64,23 +75,22 @@
                 <span class="mark">（用于前端显示）</span>
             </div>
         </div>
-        <div class="item">
-            <div class="ftitle"><span class="tip">*</span><span class="title">商户ID号：</span></div>
+        <div class="item" style="margin-bottom: 40px">
+            <div class="ftitle"><span class="tip">*</span><span class="title">订水电话：</span></div>
             <div class="fcontent">
-                <input id="id" type="text" class="baseinput"/>
+<!--                <input id="id" type="text" class="baseinput"/>-->
+                <input id="tel1" placeholder="请输入订水电话" type="text" class="baseinput"/><br />
+                <input id="tel2" placeholder="请输入订水电话" type="text" class="baseinput"/>
             </div>
         </div>
         <div class="item" style="height:auto;">
             <div class="ftitle"><span class="tip">*</span><span class="title">选择商品：</span></div>
-            <div class="fcontent" style="height:auto;">
-                <div id="good_sub_type_c">
-
+            <div class="fcontent" style="height:auto;width:1000px;">
+                <div id="good_sub_type_c" style='min-width: 1200px;'>
                 </div>
-
                 <p><a href="javascript:addGoodType();">继续添加</a></p>
             </div>
         </div>
-
         <div style="clear:both;"></div>
         <div class="split"></div>
 
@@ -179,8 +189,11 @@
         </div>
     </div>
 
+
+
+             <div id="previewDetails"  style="clear:both;padding:50px 15px;text-align: center; "></div>
     <div class="separator">
-        3、上下架管理
+        3、营业时间
     </div>
     <div class="detail5">
 <!--        <div class="item onlinetimec">-->
@@ -197,21 +210,21 @@
 <!--            </div>-->
 <!--        </div>-->
         <div class="item">
-            <div class="ftitle"><span class="tip">*</span><span class="title">上架时间：</span></div>
+            <div class="ftitle"><span class="tip">*</span><span class="title">早上时间：</span></div>
             <div class="fcontent" style="height: 30px">
                 <div style="float: left;width: 200px">
-                    <input  id="starttime" type="text" class="baseinput" value="<?=date('Y-m-d H:i:s',time())?>"/>
+                    <input  id="starttime" type="text" class="baseinput" value="8:00"/>
                 </div>
             </div>
         </div>
         <div class="item">
-            <div class="ftitle"><span class="tip">*</span><span class="title">下架时间：</span></div>
+            <div class="ftitle"><span class="tip">*</span><span class="title">晚上时间：</span></div>
             <div class="fcontent" style="height: 30px">
                 <div style="float: left;width: 200px">
-                    <input  id="endtime" type="text" class="baseinput" value="2099-1-1 00:00:00"/>
+                    <input  id="endtime" type="text" class="baseinput" value="22:00"/>
                 </div>
                 <div style="float: left;width: 440px;line-height: 18px">
-                    <span class="mark" style="height: 30px;line-height:18px">（勾选“立即销售”，设置下架时间后，点击“保存”，系统会在您设置的时间自动进行下架操作，下架时间为空时，默认该商品下架时间很长。）</span>
+                    <span class="mark" style="height: 30px;line-height:18px">（选择商户送水时间段，默认显示早上8点到晚上10点。）</span>
                 </div>
             </div>
         </div>
@@ -232,7 +245,7 @@
         </div>
         <div class="item">
             <div class="ftitle"><span class="tip">*</span><span class="title">关店时间：</span></div>
-            <div class="fcontent" style="height: 30px">
+            <div class="fcontent" style="height: 30px;">
                 <div style="float: left;width: 200px">
                     <input  id="closetime" type="text" class="baseinput" value="2099-1-1 00:00:00"/>
                 </div>
@@ -252,27 +265,27 @@
 <!--        <input type="button" class="btn select_btn" value="保存" onclick="updategood()"/>-->
 <!--        <input type="button" class="btn select_btn" value="预览" onclick="previewgood()" style="margin-left:20px;"/>-->
 <!--    </div>-->
-
-
     <div class="detail5">
         <input type="button" class="btn select_btn" value="保存" onclick="savegood()"/>
     </div>
-
-
 </div>
 </form>
 
 <script type="text/javascript" src="./static/js/jquery.min.js"></script>
+<script type="text/javascript" src="./static/js/chosen.jquery.min.js"></script>
 <script type="text/javascript" src="./static/js/zui/js/zui.js"></script>
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.4"></script>
+
 <script type="text/javascript" src="./static/js/qiniu/moxie.js"></script>
 <script type="text/javascript" src="./static/js/qiniu/Plupload.js"></script>
 <script type="text/javascript" src="./static/js/qiniu/qiniu.min.js"></script>
+
 <script type="text/javascript" src="./static/js/jedate/jedate.js"></script>
 <script type="text/javascript" src="./static/js/layer/layer.js"></script>
 <script type="text/javascript" src="./static/js/pinyin.js"></script>
 <script type="text/javascript" src="./static/js/lib.js"></script>
 <script type="text/javascript" src="./static/js/good/addgood.js"></script>
+<script type="text/javascript" src="/static/js/datepicker/dateRange.js"></script>
 
 
 
@@ -281,30 +294,90 @@
     var merchant=<?=json_encode($agent2)?>;
 
     var sms='';
-
+// console.log(category)
+// console.log(merchant)
+// alert(5)
 </script>
 <script type="text/javascript">
+
+
+    //开店时间弹框
+    jeDate({
+        dateCell:"#opentime",
+        isinitVal:true,
+        isTime: true
+    });
+
+    //关店时间弹框
+    jeDate({
+        dateCell:"#closetime",
+        isinitVal:true,
+        isTime: true
+    });
+
+    //限制电话
+    $('#tel1').blur(function(){
+        var tel1=$(this).val();
+        if(tel1!=''){
+            if(isNaN(tel1)||tel1.length!=10&&tel1.length!=11&&tel1.length!=12 ){
+                alert("电话号码必须是10位或11位的数字或12位的数字");
+                $(this).val('');
+                $(this).focus();
+            }
+
+        }
+    });
+    $('#tel2').blur(function(){
+        var tel2=$(this).val();
+        if(tel2!=''){
+            if(isNaN(tel2)||tel2.length!=10&&tel2.length!=11&&tel2.length!=12){
+                alert("电话号码必须是10位或11位的数字或12位的数字");
+                $(this).val('');
+                $(this).focus();
+            }
+
+        }
+    });
+
+
+
+
 
     //选择运营中心后获取对应的服务中心
     $('#categoryid').change(function(){
         var agent_id=$('#categoryid option:selected').attr('value');
-        $.get('./?r=goods/get-agent',{'agent_id':agent_id},function(data){
+       
+
+        if(agent_id==0){
+        	$('#merchantid').html('');
+            var html="<option value=''>请选择服务中心</option>";
+             $(merchant).each(function(i,v){
+             	// console.log(v)
+                    html+="<option value="+ v.id+">"+ v.name+"</option>";
+                });
+            $(html).appendTo("#merchantid").trigger("chosen:updated");
+
+        }else{
+        	$.get('./?r=goods/get-agent',{'agent_id':agent_id},function(data){
+        	// console.log(data)
             if(data!=''){
                 $('#merchantid').html('');
-                var html="<option value=''>请选择</option>";
+                var html="<option value=''>请选择服务中心</option>";
                 $(data).each(function(i,v){
                     html+="<option value="+ v.Id+">"+ v.Name+"</option>";
                 });
 
-                $(html).appendTo("#merchantid");
+                $(html).appendTo("#merchantid").trigger("chosen:updated");
 
             }else{
                 $('#merchantid').html('');
-                var html="<option value=''>请选择</option>";
-                $(html).appendTo("#merchantid");
+                var html="<option value=''>请选择服务中心</option>";
+                $(html).appendTo("#merchantid").trigger("chosen:updated");
             }
 //            console.log(data);
         })
+        }
+
 
     })
 

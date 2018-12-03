@@ -15,27 +15,47 @@ use backend\models\AdminRoles;
 use backend\models\User;
 use yii\data\ActiveDataProvider;
 use backend\models\AdminRoleUser;
+use backend\models\Address;
 class AuthUserController extends BaseController
 {
 
-    public function getIndexData()
+    public function getIndexData2($content,$where)
     {
-        $query = User::find();
+        if($where){
+            $query = User::find()->where($where);
+        }else{
+            $query = User::find();
+        }
+
+
+//        $query=yii\db\ActiveRecord::findBySql("select * from admin_user".(empty($where)?'':' where '.$where));
+//        var_dump($query);exit;
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => [
                 'defaultOrder' => [
-                    'created_at' => SORT_ASC,
+                    'updated_at' => SORT_DESC,
                 ]
             ]
         ]);
         return [
+            'content'=>$content,
             'dataProvider' => $dataProvider,
         ];
     }
     public function actionAuthlist(){
-        return $this->render('authlist', $this->getIndexData());
-    }
+
+        $content=trim(Yii::$app->request->post('content'));
+
+        $where='';
+        if($content!=''){
+            $where.=" username like '%$content%' or type like '%$content%'";
+        }
+
+
+
+        return $this->render('authlist', $this->getIndexData2($content,$where));
+}
 
     public function actionCreate()
     {
@@ -161,6 +181,7 @@ class AuthUserController extends BaseController
 
     public function actionAssign($uid='')
     {
+        $urlobj = $this->getParam("Url");//返回参数记录
         $model = AdminRoleUser::findOne(['uid'=>$uid]);//->createCommand()->getRawSql();var_dump($model);die;
         if($model == ''){//echo 11;die;
             $model = new AdminRoleUser();
@@ -169,6 +190,7 @@ class AuthUserController extends BaseController
         if( yii::$app->getRequest()->getIsPost() ){
             if($model->load(yii::$app->getRequest()->post()) && $model->save()){
                 Yii::$app->getSession()->setFlash('success', yii::t('app', 'success'));
+                return $this->redirect(['admin-user/index']);
             }else{//var_dump($model->getErrors());die;
                 $errors = $model->getErrors();
                 $err = '';
@@ -186,6 +208,7 @@ class AuthUserController extends BaseController
         return $this->render('assign', [
             'model' => $model,
             'roles' => $roles,
+            'url'=>$urlobj
         ]);
     }
 
