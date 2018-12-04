@@ -6,14 +6,16 @@ use yii\db\ActiveRecord;
 
 class ActivityController extends BaseController{
     public $enableCsrfValidation = false;
-    //创建运营活动
+    //创建运营活动 或修改运营活动页面
     public function actionCreateActivity(){
-        return $this->renderPartial('create-activity');
+        $type=$this->getParam('type');
+        $activity_id=$this->getParam('activity_id');//修改时传
+        return $this->renderPartial('create-activity',['type'=>$type,'activity_id'=>$activity_id]);
     }
     //ajax获取所有没有参加活动的用户（除开参加默认活动的用户）
     public function actionGetUser(){
         $user=ActiveRecord::findBySql("
-        select user_info.Id,user_info.Name as UserName,
+        select user_info.Id as UserId,user_info.Name as UserName,
         user_info.Tel,agent_info.Name as AgentName
         from user_info
         inner join dev_regist on dev_regist.UserId=user_info.Id
@@ -32,7 +34,8 @@ class ActivityController extends BaseController{
 
     //进入添加用户页面
     public function actionAppUserActivity(){
-        return $this->render('app-user-activity');
+        $activity_id=$this->getParam('activity_id');
+        return $this->render('app-user-activity',['activity_id'=>$activity_id]);
     }
 
     //ajax保存活动内容及参加该活动的用户
@@ -45,45 +48,55 @@ class ActivityController extends BaseController{
         $remark=$this->getParam('remark');//备注
         $user_id_str=$this->getParam('user_id_str');//参加该活动的用户id
         if(!$title||!$start_time||!$end_time||!$first_money
-            ||!$drink_money||!$user_id_str||!is_numeric($first_money)
+            ||!$drink_money||!is_numeric($first_money)
             ||!is_numeric($drink_money)){
             return json_encode(['state'=>-1,'msg'=>'参数错误']);
         }
+
         $now=date('Y-m-d H:i:s');
         $transaction=\Yii::$app->db->beginTransaction();
         try{
             //保存活动
             $re=\Yii::$app->db->createCommand("insert into activity (`Title`,`StartTime`,`EndTime`,`FirstMoney`,`DrinkMoney`,`Remark`,`RowTime`,`State`)
         values('$title','$start_time','$end_time',$first_money,$drink_money,'$remark','$now',0)")->execute();
-            if($re){
+            if(!$re){
               throw new Exception('保存活动失败');
             }
             $activity_id=\Yii::$app->db->getLastInsertID();//活动id
-            //保存用户参加活动记录、修改user_info参加的活动id
-            $user_array=explode(',',$user_id_str);
-            $sql='insert into user_activity_log (`UserId`,`ActivityId`,`RowTime`)values';
-            $tag=0;
-            $str='';
-            foreach($user_array as $k=>$v){
-                if($tag==0){
-                    $sql.="('$v',$activity_id,'$now')";
-                }else{
-                    $sql.=",('$v',$activity_id,'$now')";
+            if($user_id_str&&is_string($user_id_str)){
+                //保存用户参加活动记录、修改user_info参加的活动id
+                $user_array=explode(',',$user_id_str);
+                $sql='insert into user_activity_log (`UserId`,`ActivityId`,`RowTime`)values';
+                $tag=0;
+                $user_ids='';
+                foreach($user_array as $k=>$v){
+                    if($tag==0){
+                        $sql.="('$v',$activity_id,'$now')";
+                    }else{
+                        $sql.=",('$v',$activity_id,'$now')";
+                    }
+                    if(!$user_ids){
+                        $user_ids.="'$v'";
+                    }else{
+                        $user_ids.=",'$v'";
+                    }
+                    $tag++;
+
                 }
-                //拼接sql
-                $str.=" WHEN $v THEN $activity_id ";
-                $tag++;
+
+                $re=\Yii::$app->db->createCommand($sql)->execute();
+                if(!$re){
+                    throw new Exception('保存用户参加活动记录失败');
+                }
+                //修改用户参加的活动id
+                $update_sql="update user_info set ActivityId = $activity_id where Id in ($user_ids)";
+                $re=\Yii::$app->db->createCommand($update_sql)->execute();
+                if(!$re){
+                    throw new Exception('修改用户参加的活动失败');
+                }
             }
-            $re=\Yii::$app->db->createCommand($sql)->execute();
-            if($re){
-                throw new Exception('保存用户参加活动记录失败');
-            }
-            //修改用户参加的活动id
-            $update_sql="update user_info set ActivityId = CASE Id $str END where Id in ($user_id_str)";
-            $re=\Yii::$app->db->createCommand($update_sql)->execute();
-            if($re){
-                throw new Exception('修改用户参加的活动失败');
-            }
+
+
             $transaction->commit();
             return json_encode(['state'=>0]);
         }catch (Exception $e){
@@ -130,11 +143,11 @@ class ActivityController extends BaseController{
         }
         $activity=ActiveRecord::findBySql("select `Title`,`StartTime`,`EndTime`,`FirstMoney`,`DrinkMoney`,`Remark` from activity where Id=$activity_id")->asArray()->one();
         $users=ActiveRecord::findBySql("
-        select user_activity_log.Id,user_info.Name as UserName, user_info.Tel
+        select user_activity_log.Id,user_activity_log.UserId,user_info.Name as UserName, user_info.Tel
         from user_activity_log
         inner join activity on activity.Id=user_activity_log.ActivityId
         inner join user_info on user_info.Id=user_activity_log.UserId
-        where ActivityId=$activity_id")->asArray()->all();
+        where user_activity_log.ActivityId=$activity_id")->asArray()->all();
         $data=['activity'=>$activity,'users'=>$users];
         return json_encode(['data'=>$data]);
     }
@@ -150,7 +163,7 @@ class ActivityController extends BaseController{
         $remark=$this->getParam('remark');//备注
         $user_id_str=$this->getParam('user_id_str');//新增的参加该活动的用户id
         if(!$title||!$start_time||!$end_time||!$first_money
-            ||!$drink_money||!$user_id_str||!is_numeric($first_money)
+            ||!$drink_money||!is_numeric($first_money)
             ||!is_numeric($drink_money)||!$activity_id){
             return json_encode(['state'=>-1,'msg'=>'参数错误']);
         }
@@ -167,23 +180,55 @@ class ActivityController extends BaseController{
             $re=\Yii::$app->db->createCommand("update activity set `Title`='$title',`StartTime`='$start_time',
             `EndTime`='$end_time',`FirstMoney`=$first_money,`DrinkMoney`=$drink_money,`Remark`='$remark',`UpdateTime`='$now'
             where Id=$activity_id")->execute();
-            if($re){
+            if(!$re){
                 throw new Exception('修改活动失败');
             }
-            //保存用户参加活动记录
-            $user_array=explode(',',$user_id_str);
-            $sql='insert into user_activity_log (`UserId`,`ActivityId`,`RowTime`)values';
-            foreach($user_array as $k=>$v){
-                if($k==0){
-                    $sql.="('$v',$activity_id,'$now')";
-                }else{
-                    $sql.=",('$v',$activity_id,'$now')";
+
+            if($user_id_str&&is_string($user_id_str)){
+                //保存用户参加活动记录
+                $user_array=explode(',',$user_id_str);
+                $sql='insert into user_activity_log (`UserId`,`ActivityId`,`RowTime`)values';
+                $tag=0;
+                $user_ids='';
+                foreach($user_array as $k=>$v){
+                    if($tag==0){
+                        $sql.="('$v',$activity_id,'$now')";
+                    }else{
+                        $sql.=",('$v',$activity_id,'$now')";
+                    }
+                    if(!$user_ids){
+                        $user_ids.="'$v'";
+                    }else{
+                        $user_ids.=",'$v'";
+                    }
+                    $tag++;
+                }
+
+                //将已有的记录删除（删除后在添加）
+                $re=\Yii::$app->db->createCommand("delete from user_activity_log where ActivityId=$activity_id")->execute();
+                if(!$re){
+                    throw new Exception('删除用户参加的活动失败');
+                }
+
+                //修改用户参加活动的id
+                $re=\Yii::$app->db->createCommand("update user_info set ActivityId=0 where Id in ($user_ids)")->execute();
+                if(!$re){
+                    throw new Exception('修改用户参加的活动失败');
+                }
+
+
+                $re=\Yii::$app->db->createCommand($sql)->execute();
+                if(!$re){
+                    throw new Exception('保存用户参加活动记录失败');
+                }
+                //修改用户参加的活动id
+                $update_sql="update user_info set ActivityId =$activity_id where Id in ($user_ids)";
+                $re=\Yii::$app->db->createCommand($update_sql)->execute();
+                if(!$re){
+                    throw new Exception('重新修改用户参加的活动失败');
                 }
             }
-            $re=\Yii::$app->db->createCommand($sql)->execute();
-            if($re){
-                throw new Exception('保存用户参加活动记录失败');
-            }
+
             $transaction->commit();
             return json_encode(['state'=>0]);
         }catch (Exception $e){
@@ -194,15 +239,34 @@ class ActivityController extends BaseController{
 
     //ajax 删除用户参加某个活动
     public function actionDelUser(){
-        $id=$this->getParam('id');
-        if(!$id){
+        $id=$this->getParam('id');//删除多个的话是用逗号隔开的
+        $UserId=$this->getParam('UserId');//删除多个的话是用逗号隔开的
+        if(!$id||!$UserId||!is_string($id)||!is_string($UserId)){
             return json_encode(['state'=>-1,'msg'=>'参数错误']);
         }
-        $re=\Yii::$app->db->createCommand("delete from user_activity_log where Id=$id")->execute();
-        if(!$re){
-            return json_encode(['state'=>-1,'msg'=>'删除失败']);
+        $transaction=\Yii::$app->db->beginTransaction();
+        try{
+            //删除
+            $re=\Yii::$app->db->createCommand("delete from user_activity_log where Id in ($id)")->execute();
+            if(!$re){
+                throw new Exception('删除失败');
+
+            }
+            //修改用户参加的活动id
+            $re=\Yii::$app->db->createCommand("update user_info set ActivityId=0 where Id in ($UserId)")->execute();
+            if(!$re){
+                throw new Exception('修改失败');
+
+            }
+
+            $transaction->commit();
+            return json_encode(['state'=>0]);
+        }catch (Exception $e){
+            $transaction->rollBack();
+            return json_encode(['state'=>-1,'msg'=>$e->getMessage()]);
         }
-        return json_encode(['state'=>0]);
+
+
     }
 
     //进入运营活动页面
@@ -215,7 +279,7 @@ class ActivityController extends BaseController{
         $search=$this->getParam('search');
         $offset=$this->getParam('offset');
         $limit=$this->getParam('limit');
-        if($offset&&$limit){
+        if(!$offset&&!$limit){
             $offset=0;
             $limit=10;
         }
@@ -224,11 +288,11 @@ class ActivityController extends BaseController{
             $where="activity.Title like '%$search%'";
         }
         $data=ActiveRecord::findBySql("
-        select activity.Title,activity.StartTime,activity.EndTime,
+        select activity.Id,activity.Title,activity.StartTime,activity.EndTime,
         activity.FirstMoney,activity.DrinkMoney,count(user_activity_log.Id)as UserNum,activity.`Remark`,activity.RowTime
         from activity
         left join user_activity_log on user_activity_log.ActivityId=activity.Id
-        ".(empty($where)?'':" where $where"));
+        ".(empty($where)?'':" where $where")." GROUP BY activity.Id");
         $total=$data->count();
         $datas=ActiveRecord::findBySql($data->sql." limit $offset,$limit")->asArray()->all();
         $result=['total'=>$total,'search'=>$search,'datas'=>$datas,'offset'=>$offset,'limit'=>$limit];
