@@ -311,6 +311,7 @@ class ActivityController extends BaseController{
         $limit=$this->getParam('limit');
         if(!$offset&&!$limit){
             $offset=0;
+			
             $limit=10;
         }
         $where='';
